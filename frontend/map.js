@@ -10,7 +10,7 @@ const mapLocations = {
     8:  { name: "Staircase A", floor: 0, x: 280, y: 530, type: "stairs" },
     9:  { name: "Staircase B", floor: 0, x: 1050, y: 190, type: "stairs" },
     10: { name: "Staircase C", floor: 0, x: 1050, y: 530, type: "stairs" },
-    11: { name: "Reception", floor: 0, x: 180, y: 300, type: "room" },
+    11: { name: "Reception", floor: 0, x: 210, y: 390, type: "room" },
     12: { name: "Admissions Office", floor: 0, x: 350, y: 100, type: "room" },
     13: { name: "Lecture Hall 01", floor: 0, x: 520, y: 100, type: "room" },
     14: { name: "Library", floor: 0, x: 850, y: 100, type: "room" },
@@ -62,6 +62,10 @@ function connect(a, b, type = "corridor", distance = 100) {
 }
 
 // Ground-floor corridor network
+// Direct left-turn entrance route to reception
+connect(1, 11, "corridor", 20);
+
+// Other ground-floor connections
 connect(1, 4, "corridor", 45);
 connect(2, 4, "corridor", 90);
 connect(4, 3, "corridor", 110);
