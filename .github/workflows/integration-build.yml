@@ -1,0 +1,33 @@
+
+name: AccessWay Backend Integration Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build integrated backend
+        run: |
+          g++ -std=c++17 -Wall -Wextra -I. \
+            integration_test.cpp \
+            member1_navigation/Graph.cpp \
+            member1_navigation/Accessibility.cpp \
+            member1_navigation/MinHeap.cpp \
+            EmergencyManager.cpp \
+            EvacuationManager.cpp \
+            VolunteerManager.cpp \
+            HelpRequestManager.cpp \
+            -o integration_test
+
+      - name: Run integration test
+        run: |
+          ./integration_test
