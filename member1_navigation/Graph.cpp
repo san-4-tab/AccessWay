@@ -253,7 +253,191 @@ void Graph::BFS(int startLocationId) {
 int Graph::getVertexCount() {
     return vertexCount;
 }
+Graph::RouteResult Graph::dijkstra(
+    int startLocationId,
+    int destinationLocationId,
+    MobilityProfile profile
+) {
 
+    RouteResult result;
+    result.found = false;
+    result.path = NULL;
+    result.pathSize = 0;
+    result.totalCost = -1;
+
+    if (findVertex(startLocationId) == NULL ||
+        findVertex(destinationLocationId) == NULL) {
+
+        cout << "Starting or destination location not found!\n";
+        return result;
+    }
+
+    if (startLocationId == destinationLocationId) {
+
+        result.path = new int[1];
+        result.path[0] = startLocationId;
+        result.pathSize = 1;
+        result.totalCost = 0;
+        result.found = true;
+
+        return result;
+    }
+
+    int n = vertexCount;
+
+    int* ids = new int[n];
+    float* dist = new float[n];
+    int* parent = new int[n];
+    bool* visited = new bool[n];
+
+    VertexNode* vertex = head;
+
+    int k = 0;
+
+    while (vertex != NULL) {
+
+        ids[k] = vertex->data.locationId;
+        dist[k] = 1e9;
+        parent[k] = -1;
+        visited[k] = false;
+
+        k++;
+        vertex = vertex->next;
+    }
+
+    int startIndex = -1;
+    int destIndex = -1;
+
+    for (int i = 0; i < n; i++) {
+
+        if (ids[i] == startLocationId)
+            startIndex = i;
+
+        if (ids[i] == destinationLocationId)
+            destIndex = i;
+    }
+
+    dist[startIndex] = 0;
+
+    MinHeap heap(n);
+    heap.insert(startLocationId, 0);
+
+    Accessibility access;
+
+    while (!heap.isEmpty()) {
+
+        int currentId;
+        float currentDistance;
+
+        heap.extractMin(currentId, currentDistance);
+
+        int currentIndex = -1;
+
+        for (int i = 0; i < n; i++) {
+            if (ids[i] == currentId) {
+                currentIndex = i;
+                break;
+            }
+        }
+
+        if (currentIndex == -1 || visited[currentIndex])
+            continue;
+
+        visited[currentIndex] = true;
+
+        if (currentId == destinationLocationId)
+            break;
+
+        VertexNode* current = findVertex(currentId);
+
+        EdgeNode* edge = current->edges;
+
+        while (edge != NULL) {
+
+            int neighbourId = edge->neighbourLocationId;
+            int neighbourIndex = -1;
+
+            for (int i = 0; i < n; i++) {
+                if (ids[i] == neighbourId) {
+                    neighbourIndex = i;
+                    break;
+                }
+            }
+
+            if (neighbourIndex != -1 &&
+                !visited[neighbourIndex]) {
+
+                float cost = access.getRouteCost(
+                    edge->data, profile
+                );
+
+                if (cost >= 0) {
+
+                    float newDistance =
+                        dist[currentIndex] + cost;
+
+                    if (newDistance < dist[neighbourIndex]) {
+
+                        dist[neighbourIndex] = newDistance;
+                        parent[neighbourIndex] = currentId;
+
+                        if (heap.contains(neighbourId))
+                            heap.decreaseKey(neighbourId, newDistance);
+                        else
+                            heap.insert(neighbourId, newDistance);
+                    }
+                }
+            }
+
+            edge = edge->next;
+        }
+    }
+
+    if (dist[destIndex] != 1e9) {
+
+        int* reversePath = new int[n];
+        int count = 0;
+
+        int currentId = destinationLocationId;
+
+        while (currentId != -1 && count < n) {
+
+            reversePath[count++] = currentId;
+
+            int index = -1;
+
+            for (int i = 0; i < n; i++) {
+                if (ids[i] == currentId) {
+                    index = i;
+                    break;
+                }
+            }
+
+            if (index == -1)
+                break;
+
+            currentId = parent[index];
+        }
+
+        result.path = new int[count];
+
+        for (int i = 0; i < count; i++)
+            result.path[i] = reversePath[count - 1 - i];
+
+        result.pathSize = count;
+        result.totalCost = dist[destIndex];
+        result.found = true;
+
+        delete[] reversePath;
+    }
+
+    delete[] ids;
+    delete[] dist;
+    delete[] parent;
+    delete[] visited;
+
+    return result;
+}
 // Destructor
 Graph::~Graph() {
 
