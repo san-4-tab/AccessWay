@@ -29,7 +29,7 @@ struct BuildingData {
     vector<Connection> connections;
 };
 
-class Graph {
+class SimulationGraph  {
 private:
     vector<Location> locations;
     vector<Connection> connections;
@@ -44,9 +44,9 @@ private:
     }
 
 public:
-    Graph() {}
+    SimulationGraph() {}
 
-    Graph(const BuildingData& data) {
+    SimulationGraph(const BuildingData& data) {
         locations = data.locations;
         connections = data.connections;
     }
