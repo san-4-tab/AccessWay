@@ -16,8 +16,8 @@ int main() {
     Building b1 = {101, "Main Building", 3};
     Building b2 = {102, "Library", 2};
 
-    bm.insertBuilding(b1);
-    bm.insertBuilding(b2);
+    bm.addBuilding(b1);
+    bm.addBuilding(b2);
 
     cout << "\nBuildings:\n";
     bm.displayBuildings();
