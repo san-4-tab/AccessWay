@@ -3,6 +3,8 @@
 #define ACCESSPULSE_DATA_H
 
 #include <string>
+#include <vector>
+
 using namespace std;
 
 // Mobility profiles
@@ -92,5 +94,9 @@ struct SimulationChange {
     int connectionId;
     int locationId;
 };
-
+// Common building dataset shared by all backend modules
+struct BuildingData {
+    vector<Location> locations;
+    vector<Connection> connections;
+};
 #endif
