@@ -276,7 +276,7 @@ void Graph::BFS(int startLocationId) {
 
     queue[rear++] = startLocationId;
 
-    VertexNode* start = findVertex(startLocationId);
+
 
     int index = 0;
     VertexNode* tempVertex = head;
