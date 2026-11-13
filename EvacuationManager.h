@@ -54,6 +54,7 @@ public:
     // ---- building data (from Member 1 later, dummy data for now) ----
     bool addLocation(const Location& location);
     bool addConnection(const Connection& connection);
+bool loadBuildingData(const BuildingData& data);
     bool hasBuilding(int buildingId) const;
     bool hasLocation(int buildingId, int locationId) const;
     string getLocationName(int buildingId, int locationId) const;
