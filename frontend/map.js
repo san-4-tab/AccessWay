@@ -18,8 +18,7 @@ const mapConnections = [
     { from: 2, to: 5, stairs: true },
     { from: 5, to: 6, stairs: true },
     { from: 6, to: 7 },
-    { from: 7, to: 8 },
-    { from: 2, to: 8 }
+    { from: 7, to: 8 }
 ];
 
 let currentMapRoute = [];
@@ -144,7 +143,7 @@ function renderFloorPlan(floor) {
     const isGround = floor === 0;
 
     let svg = `
-   <svg viewBox="0 0 900 510"
+  <svg viewBox="0 0 900 510"
      xmlns="http://www.w3.org/2000/svg"
      role="img"
      aria-label="${isGround ? "Ground" : "First"} floor building plan"
@@ -163,9 +162,9 @@ function renderFloorPlan(floor) {
         </text>
 
         <!-- Main corridor -->
-   <rect x="55" y="235" width="790" height="90"
-      fill="#e9f2f8"
-      stroke="#8297aa"
+   <rect x="755" y="350" width="90" height="105"
+      fill="#fff1d9"
+      stroke="#d99b43"
       stroke-width="3"/>
         <text x="450" y="270" class="corridor-title">
             ${isGround ? "MAIN CORRIDOR" : "FIRST FLOOR CORRIDOR"}
@@ -185,9 +184,9 @@ function renderFloorPlan(floor) {
             ${drawRoom(245, 350, 155, 105, "WASHROOM", "R-005")}
             ${drawRoom(420, 350, 155, 105, "STUDENT AREA", "R-006")}
 
-            <rect x="745" y="225" width="100" height="110"
-      fill="#eee8fc"
-      stroke="#9274c8"
+            <rect x="755" y="350" width="90" height="105"
+      fill="#fff1d9"
+      stroke="#d99b43"
       stroke-width="3"/>
             <text x="795" y="260" class="service-label">LIFT</text>
             <text x="795" y="285" class="service-symbol">↕</text>
@@ -227,14 +226,14 @@ function renderFloorPlan(floor) {
         `;
     }
 
-    const visibleLocations = Object.keys(mapLocations)
-        .filter(id => mapLocations[id].floor === floor);
+  const visibleLocations = Object.keys(mapLocations)
+    .filter(id => mapLocations[id].floor === floor);
 
-    visibleLocations.forEach(id => {
-        svg += drawLocation(Number(id), floor);
-    });
+visibleLocations.forEach(id => {
+    svg += drawLocation(Number(id), floor);
+});
 
-      svg += drawRouteOnFloor(floor);
+svg += drawRouteOnFloor(floor);
     svg += `</svg>`;
     return svg;
 }
