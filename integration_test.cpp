@@ -50,7 +50,20 @@ int main() {
         cout << "Navigation route failed.\n";
 
     delete[] normalRoute.path;
+    // Test blocked connection
+navigation.removeEdge(1);
 
+Graph::RouteResult blockedRoute =
+    navigation.dijkstra(1, 2, GENERAL);
+
+cout << "\n--- BLOCKED ROUTE TEST ---\n";
+
+if (!blockedRoute.found)
+    cout << "PASS: No route available after blocking connection.\n";
+else
+    cout << "FAIL: Route still exists after blocking connection.\n";
+
+delete[] blockedRoute.path;
     // 3. MEMBER 2 - Emergency Management
 
     EmergencyManager emergency;
@@ -91,7 +104,7 @@ int main() {
 
     // 5. Final result
 
-    if (normalRoute.found && evacuationRoute.found) {
+   if (normalRoute.found && evacuationRoute.found && !blockedRoute.found) {
         cout << "\nALL THREE MODULES CONNECTED SUCCESSFULLY!\n";
         return 0;
     }
