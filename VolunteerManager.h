@@ -7,7 +7,7 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
-#include "../common/AccessPulseData.h"
+#include "../common/AccessWayData.h"
 
 // A volunteerId / requestId is unique only INSIDE a building,
 // so every hash key combines buildingId + id.
