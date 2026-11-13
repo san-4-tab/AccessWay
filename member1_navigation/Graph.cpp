@@ -8,7 +8,93 @@ Graph::Graph() {
     head = NULL;
     vertexCount = 0;
 }
+// Clear all existing vertices and edges
+void Graph::clearGraph() {
 
+    VertexNode* vertex = head;
+
+    while (vertex != NULL) {
+
+        EdgeNode* edge = vertex->edges;
+
+        while (edge != NULL) {
+            EdgeNode* tempEdge = edge;
+            edge = edge->next;
+            delete tempEdge;
+        }
+
+        VertexNode* tempVertex = vertex;
+        vertex = vertex->next;
+        delete tempVertex;
+    }
+
+    head = NULL;
+    vertexCount = 0;
+}
+
+// Load locations and connections from common building data
+bool Graph::loadBuildingData(const BuildingData& data) {
+
+    if (data.locations.empty()) {
+        cout << "Building data has no locations.\n";
+        return false;
+    }
+
+    int buildingId = data.locations[0].buildingId;
+
+    // Validate location IDs and building IDs
+    for (size_t i = 0; i < data.locations.size(); i++) {
+
+        if (data.locations[i].buildingId != buildingId)
+            return false;
+
+        for (size_t j = i + 1; j < data.locations.size(); j++) {
+            if (data.locations[i].locationId ==
+                data.locations[j].locationId)
+                return false;
+        }
+    }
+
+    // Validate connection IDs and endpoints
+    for (size_t i = 0; i < data.connections.size(); i++) {
+
+        const Connection& c = data.connections[i];
+
+        if (c.buildingId != buildingId)
+            return false;
+
+        bool fromFound = false;
+        bool toFound = false;
+
+        for (const Location& loc : data.locations) {
+            if (loc.locationId == c.fromLocationId)
+                fromFound = true;
+
+            if (loc.locationId == c.toLocationId)
+                toFound = true;
+        }
+
+        if (!fromFound || !toFound)
+            return false;
+
+        for (size_t j = i + 1; j < data.connections.size(); j++) {
+            if (c.connectionId == data.connections[j].connectionId)
+                return false;
+        }
+    }
+
+    // Replace old graph only after validation succeeds
+    clearGraph();
+
+    for (const Location& loc : data.locations)
+        addVertex(loc);
+
+    for (const Connection& c : data.connections)
+        addEdge(c);
+
+    cout << "Common building data loaded into navigation graph.\n";
+    return true;
+}
 // Find a vertex
 Graph::VertexNode* Graph::findVertex(int locationId) {
 
@@ -552,7 +638,6 @@ Graph::RouteResult Graph::findAlternativeRoute(
     return result;
 }
 
-// Destructor
 Graph::~Graph() {
 
     VertexNode* vertex = head;
@@ -574,4 +659,5 @@ Graph::~Graph() {
 
         delete tempVertex;
     }
+}
 }
