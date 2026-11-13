@@ -3,6 +3,8 @@
 #include <fstream>
 #include <iomanip>
 #include <algorithm>
+#include <iostream>
+#include <cctype>
 
 HelpRequestManager::HelpRequestManager(VolunteerManager& vm) : volunteers(vm), nextSequence(0) {}
 
