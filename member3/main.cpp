@@ -116,10 +116,13 @@ int main() {
     ReviewManager manager;
     ReviewOptimizer optimizer;
 
-    BuildingData building = createSampleBuilding();
-    WhatIfSimulator simulator(building);
+   BuildingData building = createSampleBuilding();
 
-    manager.loadFromFile();
+manager.setBuildingData(building);
+
+WhatIfSimulator simulator(building);
+
+manager.loadFromFile();
 
     if (manager.getReviews(1).empty()) {
         addSampleReviews(manager);
