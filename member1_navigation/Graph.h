@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "../common/AccessPulseData.h"
+#include "../common/AccessWayData.h"
 #include "MinHeap.h"
 #include "Accessibility.h"
 
