@@ -7,6 +7,7 @@
 #include <fstream>
 #include <limits>
 #include <iostream>
+#include <sstream>
 // ------------------------------------------------------------------ data
 
 // Keep accessibility penalties consistent with Member 1
@@ -558,18 +559,76 @@ bool EvacuationManager::saveStatus(const string& filename) const {
     return true;
 }
 
+
 bool EvacuationManager::loadStatus(const string& filename) {
+
     ifstream in(filename.c_str());
-    if (!in) return false;
+
+    if (!in)
+        return false;
+
     string line;
+    bool success = true;
+
     while (getline(in, line)) {
-        vector<string> p = splitLine(line);
-        if (p.size() < 3) continue;
+
+        if (line.empty())
+            continue;
+
+        stringstream ss(line);
+
+        string type, buildingText, idText, extra;
+
+        if (!getline(ss, type, '|') ||
+            !getline(ss, buildingText, '|') ||
+            !getline(ss, idText, '|') ||
+            getline(ss, extra, '|')) {
+
+            success = false;
+            continue;
+        }
+
         try {
-            int b = stoi(p[1]), id = stoi(p[2]);
-            if (p[0] == "BLOCKED_CONNECTION") blockConnection(b, id);
-            else if (p[0] == "UNAVAILABLE_LOCATION") setLocationAvailability(b, id, false);
-        } catch (...) {}
+
+            size_t pos1 = 0;
+            size_t pos2 = 0;
+
+            int buildingId = stoi(buildingText, &pos1);
+            int id = stoi(idText, &pos2);
+
+            if (pos1 != buildingText.size() ||
+                pos2 != idText.size() ||
+                buildingId <= 0 ||
+                id <= 0) {
+
+                success = false;
+                continue;
+            }
+
+            bool loaded = false;
+
+            if (type == "BLOCKED_CONNECTION") {
+                loaded = blockConnection(buildingId, id);
+            }
+            else if (type == "UNAVAILABLE_LOCATION") {
+                loaded = setLocationAvailability(
+                    buildingId, id, false
+                );
+            }
+            else {
+                success = false;
+                continue;
+            }
+
+            if (!loaded)
+                success = false;
+
+        }
+        catch (...) {
+            success = false;
+        }
     }
-    return true;
+
+    return success && !in.bad();
 }
+
