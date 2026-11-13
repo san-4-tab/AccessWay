@@ -99,21 +99,52 @@ bool HelpRequestManager::autoAssignRequest(int buildingId, int requestId, const 
     return assignVolunteer(buildingId, requestId, bestId);
 }
 
-bool HelpRequestManager::processNextRequest(int buildingId, const EvacuationManager& evac, int* handled) {
+
+bool HelpRequestManager::processNextRequest(
+    int buildingId,
+    const EvacuationManager& evac,
+    int* handled
+) {
+
     PendingQueue& pq = pendingQueues[buildingId];
+
+    vector<PendingEntry> deferred;
+
     while (!pq.empty()) {
+
         PendingEntry e = pq.top();
+        pq.pop();
+
         HelpRequest* r = findRequest(buildingId, e.requestId);
-        if (!r || r->status != PENDING) { pq.pop(); continue; }     // stale entry
+
+        // Ignore stale queue entries.
+        if (!r || r->status != PENDING)
+            continue;
+
+        // Try assigning this request.
         if (autoAssignRequest(buildingId, e.requestId, evac)) {
-            pq.pop();
-            if (handled) *handled = e.requestId;
+
+            // Restore requests that could not be assigned.
+            for (size_t i = 0; i < deferred.size(); i++)
+                pq.push(deferred[i]);
+
+            if (handled)
+                *handled = e.requestId;
+
             return true;
         }
-        return false;                                               // nobody available / reachable
+
+        // Keep this request pending and try the next one.
+        deferred.push_back(e);
     }
+
+    // Restore all requests that remain pending.
+    for (size_t i = 0; i < deferred.size(); i++)
+        pq.push(deferred[i]);
+
     return false;
 }
+
 
 bool HelpRequestManager::updateRequestStatus(int buildingId, int requestId, RequestStatus status) {
     HelpRequest* r = findRequest(buildingId, requestId);
