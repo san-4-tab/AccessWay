@@ -65,10 +65,10 @@ int main() {
 
     cout << "\n===== 3. FILE PERSISTENCE =====\n";
     em.blockConnection(1, 13);
-    cout << "saveAll: " << em.saveAll("../data") << "\n";
+    cout << "saveAll: " << em.saveAll("data") << "\n";
     EmergencyManager em2;
     em2.loadSampleBuilding(1);
-    cout << "loadAll: " << em2.loadAll("../data") << "\n";
+    cout << "loadAll: " << em2.loadAll("data") << "\n";
     em2.displayVolunteers(1);
     em2.displayRequests(1);
     em2.printEmergencyReport(1);
