@@ -12,6 +12,7 @@
 #include "common/AccessWayData.h"
 #include "common/EmergencyData.h"
 
+
 // Structured result (nothing is only printed - callers get data back)
 struct RouteResult {
     bool found;
