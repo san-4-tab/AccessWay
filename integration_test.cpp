@@ -7,7 +7,9 @@
 #include "member1_navigation/Graph.h"
 #include "EmergencyManager.h"
 #include "member3/WhatIfSimulator.h"
-
+#include "member3/ReviewManager.h"
+#include "member3/ReviewOptimizer.h"
+#include <sstream>
 using namespace std;
 
 int main() {
@@ -138,7 +140,103 @@ cout << (emergencyLoadPass
     cout << (simulationPass
         ? "PASS: Accessibility decreases after blocking connection.\n"
         : "FAIL: Simulation reachability test failed.\n");
+    // 5. MEMBER 3 - REVIEW VALIDATION
 
+    cout << "\n--- MEMBER 3: REVIEW VALIDATION ---\n";
+
+    ReviewManager reviewManager;
+    reviewManager.setBuildingData(building);
+
+    Review review1 = {
+        101, 1, 1, 5,
+        "Ramp issue",
+        "Ramp is too steep.",
+        true
+    };
+
+    Review review2 = {
+        102, 1, 1, 4,
+        "Door issue",
+        "Door is difficult to open.",
+        true
+    };
+
+    Review invalidReview = {
+        103, 1, 99, 5,
+        "Invalid location",
+        "This location does not exist.",
+        true
+    };
+
+    Review duplicateReview = {
+        101, 1, 2, 3,
+        "Duplicate",
+        "This review ID already exists.",
+        true
+    };
+
+    reviewManager.addReview(review1);
+    reviewManager.addReview(review2);
+    reviewManager.addReview(invalidReview);
+    reviewManager.addReview(duplicateReview);
+
+    vector<Review> storedReviews =
+        reviewManager.getReviews(1);
+
+    bool reviewValidationPass =
+        storedReviews.size() == 2;
+
+    cout << (reviewValidationPass
+        ? "PASS: Valid reviews accepted; invalid and duplicate reviews rejected.\n"
+        : "FAIL: Review validation test failed.\n");
+
+
+    // 6. MEMBER 3 - PRIORITY RANKING
+
+    cout << "\n--- MEMBER 3: PRIORITY RANKING ---\n";
+
+    ReviewOptimizer reviewOptimizer;
+
+    ostringstream rankingOutput;
+    streambuf* oldOutput = cout.rdbuf(rankingOutput.rdbuf());
+
+    reviewOptimizer.generateRanking(storedReviews, 1);
+
+    cout.rdbuf(oldOutput);
+
+    bool rankingPass =
+        rankingOutput.str().find("Priority score: 11")
+        != string::npos;
+
+    cout << (rankingPass
+        ? "PASS: Review priority score calculated correctly.\n"
+        : "FAIL: Review priority calculation failed.\n");
+
+
+    // 7. MEMBER 3 - MAX HEAP EMPTY AND ORDER TEST
+
+    MaxHeap testHeap;
+
+    ProblemSummary lowPriority = {1, 1, 1, 5, 5};
+    ProblemSummary highPriority = {2, 1, 1, 10, 10};
+
+    testHeap.push(lowPriority);
+    testHeap.push(highPriority);
+
+    ProblemSummary first = testHeap.pop();
+    ProblemSummary second = testHeap.pop();
+    ProblemSummary emptyResult = testHeap.pop();
+
+    bool heapPass =
+        first.locationId == 2 &&
+        second.locationId == 1 &&
+        testHeap.empty() &&
+        emptyResult.locationId == 0;
+
+    cout << (heapPass
+        ? "PASS: Max heap ordering and empty-pop safety verified.\n"
+        : "FAIL: Max heap test failed.\n");
+    
     // 5. FINAL INTEGRATION RESULT
 
     cout << "\n===== FINAL TEST RESULTS =====\n";
@@ -157,6 +255,14 @@ cout << (emergencyLoadPass
 
     cout << "Member 3 what-if simulation: "
          << (simulationPass ? "PASS" : "FAIL") << "\n";
+     cout << "Member 3 review validation: "
+     << (reviewValidationPass ? "PASS" : "FAIL") << "\n";
+
+cout << "Member 3 priority ranking: "
+     << (rankingPass ? "PASS" : "FAIL") << "\n";
+
+cout << "Member 3 max heap: "
+     << (heapPass ? "PASS" : "FAIL") << "\n";
 
     if (navigationLoadPass &&
     emergencyLoadPass &&
@@ -164,7 +270,9 @@ cout << (emergencyLoadPass
     navigationBlockPass &&
     emergencyPass &&
     emergencyBlockPass &&
-    simulationPass) {
+    simulationPass && reviewValidationPass &&
+    rankingPass &&
+    heapPass ) {
 
         cout << "\nALL BACKEND INTEGRATION TESTS PASSED!\n";
         return 0;
