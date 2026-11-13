@@ -1303,3 +1303,125 @@ textarea {
         padding: 15px;
     }
 }
+   
+/* FIX: ACCESSWAY FLOOR MAP VISUALS */
+
+.floor-plan-canvas {
+    background: #ffffff !important;
+    border-radius: 12px;
+    overflow: hidden;
+    min-width: 650px;
+}
+
+.floor-plan-canvas svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: #ffffff;
+}
+
+.floor-background {
+    fill: #ffffff !important;
+    stroke: #d7e1eb !important;
+    stroke-width: 2;
+}
+
+.room-wall {
+    fill: #f8fafc !important;
+    stroke: #8297aa !important;
+    stroke-width: 3;
+}
+
+.corridor-area {
+    fill: #e9f2f8 !important;
+    stroke: #8297aa !important;
+    stroke-width: 3;
+}
+
+.service-room {
+    fill: #eee8fc !important;
+    stroke: #9274c8 !important;
+    stroke-width: 3;
+}
+
+.stairs-room {
+    fill: #fff1d9 !important;
+    stroke: #d99b43 !important;
+}
+
+.floor-title,
+.plan-heading {
+    fill: #173653 !important;
+    font-weight: 800;
+}
+
+.room-label,
+.location-label {
+    fill: #38536d !important;
+}
+
+.floor-switcher {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.floor-switcher button {
+    padding: 12px 22px;
+    border: 1px solid #d8e2ec;
+    border-radius: 9px;
+    background: #ffffff;
+    color: #173653;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.floor-switcher button.active {
+    background: #173653;
+    color: #ffffff;
+}
+
+.indoor-route-line {
+    fill: none;
+    stroke: #10a89d;
+    stroke-width: 9;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.map-edge {
+    stroke: #b8c8d8;
+    stroke-width: 12;
+}
+
+.location-circle {
+    stroke: #ffffff;
+    stroke-width: 4;
+}
+
+.location-circle.entrance { fill: #16a875; }
+.location-circle.corridor { fill: #4f8cc9; }
+.location-circle.elevator { fill: #9274c8; }
+.location-circle.room { fill: #647d95; }
+.location-circle.stairs { fill: #dc9b3e; }
+.location-circle.exit { fill: #d85c5c; }
+
+.location-symbol {
+    fill: #ffffff;
+    text-anchor: middle;
+    font-weight: 800;
+}
+
+.location-label {
+    fill: #243d55;
+    text-anchor: middle;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+@media (max-width: 700px) {
+    .floor-plan-canvas {
+        overflow-x: auto;
+    }
+}
+
