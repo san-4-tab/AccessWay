@@ -10,32 +10,62 @@
 using namespace std;
 
 // Sample building data
+
 BuildingData createSampleBuilding() {
     BuildingData data;
 
-    data.locations = {
-        {1, "Main Entrance", 0},
-        {2, "Main Corridor", 0},
-        {3, "Elevator", 0},
-        {4, "Room 101", 0},
-        {5, "Staircase", 0},
-        {6, "First Floor Corridor", 1},
-        {7, "Room 201", 1},
-        {8, "Emergency Exit", 0}
-    };
+    Location l;
 
-    data.connections = {
-        {1, 1, 2, 10, true, false},
-        {2, 2, 3, 5, true, false},
-        {3, 3, 6, 8, true, false},
-        {4, 6, 7, 6, true, false},
-        {5, 2, 5, 4, true, true},
-        {6, 5, 6, 9, true, true},
-        {7, 2, 8, 12, true, false}
-    };
+    l = {1, 1, "Main Entrance", 0, ENTRANCE};
+    data.locations.push_back(l);
+
+    l = {2, 1, "Main Corridor", 0, CORRIDOR};
+    data.locations.push_back(l);
+
+    l = {3, 1, "Elevator", 0, ELEVATOR};
+    data.locations.push_back(l);
+
+    l = {4, 1, "Room 101", 0, ROOM};
+    data.locations.push_back(l);
+
+    l = {5, 1, "Staircase", 0, STAIRCASE};
+    data.locations.push_back(l);
+
+    l = {6, 1, "First Floor Corridor", 1, CORRIDOR};
+    data.locations.push_back(l);
+
+    l = {7, 1, "Room 201", 1, ROOM};
+    data.locations.push_back(l);
+
+    l = {8, 1, "Emergency Exit", 0, EXIT};
+    data.locations.push_back(l);
+
+    Connection c;
+
+    c = {1, 1, 1, 2, 10, 1.5, 0, false, true, false, true, true, true};
+    data.connections.push_back(c);
+
+    c = {2, 1, 2, 3, 5, 1.5, 0, false, false, true, true, true, true};
+    data.connections.push_back(c);
+
+    c = {3, 1, 3, 6, 8, 1.5, 0, false, false, true, true, true, true};
+    data.connections.push_back(c);
+
+    c = {4, 1, 6, 7, 6, 1.2, 0, false, false, false, true, true, true};
+    data.connections.push_back(c);
+
+    c = {5, 1, 2, 5, 4, 1.0, 0, true, false, false, false, true, true};
+    data.connections.push_back(c);
+
+    c = {6, 1, 5, 6, 9, 1.0, 0, true, false, false, false, true, true};
+    data.connections.push_back(c);
+
+    c = {7, 1, 2, 8, 12, 1.5, 0, false, true, false, true, true, true};
+    data.connections.push_back(c);
 
     return data;
 }
+
 
 // Sample reviews
 void addSampleReviews(ReviewManager& manager) {
