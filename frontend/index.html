@@ -1,0 +1,634 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AccessWay | Intelligent Accessibility System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app-container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">A</div>
+            <div>
+                <h2>AccessWay</h2>
+                <span>Smart Accessibility</span>
+            </div>
+        </div>
+
+        <div class="sidebar-heading">MAIN MENU</div>
+
+        <nav class="navigation">
+            <button class="nav-link active" data-page="dashboard">
+                <span>▦</span> Dashboard
+            </button>
+
+            <button class="nav-link" data-page="navigation">
+                <span>⌖</span> Building Navigation
+            </button>
+
+            <button class="nav-link" data-page="reviews">
+                <span>✎</span> Accessibility Reviews
+            </button>
+
+            <button class="nav-link" data-page="emergency">
+                <span>⚠</span> Emergency & Simulation
+            </button>
+
+            <button class="nav-link" data-page="volunteers">
+                <span>♡</span> Volunteer Assistance
+            </button>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="help-card">
+                <div class="help-icon">?</div>
+                <h3>Need assistance?</h3>
+                <p>AccessWay helps make buildings more accessible.</p>
+                <button class="help-button" data-page="volunteers">
+                    Get Help
+                </button>
+            </div>
+
+            <div class="sidebar-footer">
+                AccessWay © 2026
+            </div>
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- TOP BAR -->
+        <header class="topbar">
+
+            <div>
+                <p class="breadcrumb">Workspace / <span id="breadcrumb-page">Dashboard</span></p>
+                <h1 id="page-heading">Dashboard</h1>
+            </div>
+
+            <div class="topbar-right">
+                <span class="status-indicator"></span>
+                <span class="system-status">System Demo</span>
+                <div class="profile-avatar">U</div>
+            </div>
+
+        </header>
+
+
+        <!-- DASHBOARD PAGE -->
+        <section class="page active" id="dashboard">
+
+            <div class="welcome-section">
+                <div>
+                    <p class="eyebrow">ACCESSIBILITY MANAGEMENT</p>
+                    <h2>Welcome to AccessWay</h2>
+                    <p>
+                        Making buildings safer, smarter and more accessible
+                        for everyone.
+                    </p>
+                </div>
+
+                <div class="welcome-symbol">♿</div>
+            </div>
+
+
+            <div class="section-heading">
+                <div>
+                    <h2>Building Overview</h2>
+                    <p>Sample building information for demonstration</p>
+                </div>
+
+                <span class="demo-label">DEMO DATA</span>
+            </div>
+
+
+            <!-- STATISTICS -->
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-icon blue">▦</div>
+                    <p>Registered Buildings</p>
+                    <h2 id="building-count">3</h2>
+                    <span>Sample buildings</span>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon teal">✎</div>
+                    <p>Accessibility Reviews</p>
+                    <h2 id="review-count">6</h2>
+                    <span>Submitted reviews</span>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon orange">⚠</div>
+                    <p>Issues Identified</p>
+                    <h2 id="issue-count">4</h2>
+                    <span>Sample accessibility issues</span>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon purple">♡</div>
+                    <p>Available Volunteers</p>
+                    <h2 id="volunteer-count">12</h2>
+                    <span>Sample volunteers</span>
+                </div>
+
+            </div>
+
+
+            <!-- BUILDINGS -->
+            <div class="section-heading">
+                <div>
+                    <h2>Registered Buildings</h2>
+                    <p>Select a building to explore its accessibility features.</p>
+                </div>
+            </div>
+
+            <div class="building-grid">
+
+                <article class="building-card">
+                    <div class="building-visual building-one">🏢</div>
+                    <div class="building-info">
+                        <span class="building-tag">Educational</span>
+                        <h3>University Campus</h3>
+                        <p>4 Floors · Sample Building</p>
+                        <button class="text-button" data-page="navigation">
+                            Explore Building →
+                        </button>
+                    </div>
+                </article>
+
+                <article class="building-card">
+                    <div class="building-visual building-two">🏥</div>
+                    <div class="building-info">
+                        <span class="building-tag">Healthcare</span>
+                        <h3>City Medical Centre</h3>
+                        <p>5 Floors · Sample Building</p>
+                        <button class="text-button" data-page="navigation">
+                            Explore Building →
+                        </button>
+                    </div>
+                </article>
+
+                <article class="building-card">
+                    <div class="building-visual building-three">🏬</div>
+                    <div class="building-info">
+                        <span class="building-tag">Commercial</span>
+                        <h3>Central Shopping Complex</h3>
+                        <p>3 Floors · Sample Building</p>
+                        <button class="text-button" data-page="navigation">
+                            Explore Building →
+                        </button>
+                    </div>
+                </article>
+
+            </div>
+
+
+            <!-- QUICK ACTIONS -->
+            <div class="section-heading">
+                <div>
+                    <h2>Quick Actions</h2>
+                    <p>Access important AccessWay features.</p>
+                </div>
+            </div>
+
+            <div class="quick-actions">
+
+                <button class="action-card" data-page="navigation">
+                    <span>⌖</span>
+                    <strong>Find Accessible Routes</strong>
+                    <small>Explore building navigation</small>
+                </button>
+
+                <button class="action-card" data-page="reviews">
+                    <span>✎</span>
+                    <strong>Submit a Review</strong>
+                    <small>Report accessibility issues</small>
+                </button>
+
+                <button class="action-card" data-page="emergency">
+                    <span>⚠</span>
+                    <strong>Run a Simulation</strong>
+                    <small>Explore what-if scenarios</small>
+                </button>
+
+                <button class="action-card" data-page="volunteers">
+                    <span>♡</span>
+                    <strong>Request Assistance</strong>
+                    <small>Connect with volunteers</small>
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- BUILDING NAVIGATION PAGE -->
+        <section class="page" id="navigation">
+
+            <div class="intro-card">
+                <span class="large-icon">⌖</span>
+                <div>
+                    <h2>Accessible Building Navigation</h2>
+                    <p>
+                        Find routes based on your destination and mobility
+                        preferences.
+                    </p>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>Find Your Route</h3>
+
+                <form id="route-form">
+
+                    <label for="building-select">Select Building</label>
+                    <select id="building-select" required>
+                        <option value="">Choose a building</option>
+                        <option>University Campus</option>
+                        <option>City Medical Centre</option>
+                        <option>Central Shopping Complex</option>
+                    </select>
+
+                    <label for="start-location">Starting Location</label>
+                    <input id="start-location" type="text"
+                        placeholder="Example: Main Entrance" required>
+
+                    <label for="destination">Destination</label>
+                    <input id="destination" type="text"
+                        placeholder="Example: Room 201" required>
+
+                    <label for="mobility">Mobility Preference</label>
+                    <select id="mobility" required>
+                        <option value="general">General</option>
+                        <option value="wheelchair">Wheelchair User</option>
+                        <option value="crutches">Crutches</option>
+                        <option value="limited">Limited Mobility</option>
+                        <option value="hand">Hand Disability</option>
+                    </select>
+
+                    <button class="primary-button" type="submit">
+                        Find Accessible Route
+                    </button>
+
+                </form>
+
+                <div id="route-result" class="result-area" aria-live="polite">
+                    Your route information will appear here.
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- REVIEWS PAGE -->
+        <section class="page" id="reviews">
+
+            <div class="intro-card">
+                <span class="large-icon">✎</span>
+                <div>
+                    <h2>Accessibility Reviews</h2>
+                    <p>
+                        Help administrators identify and prioritize
+                        accessibility problems.
+                    </p>
+                </div>
+            </div>
+
+            <div class="two-column">
+
+                <div class="content-card">
+                    <h3>Submit an Accessibility Review</h3>
+
+                    <form id="review-form">
+
+                        <label for="review-building">Building</label>
+                        <select id="review-building" required>
+                            <option value="">Select building</option>
+                            <option>University Campus</option>
+                            <option>City Medical Centre</option>
+                            <option>Central Shopping Complex</option>
+                        </select>
+
+                        <label for="review-location">Location</label>
+                        <input id="review-location" type="text"
+                            placeholder="Enter location" required>
+
+                        <label for="review-category">Issue Category</label>
+                        <select id="review-category" required>
+                            <option value="">Select category</option>
+                            <option>Ramp Accessibility</option>
+                            <option>Elevator Problem</option>
+                            <option>Blocked Corridor</option>
+                            <option>Door Accessibility</option>
+                            <option>Washroom Accessibility</option>
+                            <option>Other</option>
+                        </select>
+
+                        <label for="review-severity">Severity (1–5)</label>
+                        <select id="review-severity" required>
+                            <option value="">Select severity</option>
+                            <option value="1">1 - Very Low</option>
+                            <option value="2">2 - Low</option>
+                            <option value="3">3 - Moderate</option>
+                            <option value="4">4 - High</option>
+                            <option value="5">5 - Very High</option>
+                        </select>
+
+                        <label for="review-description">Description</label>
+                        <textarea id="review-description" rows="4"
+                            placeholder="Describe the accessibility issue..."
+                            required></textarea>
+
+                        <button class="primary-button" type="submit">
+                            Submit Review
+                        </button>
+
+                    </form>
+                </div>
+
+
+                <div class="content-card">
+                    <h3>Recent Reviews</h3>
+
+                    <div id="review-list">
+
+                        <div class="review-item">
+                            <div>
+                                <strong>Elevator Failure</strong>
+                                <p>University Campus · Location 3</p>
+                            </div>
+                            <span class="severity high">High</span>
+                        </div>
+
+                        <div class="review-item">
+                            <div>
+                                <strong>Steep Ramp</strong>
+                                <p>University Campus · Location 5</p>
+                            </div>
+                            <span class="severity high">High</span>
+                        </div>
+
+                        <div class="review-item">
+                            <div>
+                                <strong>Blocked Corridor</strong>
+                                <p>University Campus · Location 2</p>
+                            </div>
+                            <span class="severity high">High</span>
+                        </div>
+
+                        <div class="review-item">
+                            <div>
+                                <strong>Door Accessibility</strong>
+                                <p>University Campus · Location 7</p>
+                            </div>
+                            <span class="severity medium">Medium</span>
+                        </div>
+
+                    </div>
+
+                    <p class="small-note">
+                        Sample reviews for demonstration.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="content-card">
+                <h3>Accessibility Improvement Priorities</h3>
+
+                <div class="priority-item">
+                    <div>
+                        <strong>Elevator Accessibility</strong>
+                        <p>Location 3</p>
+                    </div>
+                    <span class="priority-score">11</span>
+                </div>
+
+                <div class="priority-item">
+                    <div>
+                        <strong>Ramp Accessibility</strong>
+                        <p>Location 5</p>
+                    </div>
+                    <span class="priority-score">10</span>
+                </div>
+
+                <div class="priority-item">
+                    <div>
+                        <strong>Corridor Accessibility</strong>
+                        <p>Location 2</p>
+                    </div>
+                    <span class="priority-score">5</span>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- EMERGENCY AND SIMULATION PAGE -->
+        <section class="page" id="emergency">
+
+            <div class="warning-banner">
+                <span>⚠</span>
+                <div>
+                    <strong>Demonstration simulation only</strong>
+                    <p>
+                        This prototype does not provide certified emergency
+                        evacuation instructions. Follow official building
+                        emergency procedures and trained personnel.
+                    </p>
+                </div>
+            </div>
+
+            <div class="intro-card">
+                <span class="large-icon">⚙</span>
+                <div>
+                    <h2>What-If Simulation</h2>
+                    <p>
+                        Explore how facility failures or blocked connections
+                        can affect accessibility.
+                    </p>
+                </div>
+            </div>
+
+            <div class="two-column">
+
+                <div class="content-card">
+                    <h3>Configure a Scenario</h3>
+
+                    <form id="simulation-form">
+
+                        <label for="scenario-building">Building</label>
+                        <select id="scenario-building">
+                            <option>University Campus</option>
+                            <option>City Medical Centre</option>
+                        </select>
+
+                        <label for="scenario-type">Scenario Type</label>
+                        <select id="scenario-type">
+                            <option value="block">Blocked Connection</option>
+                            <option value="elevator">Elevator Unavailable</option>
+                            <option value="restore">Restore Connection</option>
+                        </select>
+
+                        <label for="connection-id">Connection ID</label>
+                        <input type="number" id="connection-id"
+                            min="1" value="2">
+
+                        <button class="primary-button" type="submit">
+                            Run What-If Simulation
+                        </button>
+
+                    </form>
+                </div>
+
+
+                <div class="content-card">
+                    <h3>Simulation Results</h3>
+
+                    <div id="simulation-result" class="result-area"
+                        aria-live="polite">
+                        No simulation has been run yet.
+                    </div>
+
+                    <button class="secondary-button" id="reset-simulation">
+                        Reset Scenario
+                    </button>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- VOLUNTEER ASSISTANCE PAGE -->
+        <section class="page" id="volunteers">
+
+            <div class="intro-card">
+                <span class="large-icon">♡</span>
+                <div>
+                    <h2>Volunteer Assistance</h2>
+                    <p>
+                        Request support from available volunteers
+                        inside the building.
+                    </p>
+                </div>
+            </div>
+
+            <div class="two-column">
+
+                <div class="content-card">
+                    <h3>Request Assistance</h3>
+
+                    <form id="help-form">
+
+                        <label for="help-building">Building</label>
+                        <select id="help-building" required>
+                            <option value="">Select building</option>
+                            <option>University Campus</option>
+                            <option>City Medical Centre</option>
+                            <option>Central Shopping Complex</option>
+                        </select>
+
+                        <label for="help-location">Your Location</label>
+                        <input id="help-location" type="text"
+                            placeholder="Enter your current location" required>
+
+                        <label for="help-type">Type of Assistance</label>
+                        <select id="help-type" required>
+                            <option value="">Select assistance</option>
+                            <option>Wheelchair Assistance</option>
+                            <option>Crutch Assistance</option>
+                            <option>Mobility Support</option>
+                            <option>Help with Doors</option>
+                            <option>General Assistance</option>
+                        </select>
+
+                        <label for="help-description">Additional Details</label>
+                        <textarea id="help-description" rows="3"
+                            placeholder="Describe the help you need"></textarea>
+
+                        <button class="primary-button" type="submit">
+                            Request a Volunteer
+                        </button>
+
+                    </form>
+
+                    <div id="help-result" class="result-area"
+                        aria-live="polite">
+                        Your request status will appear here.
+                    </div>
+
+                </div>
+
+
+                <div class="content-card">
+                    <h3>Volunteer Availability</h3>
+
+                    <div class="volunteer-item">
+                        <div class="volunteer-avatar">A</div>
+                        <div>
+                            <strong>Volunteer A</strong>
+                            <p>Wheelchair Assistance</p>
+                        </div>
+                        <span class="available-tag">Available</span>
+                    </div>
+
+                    <div class="volunteer-item">
+                        <div class="volunteer-avatar">B</div>
+                        <div>
+                            <strong>Volunteer B</strong>
+                            <p>Mobility Support</p>
+                        </div>
+                        <span class="available-tag">Available</span>
+                    </div>
+
+                    <div class="volunteer-item">
+                        <div class="volunteer-avatar">C</div>
+                        <div>
+                            <strong>Volunteer C</strong>
+                            <p>General Assistance</p>
+                        </div>
+                        <span class="busy-tag">Busy</span>
+                    </div>
+
+                    <p class="small-note">
+                        Sample volunteer information for demonstration.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- FOOTER -->
+        <footer class="main-footer">
+            <p>AccessWay – Intelligent Building Accessibility & Resilience System</p>
+            <span>Prototype · Sample Data</span>
+        </footer>
+
+    </main>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
