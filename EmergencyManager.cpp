@@ -1,6 +1,6 @@
 // EmergencyManager.cpp  (Member 2)
 #include "EmergencyManager.h"
-
+#include <iostream>
 EmergencyManager::EmergencyManager() : helpRequests(volunteers) {}
 
 // ------------------------------------------------------------ building data
