@@ -6,6 +6,9 @@ EmergencyManager::EmergencyManager() : helpRequests(volunteers) {}
 // ------------------------------------------------------------ building data
 bool EmergencyManager::addLocation(const Location& l) { return evacuation.addLocation(l); }
 bool EmergencyManager::addConnection(const Connection& c) { return evacuation.addConnection(c); }
+bool EmergencyManager::loadBuildingData(const BuildingData& data) {
+    return evacuation.loadBuildingData(data);
+}
 
 // Dummy data = the shared sample dataset (College Block A) so Member 2 can test alone.
 // Additions for Member 2 testing: location 9 (refuge area), and a 2<->4 link for Room 101.
