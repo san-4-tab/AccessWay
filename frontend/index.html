@@ -283,6 +283,55 @@
                     </button>
 
                 </form>
+                
+<div class="content-card indoor-map-card">
+    <h2>Interactive Indoor Map</h2>
+    <p>Explore our sample university building.</p>
+
+    <div class="map-controls">
+        <label>Starting point
+            <select id="map-start">
+                <option value="1">Main Entrance</option>
+                <option value="2">Main Corridor</option>
+                <option value="3">Elevator</option>
+                <option value="4">Room 101</option>
+                <option value="5">Staircase</option>
+                <option value="6">First Floor Corridor</option>
+                <option value="7">Room 201</option>
+                <option value="8">Emergency Exit</option>
+            </select>
+        </label>
+
+        <label>Destination
+            <select id="map-destination">
+                <option value="4">Room 101</option>
+                <option value="7">Room 201</option>
+                <option value="8">Emergency Exit</option>
+                <option value="3">Elevator</option>
+            </select>
+        </label>
+
+        <label>Mobility profile
+            <select id="map-mobility">
+                <option value="wheelchair">Wheelchair</option>
+                <option value="crutches">Crutches</option>
+                <option value="limited">Limited mobility</option>
+                <option value="general">General</option>
+            </select>
+        </label>
+
+        <button type="button" id="show-map-route">
+            Show Accessible Route
+        </button>
+    </div>
+
+    <div id="indoor-map" class="indoor-map"></div>
+
+    <div id="map-route-result" class="map-route-result">
+        Select your route.
+    </div>
+</div>
+
 
                 <div id="route-result" class="result-area" aria-live="polite">
                     Your route information will appear here.
