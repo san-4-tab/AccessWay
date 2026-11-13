@@ -1789,3 +1789,214 @@ textarea {
         flex-direction: column;
     }
 }
+
+/* ==========================================
+   ACCESSWAY EXPANDED UNIVERSITY FLOOR MAP
+========================================== */
+
+.new-floor-canvas {
+    min-width: 900px;
+    background: #f3f7fb;
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.new-floor-canvas svg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.new-map-bg {
+    fill: #f7fafc;
+    stroke: #d7e2ec;
+    stroke-width: 2;
+}
+
+.new-map-title {
+    fill: #173653;
+    font-size: 25px;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+.new-map-subtitle {
+    fill: #8293a5;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.new-corridor {
+    fill: none;
+    stroke: #dce9f2;
+    stroke-width: 65;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.new-corridor-branch {
+    fill: none;
+    stroke: #e5eef5;
+    stroke-width: 38;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.new-corridor-label {
+    fill: #617d94;
+    font-size: 12px;
+    font-weight: 800;
+    text-anchor: middle;
+    letter-spacing: 1px;
+}
+
+.new-wing-label {
+    fill: #8195a8;
+    font-size: 13px;
+    font-weight: 900;
+    text-anchor: middle;
+    letter-spacing: 1px;
+}
+
+.new-map-room rect {
+    fill: #ffffff;
+    stroke: #9aafc1;
+    stroke-width: 2;
+}
+
+.new-map-room text {
+    fill: #29465f;
+    text-anchor: middle;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.new-map-room .room-small {
+    fill: #91a2b1;
+    font-size: 9px;
+    letter-spacing: 1px;
+}
+
+.new-map-edge {
+    fill: none;
+    stroke: #a9bdce;
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: .8;
+}
+
+.new-route-edge {
+    fill: none;
+    stroke: #00a99d;
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 2px 2px rgba(0,120,110,.2));
+}
+
+.new-map-node {
+    cursor: pointer;
+    outline: none;
+}
+
+.new-map-node circle {
+    fill: #4d83ad;
+    stroke: #ffffff;
+    stroke-width: 4;
+    filter: drop-shadow(0 2px 3px rgba(25,50,70,.2));
+}
+
+.new-map-node[data-location="1"] circle,
+.new-map-node[data-location="2"] circle {
+    fill: #16a875;
+}
+
+.new-map-node[data-location="6"] circle,
+.new-map-node[data-location="7"] circle,
+.new-map-node[data-location="18"] circle,
+.new-map-node[data-location="19"] circle,
+.new-map-node[data-location="32"] circle,
+.new-map-node[data-location="33"] circle {
+    fill: #9274c8;
+}
+
+.new-map-node[data-location="8"] circle,
+.new-map-node[data-location="9"] circle,
+.new-map-node[data-location="10"] circle,
+.new-map-node[data-location="20"] circle,
+.new-map-node[data-location="21"] circle,
+.new-map-node[data-location="22"] circle,
+.new-map-node[data-location="34"] circle,
+.new-map-node[data-location="35"] circle,
+.new-map-node[data-location="36"] circle {
+    fill: #d99b43;
+}
+
+.new-map-node.selected circle {
+    stroke: #00a99d;
+    stroke-width: 6;
+}
+
+.new-node-symbol {
+    fill: #ffffff;
+    text-anchor: middle;
+    font-size: 10px;
+    font-weight: 900;
+    pointer-events: none;
+}
+
+.new-node-label {
+    fill: #29465f;
+    text-anchor: middle;
+    font-size: 10px;
+    font-weight: 800;
+    paint-order: stroke;
+    stroke: #ffffff;
+    stroke-width: 4px;
+    stroke-linejoin: round;
+    pointer-events: none;
+}
+
+.new-map-node:hover circle,
+.new-map-node:focus circle {
+    stroke: #00a99d;
+    stroke-width: 6;
+}
+
+.new-route-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin: 14px 0;
+}
+
+.new-route-options button {
+    border: 1px solid #d4e2eb;
+    background: #ffffff;
+    color: #29465f;
+    border-radius: 9px;
+    padding: 10px 13px;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.new-route-options button.active {
+    background: #173653;
+    color: #ffffff;
+    border-color: #173653;
+}
+
+.new-route-options small {
+    display: block;
+    margin-top: 4px;
+    font-size: 10px;
+    opacity: .8;
+}
+
+@media (max-width: 700px) {
+    .new-floor-canvas {
+        min-width: 900px;
+    }
+}
