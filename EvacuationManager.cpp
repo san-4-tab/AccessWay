@@ -26,6 +26,55 @@ bool EvacuationManager::addConnection(const Connection& c) {
     g.adjacency[c.fromLocationId].push_back(c.connectionId);
     return true;
 }
+// Load the common building dataset into emergency management
+bool EvacuationManager::loadBuildingData(const BuildingData& data) {
+
+    if (data.locations.empty())
+        return false;
+
+    int buildingId = data.locations[0].buildingId;
+
+    BuildingGraph newGraph;
+
+    // Load and validate locations
+    for (const Location& loc : data.locations) {
+
+        if (loc.buildingId != buildingId)
+            return false;
+
+        if (newGraph.locations.count(loc.locationId))
+            return false;
+
+        newGraph.locations[loc.locationId] = loc;
+        newGraph.adjacency[loc.locationId];
+    }
+
+    // Load and validate connections
+    for (const Connection& c : data.connections) {
+
+        if (c.buildingId != buildingId)
+            return false;
+
+        if (!newGraph.locations.count(c.fromLocationId) ||
+            !newGraph.locations.count(c.toLocationId))
+            return false;
+
+        if (newGraph.connections.count(c.connectionId))
+            return false;
+
+        newGraph.connections[c.connectionId] = c;
+
+        newGraph.adjacency[c.fromLocationId].push_back(
+            c.connectionId
+        );
+    }
+
+    // Replace this building's existing graph
+    graphs[buildingId] = newGraph;
+
+    cout << "Common building data loaded into emergency graph.\n";
+    return true;
+}
 
 bool EvacuationManager::hasBuilding(int b) const { return graphs.find(b) != graphs.end(); }
 
