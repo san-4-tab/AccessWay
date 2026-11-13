@@ -69,6 +69,14 @@ int main() {
     g.addEdge(c1);
     g.addEdge(c2);
 
+    Connection c3 = {
+    3, 101, 1, 3,
+    40, 1.5, 0,
+    false, false, false, true,
+    true, true
+};
+
+g.addEdge(c3);
     cout << "\nGraph:\n";
     g.displayGraph();
 
