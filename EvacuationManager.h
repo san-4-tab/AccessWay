@@ -9,7 +9,8 @@
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
-#include "../common/AccessWayData.h"
+#include "common/AccessWayData.h"
+#include "common/EmergencyData.h"
 
 // Structured result (nothing is only printed - callers get data back)
 struct RouteResult {
