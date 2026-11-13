@@ -79,6 +79,7 @@ struct Review {
     bool verified;
 };
 
+
 // What-if simulation changes
 enum ChangeType {
     BLOCK_CONNECTION,
