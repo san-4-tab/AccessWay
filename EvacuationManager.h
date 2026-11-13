@@ -43,8 +43,9 @@ private:
 
     unordered_map<int, BuildingGraph> graphs;          // buildingId -> graph
 
-    bool isUsable(const BuildingGraph& g, const Connection& c,
-                  MobilityProfile profile, RouteMode mode) const;
+   bool isUsable(const BuildingGraph& g, const Connection& c,
+              int targetLocationId,
+              MobilityProfile profile, RouteMode mode) const;
     void dijkstra(const BuildingGraph& g, int start, MobilityProfile profile, RouteMode mode,
                   unordered_map<int, float>& dist, unordered_map<int, int>& parent) const;
     void buildPath(const BuildingGraph& g, const unordered_map<int, int>& parent,
