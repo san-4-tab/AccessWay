@@ -9,10 +9,10 @@ const campusLocations = {
     2: { name: "Central Junction", x: 450, y: 410, type: "junction" },
     3: { name: "West Junction", x: 250, y: 410, type: "junction" },
     4: { name: "East Junction", x: 650, y: 410, type: "junction" },
-    5: { name: "Block A - Academic", x: 250, y: 220, type: "building" },
-    6: { name: "Block B - Library", x: 650, y: 220, type: "building" },
-    7: { name: "Block C - Medical Centre", x: 90, y: 410, type: "building" },
-    8: { name: "Block D - Cafeteria", x: 810, y: 410, type: "building" },
+   5: { name: "Block A - Academic", x: 250, y: 285, type: "building" },
+6: { name: "Block B - Library", x: 650, y: 285, type: "building" },
+7: { name: "Block C - Medical Centre", x: 145, y: 410, type: "building" },
+8: { name: "Block D - Cafeteria", x: 755, y: 410, type: "building" },
     9: { name: "Accessible Parking", x: 450, y: 490, type: "parking" }
 };
 
@@ -90,13 +90,13 @@ function renderCampusMap() {
 
         <!-- Campus pathways -->
         <g class="campus-base-paths">
-            <path d="M450 555 L450 410 L250 410 L250 220"
+            <path d="M450 555 L450 410 L250 410 L250 285"
                   class="campus-walkway"/>
-            <path d="M450 410 L650 410 L650 220"
+            <path d="M450 410 L650 410 L650 285"
                   class="campus-walkway"/>
-            <path d="M250 410 L90 410"
+            <path d="M250 410 L145 410"
                   class="campus-walkway"/>
-            <path d="M650 410 L810 410"
+            <path d="M650 410 L755 410"
                   class="campus-walkway"/>
             <path d="M450 490 L450 410"
                   class="campus-walkway"/>
@@ -182,13 +182,13 @@ function renderCampusMap() {
         </g>
 
         <g class="campus-location-marker" data-campus-location="7">
-            <circle cx="90" cy="490" r="15" class="campus-building-marker"/>
+            <circle cx="145" cy="410" r="15" class="campus-building-marker"/>
             <text x="90" y="495" class="campus-marker-symbol">C</text>
         </g>
 
         <g class="campus-location-marker" data-campus-location="8">
-            <circle cx="810" cy="490" r="15" class="campus-building-marker"/>
-            <text x="810" y="495" class="campus-marker-symbol">D</text>
+            <circle cx="755" cy="410" r="15" class="campus-building-marker"/>
+            <text x="810" y="415" class="campus-marker-symbol">D</text>
         </g>
 
         <text x="450" y="45" text-anchor="middle"
