@@ -40,9 +40,18 @@ int main() {
     em.registerVolunteer(makeVolunteer(2, "Ravi", "General", 4));
     em.registerVolunteer(makeVolunteer(3, "Meena", "Wheelchair", 7));
     cout << "Duplicate volunteer rejected: " << (!em.registerVolunteer(makeVolunteer(1, "X", "General", 1)) ? "yes" : "NO") << "\n";
-    em.displayVolunteers(1);
+   em.displayVolunteers(1);
 
-    em.createHelpRequest(makeRequest(1, 6, "General"));
+// Test invalid help-request rejection.
+bool invalidRequestChecksPass =
+    !em.createHelpRequest(makeRequest(0, 6, "General")) &&
+    !em.createHelpRequest(makeRequest(10, 0, "General")) &&
+    !em.createHelpRequest(makeRequest(11, 6, "General|Invalid"));
+
+cout << "Invalid help requests rejected: "
+     << (invalidRequestChecksPass ? "PASS" : "FAIL") << "\n";
+
+em.createHelpRequest(makeRequest(1, 6, "General"));
     em.createHelpRequest(makeRequest(2, 2, "Medical help"));    // higher priority -> served first
     em.createHelpRequest(makeRequest(3, 4, "Wheelchair"));
     em.displayRequests(1);
@@ -112,7 +121,9 @@ em2.displayRequests(1);
 em2.printEmergencyReport(1);
 
 // Make GitHub Actions fail if either test fails.
-if (!manualReleaseBlocked || !persistenceAvailabilityPass) {
+if (!invalidRequestChecksPass ||
+    !manualReleaseBlocked ||
+    !persistenceAvailabilityPass) {
     cout << "\nVOLUNTEER CONSISTENCY TEST FAILED.\n";
     return 1;
 }
