@@ -53,18 +53,23 @@ function findIndoorRoute(start, destination, mobility) {
     return null;
 }
 
+
 function drawRoom(x, y, width, height, label, roomId = "") {
     return `
         <g class="floor-room">
             <rect x="${x}" y="${y}" width="${width}" height="${height}"
-                  rx="3" class="room-wall"/>
+                  rx="3"
+                  fill="#f8fafc"
+                  stroke="#8297aa"
+                  stroke-width="3"/>
             <text x="${x + width / 2}" y="${y + height / 2 - 5}"
-                  class="room-label">${label}</text>
+                  class="room-label" fill="#38536d">${label}</text>
             ${roomId ? `<text x="${x + width / 2}" y="${y + height / 2 + 17}"
-                  class="room-number">${roomId}</text>` : ""}
+                  class="room-number" fill="#8293a4">${roomId}</text>` : ""}
         </g>
     `;
 }
+
 
 function drawLocation(id, selectedFloor) {
     const location = mapLocations[id];
@@ -132,8 +137,9 @@ function renderFloorPlan(floor) {
      style="background:#ffffff !important; display:block;">
          role="img" aria-label="${isGround ? "Ground" : "First"} floor building plan">
 
-        <rect x="15" y="15" width="870" height="480"
-              rx="8" class="floor-background"/>
+     <rect x="15" y="15" width="870" height="480"
+      rx="8" fill="#ffffff"
+      stroke="#d7e1eb" stroke-width="2"/>
 
         <text x="45" y="48" class="plan-heading">
             ${isGround ? "GROUND FLOOR PLAN" : "FIRST FLOOR PLAN"}
@@ -144,8 +150,10 @@ function renderFloorPlan(floor) {
         </text>
 
         <!-- Main corridor -->
-        <rect x="55" y="235" width="790" height="90"
-              class="corridor-area"/>
+   <rect x="55" y="235" width="790" height="90"
+      fill="#e9f2f8"
+      stroke="#8297aa"
+      stroke-width="3"/>
         <text x="450" y="270" class="corridor-title">
             ${isGround ? "MAIN CORRIDOR" : "FIRST FLOOR CORRIDOR"}
         </text>
@@ -165,12 +173,14 @@ function renderFloorPlan(floor) {
             ${drawRoom(420, 350, 155, 105, "STUDENT AREA", "R-006")}
 
             <rect x="745" y="225" width="100" height="110"
-                  class="service-room"/>
+      fill="#eee8fc"
+      stroke="#9274c8"
+      stroke-width="3"/>
             <text x="795" y="260" class="service-label">LIFT</text>
             <text x="795" y="285" class="service-symbol">↕</text>
 
             <rect x="755" y="350" width="90" height="105"
-                  class="service-room stairs-room"/>
+                  fill="#fff1d9" stroke="#d99b43" stroke-width="3"
             <text x="800" y="390" class="service-label">STAIRS</text>
             <text x="800" y="420" class="service-symbol">▥</text>
         `;
@@ -184,13 +194,15 @@ function renderFloorPlan(floor) {
             ${drawRoom(245, 350, 155, 105, "WASHROOM", "R-206")}
             ${drawRoom(420, 350, 155, 105, "COMMON AREA", "R-207")}
 
-            <rect x="745" y="225" width="100" height="110"
-                  class="service-room"/>
+           <rect x="745" y="225" width="100" height="110"
+      fill="#eee8fc"
+      stroke="#9274c8"
+      stroke-width="3"/>
             <text x="795" y="260" class="service-label">LIFT</text>
             <text x="795" y="285" class="service-symbol">↕</text>
 
             <rect x="755" y="350" width="90" height="105"
-                  class="service-room stairs-room"/>
+                  fill="#fff1d9" stroke="#d99b43" stroke-width="3"
             <text x="800" y="390" class="service-label">STAIRS</text>
             <text x="800" y="420" class="service-symbol">▥</text>
 
