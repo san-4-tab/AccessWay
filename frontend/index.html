@@ -283,7 +283,69 @@
                     </button>
 
                 </form>
-                
+   
+<!-- ACCESSWAY CAMPUS OVERVIEW -->
+<div class="content-card campus-map-card">
+    <div class="campus-map-heading">
+        <div>
+            <span class="campus-eyebrow">CAMPUS WAYFINDING</span>
+            <h2>University Campus Map</h2>
+            <p>Explore buildings and accessible outdoor pathways.</p>
+        </div>
+        <span class="campus-demo-tag">SAMPLE CAMPUS</span>
+    </div>
+
+    <div class="campus-controls">
+        <label>
+            Starting point
+            <select id="campus-start">
+                <option value="1">Main Gate</option>
+                <option value="2">Central Junction</option>
+                <option value="9">Accessible Parking</option>
+            </select>
+        </label>
+
+        <label>
+            Destination
+            <select id="campus-destination">
+                <option value="5">Block A — Academic</option>
+                <option value="6">Block B — Library</option>
+                <option value="7">Block C — Medical Centre</option>
+                <option value="8">Block D — Cafeteria</option>
+            </select>
+        </label>
+
+        <label>
+            Mobility profile
+            <select id="campus-mobility">
+                <option value="wheelchair">Wheelchair</option>
+                <option value="limited">Limited mobility</option>
+                <option value="crutches">Crutches</option>
+                <option value="general">General</option>
+            </select>
+        </label>
+
+        <button type="button" id="campus-find-route">
+            Find Campus Route
+        </button>
+    </div>
+
+    <div id="campus-map" class="campus-map"></div>
+
+    <div class="campus-legend">
+        <span><i class="campus-dot gate"></i> Entrance</span>
+        <span><i class="campus-dot building"></i> Building</span>
+        <span><i class="campus-dot ramp"></i> Accessible ramp</span>
+        <span><i class="campus-dot path"></i> Pathway</span>
+        <span><i class="campus-dot route"></i> Selected route</span>
+    </div>
+
+    <div id="campus-route-result" class="campus-route-result"
+         aria-live="polite">
+        Select a destination to explore the sample campus.
+    </div>
+</div>
+             
 <div class="content-card indoor-map-card">
     <h2>Interactive Indoor Map</h2>
     <p>Explore our sample university building.</p>
