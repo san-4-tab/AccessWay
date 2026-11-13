@@ -15,12 +15,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Check Member 1 C++ files
-        run: |
-          g++ -std=c++17 -Wall -Wextra -I. -fsyntax-only \
-          member1_navigation/Building.cpp \
-          member1_navigation/Floor.cpp \
-          member1_navigation/Location.cpp \
-          member1_navigation/Graph.cpp \
-          member1_navigation/Accessibility.cpp \
-          member1_navigation/MinHeap.cpp
+     
+        - name: Build and run Member 1 test
+          run: |
+            g++ -std=c++17 -Wall -Wextra -I. \
+            member1_test.cpp \
+            member1_navigation/Building.cpp \
+            member1_navigation/Floor.cpp \
+            member1_navigation/Location.cpp \
+            member1_navigation/Graph.cpp \
+            member1_navigation/Accessibility.cpp \
+            member1_navigation/MinHeap.cpp \
+            -o member1_test
+
+            ./member1_test
