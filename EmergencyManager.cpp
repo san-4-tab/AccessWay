@@ -10,6 +10,7 @@ bool EmergencyManager::loadBuildingData(const BuildingData& data) {
     return evacuation.loadBuildingData(data);
 }
 
+
 // Dummy data = the shared sample dataset (College Block A) so Member 2 can test alone.
 // Additions for Member 2 testing: location 9 (refuge area), and a 2<->4 link for Room 101.
 void EmergencyManager::loadSampleBuilding(int b) {
