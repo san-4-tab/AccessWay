@@ -122,7 +122,16 @@ function drawRouteOnFloor(floor) {
             `${b.x},${endY}`
         ].join(" ");
 
-        output += `<polyline points="${points}" class="indoor-route-line"/>`;
+      output += `
+    <polyline
+        points="${points}"
+        fill="none"
+        stroke="#00a99d"
+        stroke-width="12"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        opacity="1"/>
+`;
     }
 
     return output;
@@ -132,10 +141,11 @@ function renderFloorPlan(floor) {
     const isGround = floor === 0;
 
     let svg = `
-    <svg viewBox="0 0 900 510"
+   <svg viewBox="0 0 900 510"
      xmlns="http://www.w3.org/2000/svg"
-     style="background:#ffffff !important; display:block;">
-         role="img" aria-label="${isGround ? "Ground" : "First"} floor building plan">
+     role="img"
+     aria-label="${isGround ? "Ground" : "First"} floor building plan"
+     style="background:#ffffff; display:block;">
 
      <rect x="15" y="15" width="870" height="480"
       rx="8" fill="#ffffff"
@@ -179,8 +189,10 @@ function renderFloorPlan(floor) {
             <text x="795" y="260" class="service-label">LIFT</text>
             <text x="795" y="285" class="service-symbol">↕</text>
 
-            <rect x="755" y="350" width="90" height="105"
-                  fill="#fff1d9" stroke="#d99b43" stroke-width="3"
+           <rect x="755" y="350" width="90" height="105"
+      fill="#fff1d9"
+      stroke="#d99b43"
+      stroke-width="3"/>
             <text x="800" y="390" class="service-label">STAIRS</text>
             <text x="800" y="420" class="service-symbol">▥</text>
         `;
@@ -201,8 +213,10 @@ function renderFloorPlan(floor) {
             <text x="795" y="260" class="service-label">LIFT</text>
             <text x="795" y="285" class="service-symbol">↕</text>
 
-            <rect x="755" y="350" width="90" height="105"
-                  fill="#fff1d9" stroke="#d99b43" stroke-width="3"
+          <rect x="755" y="350" width="90" height="105"
+      fill="#fff1d9"
+      stroke="#d99b43"
+      stroke-width="3"/>
             <text x="800" y="390" class="service-label">STAIRS</text>
             <text x="800" y="420" class="service-symbol">▥</text>
 
