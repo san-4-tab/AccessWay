@@ -3,6 +3,7 @@
 //   g++ -std=c++11 -o test_emergency test_emergency.cpp EmergencyManager.cpp EvacuationManager.cpp VolunteerManager.cpp HelpRequestManager.cpp
 #include "EmergencyManager.h"
 #include <cctype>
+#include <iostream>
 static Volunteer makeVolunteer(int id, const char* name, const char* type, int loc) {
     Volunteer v; v.volunteerId = id; v.buildingId = 1; v.volunteerName = name;
     v.assistanceType = type; v.available = true; v.currentLocationId = loc;
