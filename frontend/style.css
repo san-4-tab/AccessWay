@@ -1488,3 +1488,304 @@ textarea {
     background: #173653 !important;
     color: #ffffff !important;
 }
+
+/* ==========================================
+   ACCESSWAY HYBRID CAMPUS MAP
+========================================== */
+
+.campus-map-card {
+    margin-top: 28px;
+    padding: 25px;
+    border: 1px solid #e1e9f0;
+    border-radius: 18px;
+    background: #ffffff;
+    box-shadow: 0 8px 28px rgba(24,49,74,.05);
+}
+
+.campus-map-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 22px;
+}
+
+.campus-eyebrow {
+    color: #159c91;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+.campus-map-heading h2 {
+    color: #173653;
+    font-size: 23px;
+    margin: 7px 0;
+}
+
+.campus-map-heading p {
+    color: #7b8da0;
+    font-size: 13px;
+}
+
+.campus-demo-tag {
+    background: #e5f6f2;
+    color: #16877d;
+    padding: 8px 11px;
+    border-radius: 7px;
+    font-size: 10px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.campus-controls {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    gap: 14px;
+    align-items: end;
+    margin-bottom: 20px;
+}
+
+.campus-controls label {
+    display: block;
+    color: #40566d;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.campus-controls select {
+    display: block;
+    width: 100%;
+    margin-top: 8px;
+    padding: 12px;
+    border: 1px solid #dce5ed;
+    border-radius: 9px;
+    background: #f8fafc;
+    color: #243c55;
+}
+
+#campus-find-route {
+    grid-column: 1 / -1;
+    padding: 13px 18px;
+    border: none;
+    border-radius: 9px;
+    background: #13a69f;
+    color: #fff;
+    font-weight: 700;
+}
+
+#campus-find-route:hover {
+    background: #108b85;
+}
+
+.campus-map {
+    width: 100%;
+    overflow-x: auto;
+    padding: 12px;
+    border: 1px solid #e0e8e0;
+    border-radius: 14px;
+    background: #f2f7ef;
+}
+
+.campus-map svg {
+    display: block;
+    width: 100%;
+    min-width: 620px;
+    height: auto;
+}
+
+.campus-map-title {
+    fill: #284d3b;
+    font-size: 19px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+.campus-park-label {
+    fill: #648267;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.campus-walkway {
+    fill: none;
+    stroke: #ffffff;
+    stroke-width: 35;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.campus-sidewalk {
+    fill: none;
+    stroke: #d5e2d2;
+    stroke-width: 15;
+    stroke-dasharray: 5 5;
+}
+
+.campus-building-icon {
+    fill: #284966;
+    text-anchor: middle;
+    font-size: 26px;
+    font-weight: 900;
+}
+
+.campus-building-name {
+    fill: #284966;
+    text-anchor: middle;
+    font-size: 15px;
+    font-weight: 900;
+}
+
+.campus-building-type {
+    fill: #5c7385;
+    text-anchor: middle;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.campus-ramp circle {
+    fill: #ffffff;
+    stroke: #16a875;
+    stroke-width: 3;
+}
+
+.campus-ramp text {
+    fill: #16865e;
+    font-size: 13px;
+    font-weight: 900;
+    text-anchor: middle;
+}
+
+.campus-gate-marker {
+    fill: #16a875;
+    stroke: #ffffff;
+    stroke-width: 4;
+}
+
+.campus-parking-marker {
+    fill: #507eaa;
+    stroke: #ffffff;
+    stroke-width: 4;
+}
+
+.campus-building-marker {
+    fill: #526f91;
+    stroke: #ffffff;
+    stroke-width: 3;
+}
+
+.campus-marker-symbol {
+    fill: #ffffff;
+    text-anchor: middle;
+    font-size: 11px;
+    font-weight: 900;
+}
+
+.campus-marker-label {
+    fill: #284d3b;
+    text-anchor: middle;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.campus-location-marker {
+    cursor: pointer;
+}
+
+.campus-location-marker:hover circle {
+    stroke: #13a69f;
+    stroke-width: 6;
+}
+
+.campus-junctions circle {
+    fill: #a4b69d;
+    stroke: #ffffff;
+    stroke-width: 3;
+}
+
+.campus-route-line {
+    fill: none;
+    stroke: #0ca99d;
+    stroke-width: 10;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: .95;
+    filter: drop-shadow(0 2px 3px rgba(0,80,70,.2));
+}
+
+.campus-route-start {
+    fill: #16a875;
+    stroke: #ffffff;
+    stroke-width: 4;
+}
+
+.campus-route-end {
+    fill: #df6262;
+    stroke: #ffffff;
+    stroke-width: 4;
+}
+
+.campus-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 17px;
+    padding: 17px 3px;
+    color: #61758a;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.campus-legend span {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.campus-dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.campus-dot.gate { background: #16a875; }
+.campus-dot.building { background: #526f91; }
+.campus-dot.ramp { background: #ffffff; border: 3px solid #16a875; }
+.campus-dot.path { background: #d5e2d2; }
+.campus-dot.route { background: #0ca99d; }
+
+.campus-route-result {
+    padding: 16px;
+    border-radius: 11px;
+    background: #eaf8f5;
+    border: 1px solid #ccece4;
+    color: #17675e;
+    line-height: 1.8;
+}
+
+.campus-route-path {
+    margin: 7px 0;
+    font-weight: 800;
+}
+
+.campus-route-result p {
+    font-size: 11px;
+    margin-top: 7px;
+    color: #66847e;
+}
+
+@media (max-width: 700px) {
+    .campus-controls {
+        grid-template-columns: 1fr;
+    }
+
+    .campus-map-card {
+        padding: 15px;
+    }
+
+    .campus-map-heading {
+        flex-direction: column;
+    }
+}
