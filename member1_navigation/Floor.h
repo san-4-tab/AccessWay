@@ -2,7 +2,7 @@
 #pragma once
 
 #include "../common/AccessWayData.h"
-
+#include "Accessibility.h"
 class FloorManager {
 private:
     struct FloorNode {
