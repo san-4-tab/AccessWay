@@ -1,4 +1,5 @@
 
+
 const mapLocations = {
     1: { name: "Main Entrance", floor: 0, x: 100, y: 280, type: "entrance" },
     2: { name: "Main Corridor", floor: 0, x: 300, y: 280, type: "corridor" },
@@ -7,8 +8,23 @@ const mapLocations = {
     5: { name: "Staircase", floor: 0, x: 800, y: 280, type: "stairs" },
     6: { name: "First Floor Corridor", floor: 1, x: 300, y: 280, type: "corridor" },
     7: { name: "Room 201", floor: 1, x: 500, y: 135, type: "room" },
-    8: { name: "Emergency Exit", floor: 1, x: 800, y: 280, type: "exit" }
+    8: { name: "Emergency Exit", floor: 1, x: 800, y: 280, type: "exit" },
+
+    9: { name: "Reception", floor: 0, x: 132, y: 147, type: "room" },
+    10: { name: "Classroom 102", floor: 0, x: 322, y: 147, type: "room" },
+    11: { name: "Library", floor: 0, x: 667, y: 147, type: "room" },
+    12: { name: "Waiting Area", floor: 0, x: 132, y: 402, type: "room" },
+    13: { name: "Washroom Ground", floor: 0, x: 322, y: 402, type: "room" },
+    14: { name: "Student Lounge", floor: 0, x: 497, y: 402, type: "room" },
+
+    15: { name: "Laboratory", floor: 1, x: 322, y: 147, type: "room" },
+    16: { name: "First Floor Library", floor: 1, x: 667, y: 147, type: "room" },
+    17: { name: "Study Area", floor: 1, x: 132, y: 402, type: "room" },
+    18: { name: "Washroom First", floor: 1, x: 322, y: 402, type: "room" },
+    19: { name: "Common Area", floor: 1, x: 497, y: 402, type: "room" }
 };
+
+
 
 const mapConnections = [
     { from: 1, to: 2 },
@@ -18,8 +34,22 @@ const mapConnections = [
     { from: 2, to: 5, stairs: true },
     { from: 5, to: 6, stairs: true },
     { from: 6, to: 7 },
-    { from: 7, to: 8 }
+    { from: 7, to: 8 },
+
+    { from: 2, to: 9 },
+    { from: 2, to: 10 },
+    { from: 2, to: 11 },
+    { from: 2, to: 12 },
+    { from: 2, to: 13 },
+    { from: 2, to: 14 },
+
+    { from: 6, to: 15 },
+    { from: 6, to: 16 },
+    { from: 6, to: 17 },
+    { from: 6, to: 18 },
+    { from: 6, to: 19 }
 ];
+
 
 let currentMapRoute = [];
 let activeMapFloor = 0;
