@@ -37,22 +37,44 @@ string HelpRequestManager::statusToString(RequestStatus s) {
     return "UNKNOWN";
 }
 
+
 bool HelpRequestManager::createHelpRequest(const HelpRequest& request) {
+
+    // Reject invalid IDs and empty help types.
+    if (request.requestId <= 0 ||
+        request.buildingId <= 0 ||
+        request.visitorLocationId <= 0 ||
+        request.helpType.empty())
+        return false;
+
+    // Prevent file-format corruption.
+    if (request.helpType.find_first_of("|\r\n") != string::npos)
+        return false;
+
     long long key = makeKey(request.buildingId, request.requestId);
-    if (requests.find(key) != requests.end()) return false;
+
+    // Reject duplicate request IDs within the same building.
+    if (requests.find(key) != requests.end())
+        return false;
 
     HelpRequest r = request;
-    r.status = PENDING;                    // every new request starts as PENDING
+
+    // Every new request starts unassigned and pending.
+    r.status = PENDING;
     r.assignedVolunteerId = -1;
+
     requests[key] = r;
 
     PendingEntry e;
     e.priority = priorityOf(r.helpType);
     e.sequence = nextSequence++;
     e.requestId = r.requestId;
+
     pendingQueues[r.buildingId].push(e);
+
     return true;
 }
+
 
 int HelpRequestManager::nextRequestId(int buildingId) const {
     int maxId = 0;
