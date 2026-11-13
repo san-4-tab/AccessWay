@@ -438,6 +438,120 @@ Graph::RouteResult Graph::dijkstra(
 
     return result;
 }
+
+
+Graph::RouteResult Graph::findAlternativeRoute(
+    int startLocationId,
+    int destinationLocationId,
+    MobilityProfile profile,
+    int blockedConnectionId
+) {
+
+    VertexNode* blockedFrom = NULL;
+    EdgeNode* blockedEdge = NULL;
+
+    // Find the blocked connection
+    VertexNode* vertex = head;
+
+    while (vertex != NULL) {
+
+        EdgeNode* edge = vertex->edges;
+
+        while (edge != NULL) {
+
+            if (edge->data.connectionId == blockedConnectionId) {
+                blockedFrom = vertex;
+                blockedEdge = edge;
+                break;
+            }
+
+            edge = edge->next;
+        }
+
+        if (blockedEdge != NULL)
+            break;
+
+        vertex = vertex->next;
+    }
+
+    if (blockedEdge == NULL) {
+
+        cout << "Connection not found!\n";
+
+        RouteResult result;
+        result.found = false;
+        result.path = NULL;
+        result.pathSize = 0;
+        result.totalCost = -1;
+
+        return result;
+    }
+
+    // Find the reverse edge
+    VertexNode* blockedTo =
+        findVertex(blockedEdge->neighbourLocationId);
+
+    if (blockedTo == NULL) {
+
+        cout << "Connected location not found!\n";
+
+        RouteResult result;
+        result.found = false;
+        result.path = NULL;
+        result.pathSize = 0;
+        result.totalCost = -1;
+
+        return result;
+    }
+
+    EdgeNode* reverseEdge = blockedTo->edges;
+
+    while (reverseEdge != NULL) {
+
+        if (reverseEdge->data.connectionId == blockedConnectionId)
+            break;
+
+        reverseEdge = reverseEdge->next;
+    }
+
+    if (reverseEdge == NULL) {
+
+        cout << "Reverse connection not found!\n";
+
+        RouteResult result;
+        result.found = false;
+        result.path = NULL;
+        result.pathSize = 0;
+        result.totalCost = -1;
+
+        return result;
+    }
+
+    // Temporarily block both directions
+    bool oldAvailability = blockedEdge->data.available;
+
+    blockedEdge->data.available = false;
+    reverseEdge->data.available = false;
+
+    // Find another route
+    RouteResult result = dijkstra(
+        startLocationId,
+        destinationLocationId,
+        profile
+    );
+
+    // Restore original connection status
+    blockedEdge->data.available = oldAvailability;
+    reverseEdge->data.available = oldAvailability;
+
+    if (result.found)
+        cout << "Alternative route found!\n";
+    else
+        cout << "No alternative accessible route exists!\n";
+
+    return result;
+}
+
 // Destructor
 Graph::~Graph() {
 
