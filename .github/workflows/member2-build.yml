@@ -1,0 +1,31 @@
+
+name: Member 2 C++ Build Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Member 2
+        run: |
+          g++ -std=c++17 -Wall -Wextra -I. \
+            test_emergency.cpp \
+            EmergencyManager.cpp \
+            EvacuationManager.cpp \
+            VolunteerManager.cpp \
+            HelpRequestManager.cpp \
+            -o test_emergency
+
+      - name: Run Member 2 test
+        run: |
+          mkdir -p data
+          echo "0" | ./test_emergency
