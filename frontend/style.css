@@ -972,6 +972,139 @@ textarea {
     .navigation {
         gap: 5px;
     }
+   
+/* ACCESSWAY INTERACTIVE INDOOR MAP */
+
+.indoor-map-card {
+    margin-top: 25px;
+}
+
+.map-controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+    align-items: end;
+}
+
+.map-controls label {
+    display: block;
+    margin-bottom: 7px;
+    font-weight: 600;
+}
+
+.map-controls select {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #d5dfeb;
+    border-radius: 8px;
+    background: white;
+}
+
+.primary-button {
+    padding: 12px 18px;
+    background: #13a69f;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.primary-button:hover {
+    background: #108a85;
+}
+
+.map-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: 18px 0;
+    color: #61748b;
+    font-size: 13px;
+}
+
+.indoor-map {
+    width: 100%;
+    overflow-x: auto;
+    background: #eef4f8;
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.indoor-map svg {
+    display: block;
+    width: 100%;
+    min-width: 650px;
+    height: auto;
+}
+
+.map-node {
+    cursor: pointer;
+}
+
+.map-node rect {
+    stroke: #6e8297;
+    stroke-width: 2;
+    rx: 8;
+}
+
+.map-node text {
+    font-size: 13px;
+    fill: #17324d;
+    font-weight: 600;
+    text-anchor: middle;
+    pointer-events: none;
+}
+
+.map-node.selected rect {
+    stroke: #13a69f;
+    stroke-width: 4;
+}
+
+.map-node.route-node rect {
+    stroke: #13a69f;
+    stroke-width: 4;
+}
+
+.map-edge {
+    stroke: #9aabba;
+    stroke-width: 7;
+    stroke-linecap: round;
+    fill: none;
+}
+
+.map-edge.stairs {
+    stroke: #e5a044;
+    stroke-dasharray: 8 5;
+}
+
+.map-edge.route-edge {
+    stroke: #13a69f;
+    stroke-width: 10;
+}
+
+.floor-title {
+    font-size: 20px;
+    font-weight: 700;
+    fill: #17324d;
+}
+
+.map-route-result {
+    margin-top: 16px;
+    padding: 15px;
+    background: #e7f7f4;
+    border-radius: 9px;
+    color: #175c57;
+    line-height: 1.6;
+}
+
+@media (max-width: 650px) {
+    .map-controls {
+        grid-template-columns: 1fr;
+    }
+}
+
 
     .nav-link {
         font-size: 10px;
