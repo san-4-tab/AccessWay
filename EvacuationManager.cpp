@@ -233,39 +233,6 @@ bool EvacuationManager::isUsable(
             return false;
     }
 
-    switch (profile) {
-
-        case WHEELCHAIR:
-
-            if (c.width < 0.9f)
-                return false;
-
-            if (c.hasStairs && !c.hasRamp && !c.hasElevator)
-                return false;
-
-            break;
-
-        case CRUTCHES:
-
-            if (c.width < 0.7f)
-                return false;
-
-            break;
-
-        case LIMITED_MOBILITY:
-
-            if (c.hasStairs && !c.hasRamp && !c.hasElevator)
-                return false;
-
-            break;
-
-        case HAND_DISABILITY:
-        case GENERAL:
-            break;
-    }
-
-    return true;
-}
 switch (profile) {
 
     case WHEELCHAIR:
