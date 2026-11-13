@@ -164,6 +164,17 @@ cout << "Wheelchair allowed on stairs: "
 
 cout << "Limited mobility allowed on stairs: "
      << ac.isEdgeAllowed(stairs, LIMITED_MOBILITY) << endl;
+
+    Connection door = {
+    7, 101, 1, 2,
+    10, 1.5, 0,
+    false, false, false, false,
+    true, true
+};
+
+cout << "Hand disability door penalty: "
+     << ac.getAccessibilityPenalty(door, HAND_DISABILITY)
+     << endl;
     cout << "\n===== TEST COMPLETED =====\n";
 
     return 0;
