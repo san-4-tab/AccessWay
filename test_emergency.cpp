@@ -52,6 +52,21 @@ int main() {
     cout << "\nMost urgent request handled first: #" << handled << "\n";
     em.processNextRequest(1, &handled);
     cout << "Next request handled: #" << handled << "\n";
+    // Verify an assigned volunteer cannot be manually marked available.
+HelpRequest* activeRequest =
+    em.getHelpRequestManager().findRequest(1, 2);
+
+bool manualReleaseBlocked = false;
+
+if (activeRequest && activeRequest->assignedVolunteerId != -1) {
+    manualReleaseBlocked =
+        !em.setVolunteerAvailability(
+            1, activeRequest->assignedVolunteerId, true
+        );
+}
+
+cout << "Manual release of busy volunteer blocked: "
+     << (manualReleaseBlocked ? "PASS" : "FAIL") << "\n";
     em.displayRequests(1);
 
     cout << "\nDirections for request #3:\n";
@@ -70,8 +85,38 @@ int main() {
     EmergencyManager em2;
     em2.loadSampleBuilding(1);
     cout << "loadAll: " << em2.loadAll("data") << "\n";
-    em2.displayVolunteers(1);
-    em2.displayRequests(1);
-    em2.printEmergencyReport(1);
-    return 0;
+    HelpRequest* loadedRequest =
+    em2.getHelpRequestManager().findRequest(1, 2);
+
+bool persistenceAvailabilityPass = false;
+
+if (loadedRequest &&
+    (loadedRequest->status == ACCEPTED ||
+     loadedRequest->status == IN_PROGRESS) &&
+    loadedRequest->assignedVolunteerId != -1) {
+
+    Volunteer* loadedVolunteer =
+        em2.getVolunteerManager().findVolunteer(
+            1, loadedRequest->assignedVolunteerId
+        );
+
+    persistenceAvailabilityPass =
+        loadedVolunteer && !loadedVolunteer->available;
+}
+
+cout << "Active volunteer remains unavailable after loading: "
+     << (persistenceAvailabilityPass ? "PASS" : "FAIL") << "\n";
+
+em2.displayVolunteers(1);
+em2.displayRequests(1);
+em2.printEmergencyReport(1);
+
+// Make GitHub Actions fail if either test fails.
+if (!manualReleaseBlocked || !persistenceAvailabilityPass) {
+    cout << "\nVOLUNTEER CONSISTENCY TEST FAILED.\n";
+    return 1;
+}
+
+cout << "\nVOLUNTEER CONSISTENCY TEST PASSED.\n";
+return 0;
 }
