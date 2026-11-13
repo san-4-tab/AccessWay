@@ -56,15 +56,27 @@ bool EvacuationManager::addLocation(const Location& loc) {
     return true;
 }
 
-
 bool EvacuationManager::addConnection(const Connection& c) {
     auto it = graphs.find(c.buildingId);
-    if (it == graphs.end()) return false;
+
+    if (it == graphs.end())
+        return false;
+
     BuildingGraph& g = it->second;
-    if (!g.locations.count(c.fromLocationId) || !g.locations.count(c.toLocationId)) return false;
-    if (g.connections.count(c.connectionId)) return false;
+
+    if (!g.locations.count(c.fromLocationId) ||
+        !g.locations.count(c.toLocationId))
+        return false;
+
+    if (g.connections.count(c.connectionId))
+        return false;
+
     g.connections[c.connectionId] = c;
+
+    // Store the same physical connection at both endpoints.
     g.adjacency[c.fromLocationId].push_back(c.connectionId);
+    g.adjacency[c.toLocationId].push_back(c.connectionId);
+
     return true;
 }
 // Load the common building dataset into emergency management
@@ -77,10 +89,11 @@ bool EvacuationManager::loadBuildingData(const BuildingData& data) {
 
     BuildingGraph newGraph;
 
-    // Load and validate locations
+    // Load locations
     for (const Location& loc : data.locations) {
 
-        if (loc.buildingId != buildingId)
+        if (loc.buildingId != buildingId ||
+            loc.locationId <= 0)
             return false;
 
         if (newGraph.locations.count(loc.locationId))
@@ -90,10 +103,13 @@ bool EvacuationManager::loadBuildingData(const BuildingData& data) {
         newGraph.adjacency[loc.locationId];
     }
 
-    // Load and validate connections
+    // Load connections
     for (const Connection& c : data.connections) {
 
-        if (c.buildingId != buildingId)
+        if (c.buildingId != buildingId ||
+            c.connectionId <= 0 ||
+            c.fromLocationId == c.toLocationId ||
+            c.distance < 0)
             return false;
 
         if (!newGraph.locations.count(c.fromLocationId) ||
@@ -105,15 +121,21 @@ bool EvacuationManager::loadBuildingData(const BuildingData& data) {
 
         newGraph.connections[c.connectionId] = c;
 
+        // Both directions use the same connection ID.
         newGraph.adjacency[c.fromLocationId].push_back(
+            c.connectionId
+        );
+
+        newGraph.adjacency[c.toLocationId].push_back(
             c.connectionId
         );
     }
 
-    // Replace this building's existing graph
+    // Replace existing graph only after validation succeeds.
     graphs[buildingId] = newGraph;
 
     cout << "Common building data loaded into emergency graph.\n";
+
     return true;
 }
 
@@ -182,18 +204,68 @@ bool EvacuationManager::isExitType(LocationType t) {
     return t == EXIT || t == ENTRANCE;
 }
 
-bool EvacuationManager::isUsable(const BuildingGraph& g, const Connection& c,
-                                 MobilityProfile profile, RouteMode mode) const {
-    if (!c.available) return false;                                   // blocked path
-    auto to = g.locations.find(c.toLocationId);
-    if (to == g.locations.end()) return false;
-    if (g.unavailableLocations.count(c.toLocationId)) return false;   // facility out of service
+bool EvacuationManager::isUsable(
+    const BuildingGraph& g,
+    const Connection& c,
+    int targetLocationId,
+    MobilityProfile profile,
+    RouteMode mode
+) const {
+
+    if (!c.available)
+        return false;
+
+    auto target = g.locations.find(targetLocationId);
+
+    if (target == g.locations.end())
+        return false;
+
+    if (g.unavailableLocations.count(targetLocationId))
+        return false;
 
     if (mode == MODE_EMERGENCY) {
-        if (!c.emergencyApproved) return false;
-        if (c.hasElevator || to->second.type == ELEVATOR) return false;  // never in an emergency
+
+        if (!c.emergencyApproved)
+            return false;
+
+        if (c.hasElevator ||
+            target->second.type == ELEVATOR)
+            return false;
     }
-   
+
+    switch (profile) {
+
+        case WHEELCHAIR:
+
+            if (c.width < 0.9f)
+                return false;
+
+            if (c.hasStairs && !c.hasRamp && !c.hasElevator)
+                return false;
+
+            break;
+
+        case CRUTCHES:
+
+            if (c.width < 0.7f)
+                return false;
+
+            break;
+
+        case LIMITED_MOBILITY:
+
+            if (c.hasStairs && !c.hasRamp && !c.hasElevator)
+                return false;
+
+            break;
+
+        case HAND_DISABILITY:
+        case GENERAL:
+            break;
+    }
+
+    return true;
+}
 switch (profile) {
 
     case WHEELCHAIR:
@@ -242,17 +314,32 @@ void EvacuationManager::dijkstra(const BuildingGraph& g, int start, MobilityProf
         auto adj = g.adjacency.find(u);
         if (adj == g.adjacency.end()) continue;
         for (size_t i = 0; i < adj->second.size(); i++) {
-            const Connection& c = g.connections.at(adj->second[i]);
-            if (!isUsable(g, c, profile, mode)) continue;
-            float nd = d + c.distance +
-           getAccessibilityPenalty(c, profile);
-            auto dv = dist.find(c.toLocationId);
-            if (dv == dist.end() || nd < dv->second) {
-                dist[c.toLocationId] = nd;
-                parent[c.toLocationId] = u;
-                pq.push(Node(nd, c.toLocationId));
-            }
-        }
+
+    const Connection& c =
+        g.connections.at(adj->second[i]);
+
+    // Find the opposite endpoint.
+    int nextLocation =
+        (c.fromLocationId == u)
+        ? c.toLocationId
+        : c.fromLocationId;
+
+    if (!isUsable(g, c, nextLocation, profile, mode))
+        continue;
+
+    float nd = d + c.distance +
+               getAccessibilityPenalty(c, profile);
+
+    auto dv = dist.find(nextLocation);
+
+    if (dv == dist.end() || nd < dv->second) {
+
+        dist[nextLocation] = nd;
+        parent[nextLocation] = u;
+
+        pq.push(Node(nd, nextLocation));
+    }
+}
     }
 }
 
@@ -362,10 +449,24 @@ vector<int> EvacuationManager::findReachableLocations(int b, int start, Mobility
         auto adj = g.adjacency.find(u);
         if (adj == g.adjacency.end()) continue;
         for (size_t i = 0; i < adj->second.size(); i++) {
-            const Connection& c = g.connections.at(adj->second[i]);
-            if (!isUsable(g, c, profile, mode) || visited.count(c.toLocationId)) continue;
-            visited.insert(c.toLocationId);
-            q.push(c.toLocationId);
+
+    const Connection& c =
+        g.connections.at(adj->second[i]);
+
+    int nextLocation =
+        (c.fromLocationId == u)
+        ? c.toLocationId
+        : c.fromLocationId;
+
+    if (!isUsable(g, c, nextLocation, profile, mode))
+        continue;
+
+    if (visited.count(nextLocation))
+        continue;
+
+    visited.insert(nextLocation);
+    q.push(nextLocation);
+}
         }
     }
     sort(result.begin(), result.end());
@@ -386,31 +487,81 @@ vector<int> EvacuationManager::getSafeLocations(int b) const {
 }
 
 // Locations from which NO safe place can be reached (reverse BFS from every safe place).
-vector<int> EvacuationManager::findTrappedLocations(int b, MobilityProfile profile) const {
+vector<int> EvacuationManager::findTrappedLocations(
+    int b,
+    MobilityProfile profile
+) const {
+
     vector<int> trapped;
+
     auto git = graphs.find(b);
-    if (git == graphs.end()) return trapped;
+
+    if (git == graphs.end())
+        return trapped;
+
     const BuildingGraph& g = git->second;
 
-    unordered_map<int, vector<int> > reverse;                          // to -> list of from
-    for (auto& kv : g.connections)
-        if (isUsable(g, kv.second, profile, MODE_EMERGENCY))
-            reverse[kv.second.toLocationId].push_back(kv.second.fromLocationId);
+    // Build reverse adjacency for every usable physical connection.
+    unordered_map<int, vector<int> > reverse;
+
+    for (auto& kv : g.connections) {
+
+        const Connection& c = kv.second;
+
+        if (isUsable(g, c, c.toLocationId,
+                     profile, MODE_EMERGENCY)) {
+
+            reverse[c.toLocationId].push_back(
+                c.fromLocationId
+            );
+        }
+
+        if (isUsable(g, c, c.fromLocationId,
+                     profile, MODE_EMERGENCY)) {
+
+            reverse[c.fromLocationId].push_back(
+                c.toLocationId
+            );
+        }
+    }
 
     unordered_set<int> safe;
     queue<int> q;
+
     vector<int> sources = getSafeLocations(b);
-    for (size_t i = 0; i < sources.size(); i++) { safe.insert(sources[i]); q.push(sources[i]); }
+
+    for (size_t i = 0; i < sources.size(); i++) {
+
+        safe.insert(sources[i]);
+        q.push(sources[i]);
+    }
+
+    // Reverse BFS from every safe location.
     while (!q.empty()) {
-        int u = q.front(); q.pop();
+
+        int u = q.front();
+        q.pop();
+
         for (size_t i = 0; i < reverse[u].size(); i++) {
+
             int v = reverse[u][i];
-            if (safe.insert(v).second) q.push(v);
+
+            if (safe.insert(v).second)
+                q.push(v);
         }
     }
-    for (auto& kv : g.locations)
-        if (!safe.count(kv.first) && kv.second.type != ELEVATOR) trapped.push_back(kv.first);
+
+    for (auto& kv : g.locations) {
+
+        if (!safe.count(kv.first) &&
+            kv.second.type != ELEVATOR) {
+
+            trapped.push_back(kv.first);
+        }
+    }
+
     sort(trapped.begin(), trapped.end());
+
     return trapped;
 }
 
