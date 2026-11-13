@@ -5,12 +5,17 @@
 #include "member1_navigation/Location.h"
 #include "member1_navigation/Graph.h"
 #include "member1_navigation/Accessibility.h"
+#include "member1_navigation/MinHeap.h"
+
 using namespace std;
 
 int main() {
-    cout << "===== ACCESSWAY MEMBER 1 TEST =====\n";
 
-    // Test Building Manager
+    cout << "===== ACCESSWAY MEMBER 1 COMPLETE TEST =====\n";
+
+    // 1. BUILDING TEST
+    cout << "\n--- BUILDING TEST ---\n";
+
     BuildingManager bm;
 
     Building b1 = {101, "Main Building", 3};
@@ -19,19 +24,35 @@ int main() {
     bm.addBuilding(b1);
     bm.addBuilding(b2);
 
-    cout << "\nBuildings:\n";
+    cout << "\nAll Buildings:\n";
     bm.displayBuildings();
 
-    // Test Floor Manager
+    cout << "\nSearch Building 101:\n";
+    bm.searchBuilding(101);
+
+    // 2. FLOOR TEST
+    cout << "\n--- FLOOR TEST ---\n";
+
     FloorManager fm;
 
     fm.addFloor(101, 0, "Ground Floor");
     fm.addFloor(101, 1, "First Floor");
 
-    cout << "\nFloors:\n";
+    cout << "\nAll Floors:\n";
     fm.displayFloors(101);
 
-    // Test Location Manager
+    cout << "\nSearch Floor 0: "
+         << fm.searchFloor(101, 0) << endl;
+
+    cout << "\nDeleting Floor 1...\n";
+    fm.deleteFloor(101, 1);
+
+    cout << "\nFloors after deletion:\n";
+    fm.displayFloors(101);
+
+    // 3. LOCATION TEST
+    cout << "\n--- LOCATION TEST ---\n";
+
     LocationManager lm;
 
     Location l1 = {1, 101, "Entrance", 0, ENTRANCE};
@@ -42,10 +63,63 @@ int main() {
     lm.addLocation(l2);
     lm.addLocation(l3);
 
-    cout << "\nLocations:\n";
+    cout << "\nAll Locations:\n";
     lm.displayLocations(101);
 
-    // Test Graph
+    cout << "\nLocations on Floor 0:\n";
+    lm.displayFloorLocations(101, 0);
+
+    cout << "\nSearch Location 2:\n";
+
+    Location* foundLocation = lm.searchLocation(2);
+
+    if (foundLocation != nullptr) {
+        cout << "Found: " << foundLocation->locationName << endl;
+    } else {
+        cout << "Location not found.\n";
+    }
+
+    // 4. MIN HEAP TEST
+    cout << "\n--- MIN HEAP TEST ---\n";
+
+    MinHeap heap(10);
+
+    heap.insert(1, 30);
+    heap.insert(2, 10);
+    heap.insert(3, 20);
+    heap.insert(4, 5);
+
+    cout << "\nHeap after insertion:\n";
+    heap.display();
+
+    cout << "\nIs heap empty? "
+         << heap.isEmpty() << endl;
+
+    cout << "Does heap contain location 2? "
+         << heap.contains(2) << endl;
+
+    cout << "\nDecrease key of location 1 to 3:\n";
+    heap.decreaseKey(1, 3);
+    heap.display();
+
+    int locationId;
+    float distance;
+
+    cout << "\nExtract minimum:\n";
+    heap.extractMin(locationId, distance);
+
+    cout << "Extracted Location: "
+         << locationId << endl;
+
+    cout << "Extracted Distance: "
+         << distance << endl;
+
+    cout << "\nHeap after extraction:\n";
+    heap.display();
+
+    // 5. GRAPH TEST
+    cout << "\n--- GRAPH TEST ---\n";
+
     Graph g;
 
     g.addVertex(l1);
@@ -66,31 +140,37 @@ int main() {
         true, true
     };
 
+    Connection c3 = {
+        3, 101, 1, 3,
+        40, 1.5, 0,
+        false, false, false, true,
+        true, true
+    };
+
     g.addEdge(c1);
     g.addEdge(c2);
+    g.addEdge(c3);
 
-    Connection c3 = {
-    3, 101, 1, 3,
-    40, 1.5, 0,
-    false, false, false, true,
-    true, true
-};
-
-g.addEdge(c3);
     cout << "\nGraph:\n";
     g.displayGraph();
+
+    cout << "\nNumber of vertices: "
+         << g.getVertexCount() << endl;
+
+    cout << "\nNeighbours of Location 1:\n";
+    g.displayNeighbours(1);
 
     cout << "\nBFS Traversal:\n";
     g.BFS(1);
 
-    // Test Dijkstra
-    cout << "\nShortest Route:\n";
+    // 6. DIJKSTRA TEST
+    cout << "\n--- DIJKSTRA TEST ---\n";
 
     Graph::RouteResult r =
         g.dijkstra(1, 3, GENERAL);
 
     if (r.found) {
-        cout << "Route: ";
+        cout << "Shortest Route: ";
 
         for (int i = 0; i < r.pathSize; i++) {
             cout << r.path[i] << " ";
@@ -102,91 +182,150 @@ g.addEdge(c3);
     }
 
     delete[] r.path;
-cout << "\nAlternative Route:\n";
 
-Graph::RouteResult alt =
-    g.findAlternativeRoute(1, 3, GENERAL, 1);
+    // 7. ALTERNATIVE ROUTE TEST
+    cout << "\n--- ALTERNATIVE ROUTE TEST ---\n";
 
-if (alt.found) {
-    cout << "Alternative Route: ";
+    Graph::RouteResult alt =
+        g.findAlternativeRoute(1, 3, GENERAL, 1);
 
-    for (int i = 0; i < alt.pathSize; i++) {
-        cout << alt.path[i] << " ";
+    if (alt.found) {
+        cout << "Alternative Route: ";
+
+        for (int i = 0; i < alt.pathSize; i++) {
+            cout << alt.path[i] << " ";
+        }
+
+        cout << "\nAlternative Cost: "
+             << alt.totalCost << endl;
+    } else {
+        cout << "No alternative route found.\n";
     }
 
-    cout << "\nAlternative Cost: "
-         << alt.totalCost << endl;
-}
-else {
-    cout << "No alternative route found.\n";
-}
+    delete[] alt.path;
 
-delete[] alt.path;
+    // 8. GRAPH EDGE REMOVAL TEST
+    cout << "\n--- EDGE REMOVAL TEST ---\n";
 
-    // Test Accessibility
-cout << "\nAccessibility Test:\n";
+    cout << "Removing connection 3...\n";
+    g.removeEdge(3);
 
-Accessibility ac;
+    cout << "\nGraph after removing connection 3:\n";
+    g.displayGraph();
 
-Connection narrow = {
-    4, 101, 1, 2,
-    10, 0.6, 0,
-    false, false, false, true,
-    true, true
-};
+    cout << "\nRemoving connection 2...\n";
+    g.removeEdge(2);
 
-cout << "Wheelchair allowed: "
-     << ac.isEdgeAllowed(narrow, WHEELCHAIR) << endl;
+    cout << "\nGraph after removing connection 2:\n";
+    g.displayGraph();
 
-cout << "Crutches allowed: "
-     << ac.isEdgeAllowed(narrow, CRUTCHES) << endl;
+    cout << "\nTrying route from 1 to 3:\n";
+
+    Graph::RouteResult noRoute =
+        g.dijkstra(1, 3, GENERAL);
+
+    if (noRoute.found) {
+        cout << "Route found.\n";
+    } else {
+        cout << "No route found, as expected.\n";
+    }
+
+    delete[] noRoute.path;
+
+    // 9. ACCESSIBILITY TEST
+    cout << "\n--- ACCESSIBILITY TEST ---\n";
+
+    Accessibility ac;
+
+    Connection narrow = {
+        4, 101, 1, 2,
+        10, 0.6, 0,
+        false, false, false, true,
+        true, true
+    };
+
+    cout << "\nNarrow Path:\n";
+
+    cout << "Wheelchair allowed: "
+         << ac.isEdgeAllowed(narrow, WHEELCHAIR) << endl;
+
+    cout << "Crutches allowed: "
+         << ac.isEdgeAllowed(narrow, CRUTCHES) << endl;
 
     Connection wide = {
-    5, 101, 1, 2,
-    10, 1.5, 0,
-    false, false, false, true,
-    true, true
-};
+        5, 101, 1, 2,
+        10, 1.5, 0,
+        false, false, false, true,
+        true, true
+    };
 
-cout << "Wheelchair allowed on wide path: "
-     << ac.isEdgeAllowed(wide, WHEELCHAIR) << endl;
+    cout << "\nWide Path:\n";
 
-   
+    cout << "Wheelchair allowed: "
+         << ac.isEdgeAllowed(wide, WHEELCHAIR) << endl;
 
     Connection stairs = {
-    6, 101, 1, 2,
-    10, 1.5, 0,
-    true, false, false, true,
-    true, true
-};
-cout << "Wheelchair allowed on stairs: "
-     << ac.isEdgeAllowed(stairs, WHEELCHAIR) << endl;
+        6, 101, 1, 2,
+        10, 1.5, 0,
+        true, false, false, true,
+        true, true
+    };
 
-cout << "Limited mobility allowed on stairs: "
-     << ac.isEdgeAllowed(stairs, LIMITED_MOBILITY) << endl;
+    cout << "\nStairs:\n";
+
+    cout << "Wheelchair allowed: "
+         << ac.isEdgeAllowed(stairs, WHEELCHAIR) << endl;
+
+    cout << "Limited mobility allowed: "
+         << ac.isEdgeAllowed(stairs, LIMITED_MOBILITY) << endl;
 
     Connection door = {
-    7, 101, 1, 2,
-    10, 1.5, 0,
-    false, false, false, false,
-    true, true
-};
+        7, 101, 1, 2,
+        10, 1.5, 0,
+        false, false, false, false,
+        true, true
+    };
 
-cout << "Hand disability door penalty: "
-     << ac.getAccessibilityPenalty(door, HAND_DISABILITY)
-     << endl;
+    cout << "\nAutomatic Door Test:\n";
+
+    cout << "Hand disability penalty: "
+         << ac.getAccessibilityPenalty(door, HAND_DISABILITY)
+         << endl;
 
     Connection slope = {
-    8, 101, 1, 2,
-    10, 1.5, 10,
-    false, true, false, true,
-    true, true
-};
+        8, 101, 1, 2,
+        10, 1.5, 10,
+        false, true, false, true,
+        true, true
+    };
 
-cout << "\nSlope Accessibility Warning:\n";
+    cout << "\nSlope Warning Test:\n";
+    ac.displayWarnings(slope, WHEELCHAIR);
 
-ac.displayWarnings(slope, WHEELCHAIR);
-    cout << "\n===== TEST COMPLETED =====\n";
+    Connection unavailable = {
+        9, 101, 1, 2,
+        10, 1.5, 0,
+        false, false, false, true,
+        false, true
+    };
+
+    cout << "\nUnavailable Connection Test:\n";
+
+    cout << "Connection allowed: "
+         << ac.isEdgeAllowed(unavailable, GENERAL) << endl;
+
+    // 10. DELETE TESTS
+    cout << "\n--- DELETE TESTS ---\n";
+
+    cout << "\nDeleting Location 2...\n";
+    lm.deleteLocation(2);
+    lm.displayLocations(101);
+
+    cout << "\nDeleting Building 102...\n";
+    bm.deleteBuilding(102);
+    bm.displayBuildings();
+
+    cout << "\n===== ALL TESTS COMPLETED =====\n";
 
     return 0;
 }
