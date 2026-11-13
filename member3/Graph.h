@@ -6,23 +6,9 @@
 #include <vector>
 #include <queue>
 #include <algorithm>
-
+#include "../common/AccessWayData.h"
 using namespace std;
 
-struct Location {
-    int locationId;
-    string name;
-    int floor;
-};
-
-struct Connection {
-    int connectionId;
-    int fromLocationId;
-    int toLocationId;
-    float distance;
-    bool available;
-    bool hasStairs;
-};
 
 struct BuildingData {
     vector<Location> locations;
