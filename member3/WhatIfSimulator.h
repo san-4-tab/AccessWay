@@ -9,8 +9,8 @@ using namespace std;
 
 class WhatIfSimulator {
 private:
-    Graph originalGraph;
-    Graph scenarioGraph;
+   SimulationGraph originalGraph;
+SimulationGraph scenarioGraph;
 
 public:
     WhatIfSimulator(const BuildingData& data)
