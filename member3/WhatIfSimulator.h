@@ -9,9 +9,19 @@ using namespace std;
 
 class WhatIfSimulator {
 private:
-private:
     SimulationGraph originalGraph;
     SimulationGraph scenarioGraph;
+
+    const char* getProfileName(MobilityProfile profile) const {
+        switch (profile) {
+            case WHEELCHAIR: return "Wheelchair";
+            case CRUTCHES: return "Crutches";
+            case HAND_DISABILITY: return "Hand Disability";
+            case LIMITED_MOBILITY: return "Limited Mobility";
+            case GENERAL: return "General";
+            default: return "Unknown";
+        }
+    }
 
 public:
     WhatIfSimulator(const BuildingData& data)
@@ -36,15 +46,16 @@ public:
         cout << "Scenario: facility disabled.\n";
     }
 
-    void compare(int startId, bool wheelchair) const {
+    // Compare accessibility for any mobility profile.
+    void compare(int startId, MobilityProfile profile) const {
         int before =
-            originalGraph.countReachable(startId, wheelchair);
+            originalGraph.countReachable(startId, profile);
 
         int after =
-            scenarioGraph.countReachable(startId, wheelchair);
+            scenarioGraph.countReachable(startId, profile);
 
         cout << "\n======= ACCESSIBILITY COMPARISON =======\n";
-
+        cout << "Mobility profile: " << getProfileName(profile) << "\n";
         cout << "Before: " << before << " reachable locations\n";
         cout << "After: " << after << " reachable locations\n";
         cout << "Difference: " << after - before << "\n";
@@ -55,6 +66,14 @@ public:
             cout << "Accessibility has improved.\n";
         else
             cout << "No change in reachability.\n";
+    }
+
+    // Maintain compatibility with existing true/false calls.
+    void compare(int startId, bool wheelchair) const {
+        compare(
+            startId,
+            wheelchair ? WHEELCHAIR : GENERAL
+        );
     }
 
     void displayScenario() const {
