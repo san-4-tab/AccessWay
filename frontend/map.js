@@ -62,7 +62,7 @@ function connect(a, b, type = "corridor", distance = 100) {
 }
 
 // Ground-floor corridor network
-connect(1, 3, "corridor", 120);
+connect(1, 4, "corridor", 45);
 connect(2, 4, "corridor", 90);
 connect(4, 3, "corridor", 110);
 connect(3, 5, "corridor", 100);
@@ -77,7 +77,7 @@ connect(5, 10, "corridor", 100);
 connect(10, 7, "corridor", 100);
 
 // Ground-floor facilities
-connect(4, 11, "corridor", 60);
+connect(4, 11, "corridor", 25);
 connect(4, 12, "corridor", 60);
 connect(3, 13, "corridor", 60);
 connect(5, 14, "corridor", 60);
