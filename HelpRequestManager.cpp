@@ -242,4 +242,21 @@ bool HelpRequestManager::loadFromFile(const string& filename) {
 
     return true;
 }
+void HelpRequestManager::syncVolunteerAvailability() {
+
+    for (auto& kv : requests) {
+
+        const HelpRequest& r = kv.second;
+
+        if ((r.status == ACCEPTED || r.status == IN_PROGRESS) &&
+            r.assignedVolunteerId != -1) {
+
+            volunteers.setAvailability(
+                r.buildingId,
+                r.assignedVolunteerId,
+                false
+            );
+        }
+    }
+}
 
