@@ -1,0 +1,26 @@
+
+name: Member 3 C++ Build Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Member 3
+        run: |
+          g++ -std=c++17 -Wall -Wextra -I. \
+            member3/main.cpp \
+            -o member3_test
+
+      - name: Run Member 3 test
+        run: |
+          echo "0" | ./member3_test
