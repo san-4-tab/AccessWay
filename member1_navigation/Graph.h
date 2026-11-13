@@ -24,6 +24,7 @@ private:
     int vertexCount;
 
     VertexNode* findVertex(int locationId);
+void clearGraph();
 
 public:
 
@@ -39,7 +40,7 @@ public:
 
     void addVertex(Location location);
     void addEdge(Connection connection);
-
+bool loadBuildingData(const BuildingData& data);
     void removeEdge(int connectionId);
 
     void displayGraph();
