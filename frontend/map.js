@@ -127,7 +127,9 @@ function renderFloorPlan(floor) {
     const isGround = floor === 0;
 
     let svg = `
-    <svg viewBox="0 0 900 510" xmlns="http://www.w3.org/2000/svg"
+    <svg viewBox="0 0 900 510"
+     xmlns="http://www.w3.org/2000/svg"
+     style="background:#ffffff !important; display:block;">
          role="img" aria-label="${isGround ? "Ground" : "First"} floor building plan">
 
         <rect x="15" y="15" width="870" height="480"
@@ -224,7 +226,7 @@ function renderIndoorMap() {
                 First Floor
             </button>
         </div>
-        <div class="floor-plan-canvas">
+        <div class="floor-plan-canvas" style="background:#ffffff !important;">
             ${renderFloorPlan(activeMapFloor)}
         </div>
         <div class="map-key">
