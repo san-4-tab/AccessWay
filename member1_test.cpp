@@ -175,6 +175,17 @@ cout << "Limited mobility allowed on stairs: "
 cout << "Hand disability door penalty: "
      << ac.getAccessibilityPenalty(door, HAND_DISABILITY)
      << endl;
+
+    Connection slope = {
+    8, 101, 1, 2,
+    10, 1.5, 10,
+    false, true, false, true,
+    true, true
+};
+
+cout << "\nSlope Accessibility Warning:\n";
+
+ac.displayWarnings(slope, WHEELCHAIR);
     cout << "\n===== TEST COMPLETED =====\n";
 
     return 0;
