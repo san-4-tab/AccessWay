@@ -22,9 +22,9 @@ private:
     vector<ProblemSummary> heap;
 
     bool higherPriority(
-        ProblemSummary a,
-        ProblemSummary b
-    ) {
+        const ProblemSummary& a,
+        const ProblemSummary& b
+    ) const {
         if (a.priorityScore != b.priorityScore)
             return a.priorityScore > b.priorityScore;
 
@@ -45,7 +45,7 @@ private:
     }
 
     void heapifyDown(int i) {
-        int n = heap.size();
+        int n = static_cast<int>(heap.size());
 
         while (true) {
             int left = 2 * i + 1;
@@ -69,9 +69,9 @@ private:
     }
 
 public:
-    void push(ProblemSummary p) {
+    void push(const ProblemSummary& p) {
         heap.push_back(p);
-        heapifyUp(heap.size() - 1);
+        heapifyUp(static_cast<int>(heap.size()) - 1);
     }
 
     bool empty() const {
@@ -79,6 +79,9 @@ public:
     }
 
     ProblemSummary pop() {
+        if (empty())
+            return ProblemSummary{};
+
         ProblemSummary result = heap[0];
 
         heap[0] = heap.back();
@@ -105,7 +108,9 @@ public:
 
             int index = -1;
 
-            for (int i = 0; i < (int)summaries.size(); i++) {
+            for (int i = 0;
+                 i < static_cast<int>(summaries.size());
+                 i++) {
                 if (summaries[i].locationId == r.locationId) {
                     index = i;
                     break;
@@ -113,7 +118,7 @@ public:
             }
 
             if (index == -1) {
-                ProblemSummary p;
+                ProblemSummary p{};
 
                 p.locationId = r.locationId;
                 p.reviewCount = 0;
@@ -122,7 +127,7 @@ public:
                 p.priorityScore = 0;
 
                 summaries.push_back(p);
-                index = summaries.size() - 1;
+                index = static_cast<int>(summaries.size()) - 1;
             }
 
             summaries[index].reviewCount++;
@@ -133,23 +138,24 @@ public:
             }
         }
 
+        if (summaries.empty()) {
+            cout << "\nNo reviews available.\n";
+            return;
+        }
+
         MaxHeap maxHeap;
 
         for (ProblemSummary& p : summaries) {
             if (p.verifiedCount > 0) {
                 p.priorityScore =
-                    p.severityTotal + 2 * (p.verifiedCount - 1);
+                    p.severityTotal +
+                    2 * (p.verifiedCount - 1);
             }
 
             maxHeap.push(p);
         }
 
         cout << "\n======= PRIORITY RANKING =======\n";
-
-        if (summaries.empty()) {
-            cout << "No reviews available.\n";
-            return;
-        }
 
         while (!maxHeap.empty()) {
             ProblemSummary p = maxHeap.pop();
