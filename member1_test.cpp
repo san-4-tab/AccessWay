@@ -140,6 +140,16 @@ cout << "Wheelchair allowed: "
 
 cout << "Crutches allowed: "
      << ac.isEdgeAllowed(narrow, CRUTCHES) << endl;
+
+    Connection wide = {
+    5, 101, 1, 2,
+    10, 1.5, 0,
+    false, false, false, true,
+    true, true
+};
+
+cout << "Wheelchair allowed on wide path: "
+     << ac.isEdgeAllowed(wide, WHEELCHAIR) << endl;
     cout << "\n===== TEST COMPLETED =====\n";
 
     return 0;
