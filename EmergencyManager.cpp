@@ -28,6 +28,7 @@ void EmergencyManager::loadSampleBuilding(int b) {
         loc.floor = locs[i].floor; loc.type = locs[i].type;
         addLocation(loc);
     }
+    
 
     struct C { int from, to; float dist; bool stairs, elevator; };
     C conns[] = {
