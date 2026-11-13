@@ -10,7 +10,7 @@ const mapLocations = {
     8:  { name: "Staircase A", floor: 0, x: 280, y: 530, type: "stairs" },
     9:  { name: "Staircase B", floor: 0, x: 1050, y: 190, type: "stairs" },
     10: { name: "Staircase C", floor: 0, x: 1050, y: 530, type: "stairs" },
-    11: { name: "Reception", floor: 0, x: 210, y: 390, type: "room" },
+    11: { name: "Reception", floor: 0, x: 210, y: 300, type: "room" },
     12: { name: "Admissions Office", floor: 0, x: 350, y: 100, type: "room" },
     13: { name: "Lecture Hall 01", floor: 0, x: 520, y: 100, type: "room" },
     14: { name: "Library", floor: 0, x: 850, y: 100, type: "room" },
@@ -254,16 +254,22 @@ function populateMapSelectors() {
 function drawRoom(location) {
     if (location.type !== "room") return "";
 
+    let x = location.x - 75;
+    let y = location.y - 37.5;
     const width = 150;
     const height = 75;
-    const x = location.x - width / 2;
-    const y = location.y - height / 2;
+
+    // Reception is positioned above the corridor.
+    if (location.name === "Reception") {
+        x = 135;
+        y = 205;
+    }
 
     return `
         <g class="new-map-room">
             <rect x="${x}" y="${y}" width="${width}" height="${height}" rx="9"/>
-            <text x="${location.x}" y="${location.y - 4}">${location.name}</text>
-            <text x="${location.x}" y="${location.y + 17}" class="room-small">FACILITY</text>
+            <text x="${x + width / 2}" y="${y + 32}">${location.name}</text>
+            <text x="${x + width / 2}" y="${y + 51}" class="room-small">FACILITY</text>
         </g>
     `;
 }
