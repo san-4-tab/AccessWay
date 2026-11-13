@@ -81,7 +81,18 @@ delete[] blockedRoute.path;
         cout << "Evacuation route found.\n";
     else
         cout << "Evacuation route failed.\n";
+// Test emergency route after blocking the only connection
+emergency.blockConnection(1, 1);
 
+RouteResult emergencyBlockedRoute =
+    emergency.findEvacuationRoute(1, 1, GENERAL);
+
+cout << "\n--- EMERGENCY BLOCKED PATH TEST ---\n";
+
+if (!emergencyBlockedRoute.found)
+    cout << "PASS: Emergency route unavailable after blocking path.\n";
+else
+    cout << "FAIL: Emergency route still exists after blocking path.\n";
     // 4. MEMBER 3 - What-If Simulation
 
     BuildingData building;
@@ -104,7 +115,10 @@ delete[] blockedRoute.path;
 
     // 5. Final result
 
-   if (normalRoute.found && evacuationRoute.found && !blockedRoute.found) {
+  if (normalRoute.found &&
+    evacuationRoute.found &&
+    !blockedRoute.found &&
+    !emergencyBlockedRoute.found) {
         cout << "\nALL THREE MODULES CONNECTED SUCCESSFULLY!\n";
         return 0;
     }
