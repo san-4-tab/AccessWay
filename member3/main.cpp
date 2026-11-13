@@ -225,22 +225,21 @@ int main() {
         else if (choice == 6) {
             simulator.disableFacility(3);
         }
-        else if (choice == 7) {
-    cout << "\n--- GENERAL ---\n";
-    simulator.compare(1, GENERAL);
+                else if (choice == 7) {
+            cout << "\n--- GENERAL ---\n";
+            simulator.compare(1, GENERAL);
 
-    cout << "\n--- WHEELCHAIR ---\n";
-    simulator.compare(1, WHEELCHAIR);
+            cout << "\n--- WHEELCHAIR ---\n";
+            simulator.compare(1, WHEELCHAIR);
 
-    cout << "\n--- CRUTCHES ---\n";
-    simulator.compare(1, CRUTCHES);
+            cout << "\n--- CRUTCHES ---\n";
+            simulator.compare(1, CRUTCHES);
 
-    cout << "\n--- LIMITED MOBILITY ---\n";
-    simulator.compare(1, LIMITED_MOBILITY);
+            cout << "\n--- LIMITED MOBILITY ---\n";
+            simulator.compare(1, LIMITED_MOBILITY);
 
-    cout << "\n--- HAND DISABILITY ---\n";
-    simulator.compare(1, HAND_DISABILITY);
-}
+            cout << "\n--- HAND DISABILITY ---\n";
+            simulator.compare(1, HAND_DISABILITY);
         }
         else if (choice == 8) {
             simulator.displayScenario();
