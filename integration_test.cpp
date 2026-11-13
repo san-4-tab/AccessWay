@@ -14,7 +14,7 @@ int main() {
 
     cout << "\n===== ACCESSWAY BACKEND INTEGRATION TEST =====\n";
 
-    // 1. Create ONE shared building dataset
+    // 1. SHARED BUILDING DATA
 
     Location entrance = {
         1, 1, "Starting Location", 0, ROOM
@@ -31,7 +31,7 @@ int main() {
         true, true
     };
 
-    // 2. MEMBER 1 - Navigation
+    // 2. MEMBER 1 - NAVIGATION
 
     Graph navigation;
 
@@ -44,27 +44,28 @@ int main() {
 
     cout << "\n--- MEMBER 1: NAVIGATION ---\n";
 
-    if (normalRoute.found)
-        cout << "Navigation route found.\n";
-    else
-        cout << "Navigation route failed.\n";
+    bool navigationPass = normalRoute.found;
+
+    cout << (navigationPass
+        ? "PASS: Normal route found.\n"
+        : "FAIL: Normal route not found.\n");
 
     delete[] normalRoute.path;
-    // Test blocked connection
-navigation.removeEdge(1);
 
-Graph::RouteResult blockedRoute =
-    navigation.dijkstra(1, 2, GENERAL);
+    navigation.removeEdge(1);
 
-cout << "\n--- BLOCKED ROUTE TEST ---\n";
+    Graph::RouteResult blockedRoute =
+        navigation.dijkstra(1, 2, GENERAL);
 
-if (!blockedRoute.found)
-    cout << "PASS: No route available after blocking connection.\n";
-else
-    cout << "FAIL: Route still exists after blocking connection.\n";
+    bool navigationBlockPass = !blockedRoute.found;
 
-delete[] blockedRoute.path;
-    // 3. MEMBER 2 - Emergency Management
+    cout << (navigationBlockPass
+        ? "PASS: Blocked route unavailable.\n"
+        : "FAIL: Blocked route still exists.\n");
+
+    delete[] blockedRoute.path;
+
+    // 3. MEMBER 2 - EMERGENCY MANAGEMENT
 
     EmergencyManager emergency;
 
@@ -77,23 +78,25 @@ delete[] blockedRoute.path;
 
     cout << "\n--- MEMBER 2: EMERGENCY ---\n";
 
-    if (evacuationRoute.found)
-        cout << "Evacuation route found.\n";
-    else
-        cout << "Evacuation route failed.\n";
-// Test emergency route after blocking the only connection
-emergency.blockConnection(1, 1);
+    bool emergencyPass = evacuationRoute.found;
 
-RouteResult emergencyBlockedRoute =
-    emergency.findEvacuationRoute(1, 1, GENERAL);
+    cout << (emergencyPass
+        ? "PASS: Evacuation route found.\n"
+        : "FAIL: Evacuation route not found.\n");
 
-cout << "\n--- EMERGENCY BLOCKED PATH TEST ---\n";
+    bool blockApplied = emergency.blockConnection(1, 1);
 
-if (!emergencyBlockedRoute.found)
-    cout << "PASS: Emergency route unavailable after blocking path.\n";
-else
-    cout << "FAIL: Emergency route still exists after blocking path.\n";
-    // 4. MEMBER 3 - What-If Simulation
+    RouteResult emergencyBlockedRoute =
+        emergency.findEvacuationRoute(1, 1, GENERAL);
+
+    bool emergencyBlockPass =
+        blockApplied && !emergencyBlockedRoute.found;
+
+    cout << (emergencyBlockPass
+        ? "PASS: No evacuation route after blocking connection.\n"
+        : "FAIL: Emergency blocked-path test failed.\n");
+
+    // 4. MEMBER 3 - WHAT-IF SIMULATION
 
     BuildingData building;
 
@@ -113,16 +116,51 @@ else
     cout << "\nAfter blocking connection:\n";
     simulator.compare(1, false);
 
-    // 5. Final result
+    // Verify simulation reachability automatically
 
-  if (normalRoute.found &&
-    evacuationRoute.found &&
-    !blockedRoute.found &&
-    !emergencyBlockedRoute.found) {
-        cout << "\nALL THREE MODULES CONNECTED SUCCESSFULLY!\n";
+    SimulationGraph simulationCheck(building);
+
+    int before = simulationCheck.countReachable(1, false);
+
+    simulationCheck.blockConnection(1);
+
+    int after = simulationCheck.countReachable(1, false);
+
+    bool simulationPass = (before == 2 && after == 1);
+
+    cout << (simulationPass
+        ? "PASS: Accessibility decreases after blocking connection.\n"
+        : "FAIL: Simulation reachability test failed.\n");
+
+    // 5. FINAL INTEGRATION RESULT
+
+    cout << "\n===== FINAL TEST RESULTS =====\n";
+
+    cout << "Member 1 normal navigation: "
+         << (navigationPass ? "PASS" : "FAIL") << "\n";
+
+    cout << "Member 1 blocked navigation: "
+         << (navigationBlockPass ? "PASS" : "FAIL") << "\n";
+
+    cout << "Member 2 emergency route: "
+         << (emergencyPass ? "PASS" : "FAIL") << "\n";
+
+    cout << "Member 2 blocked emergency: "
+         << (emergencyBlockPass ? "PASS" : "FAIL") << "\n";
+
+    cout << "Member 3 what-if simulation: "
+         << (simulationPass ? "PASS" : "FAIL") << "\n";
+
+    if (navigationPass &&
+        navigationBlockPass &&
+        emergencyPass &&
+        emergencyBlockPass &&
+        simulationPass) {
+
+        cout << "\nALL BACKEND INTEGRATION TESTS PASSED!\n";
         return 0;
     }
 
-    cout << "\nINTEGRATION TEST FAILED.\n";
+    cout << "\nBACKEND INTEGRATION TEST FAILED.\n";
     return 1;
 }
