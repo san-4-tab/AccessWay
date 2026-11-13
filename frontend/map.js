@@ -10,7 +10,7 @@ const mapLocations = {
     8:  { name: "Staircase A", floor: 0, x: 280, y: 530, type: "stairs" },
     9:  { name: "Staircase B", floor: 0, x: 1050, y: 190, type: "stairs" },
     10: { name: "Staircase C", floor: 0, x: 1050, y: 530, type: "stairs" },
-    11: { name: "Reception", floor: 0, x: 210, y: 300, type: "room" },
+    11: { name: "Reception", floor: 0, x: 210, y: 315, type: "room" },
     12: { name: "Admissions Office", floor: 0, x: 350, y: 100, type: "room" },
     13: { name: "Lecture Hall 01", floor: 0, x: 520, y: 100, type: "room" },
     14: { name: "Library", floor: 0, x: 850, y: 100, type: "room" },
@@ -81,7 +81,6 @@ connect(5, 10, "corridor", 100);
 connect(10, 7, "corridor", 100);
 
 // Ground-floor facilities
-connect(4, 11, "corridor", 25);
 connect(4, 12, "corridor", 60);
 connect(3, 13, "corridor", 60);
 connect(5, 14, "corridor", 60);
@@ -254,12 +253,11 @@ function populateMapSelectors() {
 function drawRoom(location) {
     if (location.type !== "room") return "";
 
-    let x = location.x - 75;
-    let y = location.y - 37.5;
     const width = 150;
     const height = 75;
+    let x = location.x - width / 2;
+    let y = location.y - height / 2;
 
-    // Reception is positioned above the corridor.
     if (location.name === "Reception") {
         x = 135;
         y = 205;
@@ -287,15 +285,27 @@ function drawFloorEdges(floor) {
              (id === edge.to && currentMapRoute[index + 1] === edge.from))
         );
 
-        const middleX = (a.x + b.x) / 2;
-        const middleY = (a.y + b.y) / 2;
-        const bend = Math.abs(a.x - b.x) > Math.abs(a.y - b.y)
-            ? `${middleX},${a.y} ${middleX},${b.y}`
-            : `${a.x},${middleY} ${b.x},${middleY}`;
+        let points;
+
+        if (
+            (edge.from === 1 && edge.to === 11) ||
+            (edge.from === 11 && edge.to === 1)
+        ) {
+            points = `${a.x},${a.y} ${a.x},${b.y} ${b.x},${b.y}`;
+        } else {
+            const middleX = (a.x + b.x) / 2;
+            const middleY = (a.y + b.y) / 2;
+
+            const bend = Math.abs(a.x - b.x) > Math.abs(a.y - b.y)
+                ? `${middleX},${a.y} ${middleX},${b.y}`
+                : `${a.x},${middleY} ${b.x},${middleY}`;
+
+            points = `${a.x},${a.y} ${bend} ${b.x},${b.y}`;
+        }
 
         return `
             <polyline
-                points="${a.x},${a.y} ${bend} ${b.x},${b.y}"
+                points="${points}"
                 class="${isRoute ? "new-route-edge" : "new-map-edge"}"/>
         `;
     }).join("");
