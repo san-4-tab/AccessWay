@@ -29,6 +29,7 @@ public:
     // ---- building data (replaced by Member 1's data during integration) ----
     bool addLocation(const Location& location);
     bool addConnection(const Connection& connection);
+bool loadBuildingData(const BuildingData& data);
     void loadSampleBuilding(int buildingId = 1);     // "College Block A" dummy data
 
     // ---- emergency control ----
