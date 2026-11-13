@@ -8,6 +8,46 @@
 #include <limits>
 #include <iostream>
 // ------------------------------------------------------------------ data
+
+// Keep accessibility penalties consistent with Member 1
+static float getAccessibilityPenalty(
+    const Connection& c,
+    MobilityProfile profile
+) {
+    float penalty = 0;
+
+    switch (profile) {
+        case WHEELCHAIR:
+            if (c.hasRamp)
+                penalty += 3;
+            break;
+
+        case CRUTCHES:
+            if (c.hasStairs)
+                penalty += 10;
+            if (c.width < 1.0)
+                penalty += 5;
+            break;
+
+        case LIMITED_MOBILITY:
+            if (c.hasStairs)
+                penalty += 10;
+            if (c.width < 1.0)
+                penalty += 5;
+            break;
+
+        case HAND_DISABILITY:
+            if (!c.automaticDoor)
+                penalty += 10;
+            break;
+
+        case GENERAL:
+            break;
+    }
+
+    return penalty;
+}
+
 bool EvacuationManager::addLocation(const Location& loc) {
     BuildingGraph& g = graphs[loc.buildingId];
     if (g.locations.count(loc.locationId)) return false;
@@ -153,10 +193,35 @@ bool EvacuationManager::isUsable(const BuildingGraph& g, const Connection& c,
         if (!c.emergencyApproved) return false;
         if (c.hasElevator || to->second.type == ELEVATOR) return false;  // never in an emergency
     }
-    if (profile == WHEELCHAIR) {
-        if (c.hasStairs && !c.hasRamp && !c.hasElevator) return false;   // stairs only
-        if (c.width > 0 && c.width < 0.8f) return false;                 // too narrow
-    }
+   
+switch (profile) {
+
+    case WHEELCHAIR:
+        if (c.width < 0.9f)
+            return false;
+
+        if (c.hasStairs && !c.hasRamp && !c.hasElevator)
+            return false;
+        break;
+
+    case CRUTCHES:
+        if (c.width < 0.7f)
+            return false;
+        break;
+
+    case LIMITED_MOBILITY:
+        if (c.hasStairs && !c.hasRamp && !c.hasElevator)
+            return false;
+        break;
+
+    case HAND_DISABILITY:
+        // Non-automatic doors are allowed but receive a penalty
+        break;
+
+    case GENERAL:
+        break;
+}
+
     return true;
 }
 
@@ -179,7 +244,8 @@ void EvacuationManager::dijkstra(const BuildingGraph& g, int start, MobilityProf
         for (size_t i = 0; i < adj->second.size(); i++) {
             const Connection& c = g.connections.at(adj->second[i]);
             if (!isUsable(g, c, profile, mode)) continue;
-            float nd = d + c.distance;
+            float nd = d + c.distance +
+           getAccessibilityPenalty(c, profile);
             auto dv = dist.find(c.toLocationId);
             if (dv == dist.end() || nd < dv->second) {
                 dist[c.toLocationId] = nd;
