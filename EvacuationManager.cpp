@@ -49,15 +49,31 @@ static float getAccessibilityPenalty(
     return penalty;
 }
 
+
 bool EvacuationManager::addLocation(const Location& loc) {
+
+    if (loc.buildingId <= 0 || loc.locationId <= 0)
+        return false;
+
     BuildingGraph& g = graphs[loc.buildingId];
-    if (g.locations.count(loc.locationId)) return false;
+
+    if (g.locations.count(loc.locationId))
+        return false;
+
     g.locations[loc.locationId] = loc;
-    g.adjacency[loc.locationId];                       // make empty list
+    g.adjacency[loc.locationId];
+
     return true;
 }
 
 bool EvacuationManager::addConnection(const Connection& c) {
+
+    if (c.buildingId <= 0 ||
+        c.connectionId <= 0 ||
+        c.fromLocationId == c.toLocationId ||
+        !(c.distance >= 0.0f))
+        return false;
+
     auto it = graphs.find(c.buildingId);
 
     if (it == graphs.end())
@@ -74,12 +90,12 @@ bool EvacuationManager::addConnection(const Connection& c) {
 
     g.connections[c.connectionId] = c;
 
-    // Store the same physical connection at both endpoints.
     g.adjacency[c.fromLocationId].push_back(c.connectionId);
     g.adjacency[c.toLocationId].push_back(c.connectionId);
 
     return true;
 }
+
 // Load the common building dataset into emergency management
 bool EvacuationManager::loadBuildingData(const BuildingData& data) {
 
