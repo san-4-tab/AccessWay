@@ -102,7 +102,26 @@ g.addEdge(c3);
     }
 
     delete[] r.path;
+cout << "\nAlternative Route:\n";
 
+Graph::RouteResult alt =
+    g.findAlternativeRoute(1, 3, GENERAL, 1);
+
+if (alt.found) {
+    cout << "Alternative Route: ";
+
+    for (int i = 0; i < alt.pathSize; i++) {
+        cout << alt.path[i] << " ";
+    }
+
+    cout << "\nAlternative Cost: "
+         << alt.totalCost << endl;
+}
+else {
+    cout << "No alternative route found.\n";
+}
+
+delete[] alt.path;
     cout << "\n===== TEST COMPLETED =====\n";
 
     return 0;
