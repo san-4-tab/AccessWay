@@ -92,23 +92,34 @@ public:
 
             int currentId = locations[current].locationId;
 
-            for (const Connection& c : connections) {
-                if (c.fromLocationId != currentId)
-                    continue;
+         for (const Connection& c : connections) {
 
-                if (!c.available)
-                    continue;
+    if (!c.available)
+        continue;
 
-                if (wheelchair && c.hasStairs)
-                    continue;
+    int nextLocationId = -1;
 
-                int next = findLocation(c.toLocationId);
+    // Allow movement in either direction
+    if (c.fromLocationId == currentId) {
+        nextLocationId = c.toLocationId;
+    }
+    else if (c.toLocationId == currentId) {
+        nextLocationId = c.fromLocationId;
+    }
+    else {
+        continue;
+    }
 
-                if (next != -1 && !visited[next]) {
-                    visited[next] = true;
-                    q.push(next);
-                }
-            }
+    if (wheelchair && c.hasStairs)
+        continue;
+
+    int next = findLocation(nextLocationId);
+
+    if (next != -1 && !visited[next]) {
+        visited[next] = true;
+        q.push(next);
+    }
+}
         }
 
         return count;
