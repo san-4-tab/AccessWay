@@ -180,33 +180,66 @@ bool HelpRequestManager::saveToFile(const string& filename) const {
     return true;
 }
 
+
 bool HelpRequestManager::loadFromFile(const string& filename) {
     ifstream in(filename.c_str());
-    if (!in) return false;
+
+    if (!in)
+        return false;
+
     requests.clear();
     pendingQueues.clear();
+    nextSequence = 0;
+
     string line;
+
     while (getline(in, line)) {
-        if (line.empty()) continue;
+
+        if (line.empty())
+            continue;
+
         vector<string> p = splitLine(line);
-        if (p.size() < 6) continue;
+
+        if (p.size() < 6)
+            continue;
+
         try {
             HelpRequest r;
+
             r.requestId = stoi(p[0]);
             r.buildingId = stoi(p[1]);
             r.visitorLocationId = stoi(p[2]);
             r.assignedVolunteerId = stoi(p[3]);
             r.helpType = p[4];
-            r.status = static_cast<RequestStatus>(stoi(p[5]));
-            requests[makeKey(r.buildingId, r.requestId)] = r;
-            if (r.status == PENDING) {                    // rebuild priority queue
+
+            int statusValue = stoi(p[5]);
+
+            if (statusValue < PENDING || statusValue > CANCELLED)
+                continue;
+
+            r.status = static_cast<RequestStatus>(statusValue);
+
+            long long key = makeKey(r.buildingId, r.requestId);
+
+            if (requests.count(key))
+                continue;
+
+            requests[key] = r;
+
+            if (r.status == PENDING) {
                 PendingEntry e;
                 e.priority = priorityOf(r.helpType);
                 e.sequence = nextSequence++;
                 e.requestId = r.requestId;
+
                 pendingQueues[r.buildingId].push(e);
             }
-        } catch (...) {}
+
+        } catch (...) {
+            // Ignore corrupted records
+        }
     }
+
     return true;
 }
+
