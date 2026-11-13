@@ -12,6 +12,7 @@ using namespace std;
 
 
 class SimulationGraph  {
+
 private:
     vector<Location> locations;
     vector<Connection> connections;
@@ -21,7 +22,10 @@ private:
             if (locations[i].locationId == id)
                 return i;
         }
-        
+
+        return -1;
+    }
+
     bool isConnectionAllowed(
         const Connection& c,
         MobilityProfile profile
@@ -58,9 +62,6 @@ private:
         return true;
     }
 
-
-        return -1;
-    }
 
 public:
     SimulationGraph() {}
