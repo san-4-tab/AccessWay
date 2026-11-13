@@ -4,7 +4,7 @@
 #include "member1_navigation/Floor.h"
 #include "member1_navigation/Location.h"
 #include "member1_navigation/Graph.h"
-
+#include "member1_navigation/Accessibility.h"
 using namespace std;
 
 int main() {
@@ -122,6 +122,24 @@ else {
 }
 
 delete[] alt.path;
+
+    // Test Accessibility
+cout << "\nAccessibility Test:\n";
+
+Accessibility ac;
+
+Connection narrow = {
+    4, 101, 1, 2,
+    10, 0.6, 0,
+    false, false, false, true,
+    true, true
+};
+
+cout << "Wheelchair allowed: "
+     << ac.isEdgeAllowed(narrow, WHEELCHAIR) << endl;
+
+cout << "Crutches allowed: "
+     << ac.isEdgeAllowed(narrow, CRUTCHES) << endl;
     cout << "\n===== TEST COMPLETED =====\n";
 
     return 0;
