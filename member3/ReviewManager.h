@@ -7,28 +7,41 @@
 #include <vector>
 #include <fstream>
 #include "../common/AccessWayData.h"
-using namespace std;
 
-// Review data stored by the review linked list.
+using namespace std;
 
 struct ReviewNode {
     Review data;
     ReviewNode* next;
 
-    ReviewNode(Review r) {
-        data = r;
-        next = nullptr;
-    }
+    ReviewNode(Review r) : data(r), next(nullptr) {}
 };
 
 class ReviewManager {
 private:
     ReviewNode* head;
 
-public:
-    ReviewManager() {
-        head = nullptr;
+    bool validReview(const Review& r) const {
+        return r.reviewId > 0 &&
+               r.buildingId > 0 &&
+               r.locationId > 0 &&
+               r.severity >= 1 &&
+               r.severity <= 5 &&
+               !r.category.empty() &&
+               !r.description.empty() &&
+               r.category.find('|') == string::npos &&
+               r.description.find('|') == string::npos &&
+               r.category.find('\n') == string::npos &&
+               r.description.find('\n') == string::npos &&
+               r.category.find('\r') == string::npos &&
+               r.description.find('\r') == string::npos;
     }
+
+public:
+    ReviewManager() : head(nullptr) {}
+
+    ReviewManager(const ReviewManager&) = delete;
+    ReviewManager& operator=(const ReviewManager&) = delete;
 
     ~ReviewManager() {
         clear();
@@ -56,6 +69,11 @@ public:
     }
 
     void addReview(Review r) {
+        if (!validReview(r)) {
+            cout << "Invalid review details.\n";
+            return;
+        }
+
         if (reviewExists(r.reviewId)) {
             cout << "Review ID already exists.\n";
             return;
@@ -87,7 +105,7 @@ public:
         cout << "\n========== REVIEWS ==========\n";
 
         while (temp != nullptr) {
-            Review r = temp->data;
+            const Review& r = temp->data;
 
             cout << "\nReview ID: " << r.reviewId;
             cout << "\nBuilding ID: " << r.buildingId;
@@ -137,14 +155,14 @@ public:
         ofstream file("reviews.txt");
 
         if (!file) {
-            cout << "Unable to save file.\n";
+            cout << "Unable to save reviews.\n";
             return;
         }
 
         ReviewNode* temp = head;
 
         while (temp != nullptr) {
-            Review r = temp->data;
+            const Review& r = temp->data;
 
             file << r.reviewId << "|"
                  << r.buildingId << "|"
@@ -152,12 +170,13 @@ public:
                  << r.severity << "|"
                  << r.category << "|"
                  << r.description << "|"
-                 << r.verified << "\n";
+                 << (r.verified ? 1 : 0) << "\n";
 
             temp = temp->next;
         }
 
-        file.close();
+        if (!file)
+            cout << "Error occurred while writing reviews.\n";
     }
 
     void loadFromFile() {
@@ -189,7 +208,7 @@ public:
                 continue;
 
             try {
-                Review r;
+                Review r{};
 
                 r.reviewId = stoi(fields[0]);
                 r.buildingId = stoi(fields[1]);
@@ -197,16 +216,19 @@ public:
                 r.severity = stoi(fields[3]);
                 r.category = fields[4];
                 r.description = fields[5];
+
+                if (fields[6] != "0" && fields[6] != "1")
+                    continue;
+
                 r.verified = (fields[6] == "1");
 
-                addReview(r);
+                if (validReview(r))
+                    addReview(r);
             }
             catch (...) {
                 cout << "Skipping invalid review record.\n";
             }
         }
-
-        file.close();
     }
 };
 
