@@ -21,6 +21,43 @@ private:
             if (locations[i].locationId == id)
                 return i;
         }
+        
+    bool isConnectionAllowed(
+        const Connection& c,
+        MobilityProfile profile
+    ) const {
+
+        if (!c.available || c.distance < 0)
+            return false;
+
+        switch (profile) {
+
+            case WHEELCHAIR:
+                if (c.width < 0.9f)
+                    return false;
+
+                if (c.hasStairs && !c.hasRamp && !c.hasElevator)
+                    return false;
+                break;
+
+            case CRUTCHES:
+                if (c.width < 0.7f)
+                    return false;
+                break;
+
+            case LIMITED_MOBILITY:
+                if (c.hasStairs && !c.hasRamp && !c.hasElevator)
+                    return false;
+                break;
+
+            case HAND_DISABILITY:
+            case GENERAL:
+                break;
+        }
+
+        return true;
+    }
+
 
         return -1;
     }
@@ -70,7 +107,21 @@ public:
             cout << "No connections found for this facility.\n";
     }
 
+
+    // Keep compatibility with existing true/false calls
     int countReachable(int startId, bool wheelchair) const {
+        return countReachable(
+            startId,
+            wheelchair ? WHEELCHAIR : GENERAL
+        );
+    }
+
+    // Count reachable locations for any mobility profile
+    int countReachable(
+        int startId,
+        MobilityProfile profile
+    ) const {
+
         int start = findLocation(startId);
 
         if (start == -1)
@@ -85,6 +136,7 @@ public:
         int count = 0;
 
         while (!q.empty()) {
+
             int current = q.front();
             q.pop();
 
@@ -92,38 +144,32 @@ public:
 
             int currentId = locations[current].locationId;
 
-         for (const Connection& c : connections) {
+            for (const Connection& c : connections) {
 
-    if (!c.available)
-        continue;
+                if (!isConnectionAllowed(c, profile))
+                    continue;
 
-    int nextLocationId = -1;
+                int nextLocationId = -1;
 
-    // Allow movement in either direction
-    if (c.fromLocationId == currentId) {
-        nextLocationId = c.toLocationId;
-    }
-    else if (c.toLocationId == currentId) {
-        nextLocationId = c.fromLocationId;
-    }
-    else {
-        continue;
-    }
+                if (c.fromLocationId == currentId)
+                    nextLocationId = c.toLocationId;
+                else if (c.toLocationId == currentId)
+                    nextLocationId = c.fromLocationId;
+                else
+                    continue;
 
-    if (wheelchair && c.hasStairs)
-        continue;
+                int next = findLocation(nextLocationId);
 
-    int next = findLocation(nextLocationId);
-
-    if (next != -1 && !visited[next]) {
-        visited[next] = true;
-        q.push(next);
-    }
-}
+                if (next != -1 && !visited[next]) {
+                    visited[next] = true;
+                    q.push(next);
+                }
+            }
         }
 
         return count;
     }
+
 
     void displayConnections() const {
         for (const Connection& c : connections) {
