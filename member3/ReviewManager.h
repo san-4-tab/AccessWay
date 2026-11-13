@@ -6,19 +6,10 @@
 #include <string>
 #include <vector>
 #include <fstream>
-
+#include "../common/AccessWayData.h"
 using namespace std;
 
 // Review data stored by the review linked list.
-struct Review {
-    int reviewId;
-    int buildingId;
-    int locationId;
-    int severity;
-    string category;
-    string description;
-    bool verified;
-};
 
 struct ReviewNode {
     Review data;
