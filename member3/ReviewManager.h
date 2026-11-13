@@ -47,12 +47,14 @@ private:
 }
 public:
     ReviewManager() : head(nullptr) {}
+
     void setBuildingData(const BuildingData& data) {
-    knownLocations = data.locations;
+        knownLocations = data.locations;
+    }
+
     ReviewManager(const ReviewManager&) = delete;
     ReviewManager& operator=(const ReviewManager&) = delete;
-    
-}
+
     ~ReviewManager() {
         clear();
     }
