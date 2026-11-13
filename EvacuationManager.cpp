@@ -438,7 +438,7 @@ vector<int> EvacuationManager::findReachableLocations(int b, int start, Mobility
     }
     sort(result.begin(), result.end());
     return result;
-}
+
 
 vector<int> EvacuationManager::getSafeLocations(int b) const {
     vector<int> result;
