@@ -16,6 +16,7 @@ bool EvacuationManager::addLocation(const Location& loc) {
     return true;
 }
 
+
 bool EvacuationManager::addConnection(const Connection& c) {
     auto it = graphs.find(c.buildingId);
     if (it == graphs.end()) return false;
