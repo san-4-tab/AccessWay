@@ -102,6 +102,7 @@ function drawLocation(id, selectedFloor) {
     `;
 }
 
+
 function drawRouteOnFloor(floor) {
     let output = "";
 
@@ -109,9 +110,10 @@ function drawRouteOnFloor(floor) {
         const a = mapLocations[currentMapRoute[i]];
         const b = mapLocations[currentMapRoute[i + 1]];
 
-        if (a.floor !== floor || b.floor !== floor) continue;
+        if (!a || !b || a.floor !== floor || b.floor !== floor) {
+            continue;
+        }
 
-        // Draw the route through the central corridor and room doorway.
         const startY = a.type === "room" ? 218 : a.y;
         const endY = b.type === "room" ? 218 : b.y;
 
@@ -122,20 +124,21 @@ function drawRouteOnFloor(floor) {
             `${b.x},${endY}`
         ].join(" ");
 
-      output += `
-    <polyline
-        points="${points}"
-        fill="none"
-        stroke="#00a99d"
-        stroke-width="12"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        opacity="1"/>
-`;
+        output += `
+            <polyline
+                points="${points}"
+                fill="none"
+                stroke="#00a99d"
+                stroke-width="12"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                opacity="1"/>
+        `;
     }
 
     return output;
 }
+
 
 function renderFloorPlan(floor) {
     const isGround = floor === 0;
@@ -224,8 +227,6 @@ function renderFloorPlan(floor) {
         `;
     }
 
-    svg += drawRouteOnFloor(floor);
-
     const visibleLocations = Object.keys(mapLocations)
         .filter(id => mapLocations[id].floor === floor);
 
@@ -233,6 +234,7 @@ function renderFloorPlan(floor) {
         svg += drawLocation(Number(id), floor);
     });
 
+      svg += drawRouteOnFloor(floor);
     svg += `</svg>`;
     return svg;
 }
