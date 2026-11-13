@@ -1425,3 +1425,66 @@ textarea {
     }
 }
 
+
+/* ACCESSWAY MAP BACKGROUND AND TEXT REPAIR */
+
+#indoor-map {
+    background: #edf3f8 !important;
+    color: #173653 !important;
+}
+
+#indoor-map .floor-plan-canvas {
+    background: #ffffff !important;
+    color: #173653 !important;
+}
+
+#indoor-map svg {
+    background: #ffffff !important;
+    color: #173653 !important;
+}
+
+#indoor-map svg rect.floor-background {
+    fill: #ffffff !important;
+    stroke: #d7e1eb !important;
+}
+
+#indoor-map svg rect.room-wall {
+    fill: #f8fafc !important;
+    stroke: #8297aa !important;
+}
+
+#indoor-map svg rect.corridor-area {
+    fill: #e9f2f8 !important;
+    stroke: #8297aa !important;
+}
+
+#indoor-map svg rect.service-room {
+    fill: #eee8fc !important;
+    stroke: #9274c8 !important;
+}
+
+#indoor-map svg text {
+    font-family: Arial, Helvetica, sans-serif !important;
+    fill: #263f58 !important;
+}
+
+#indoor-map svg .plan-heading,
+#indoor-map svg .floor-title {
+    fill: #173653 !important;
+}
+
+#indoor-map svg .location-symbol {
+    fill: #ffffff !important;
+}
+
+#indoor-map .floor-switcher button {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    border-radius: 9px;
+    padding: 12px 20px;
+}
+
+#indoor-map .floor-switcher button.active {
+    background: #173653 !important;
+    color: #ffffff !important;
+}
