@@ -17,7 +17,7 @@ int main() {
     // 1. Create ONE shared building dataset
 
     Location entrance = {
-        1, 1, "Main Entrance", 0, ENTRANCE
+        1, 1, "Starting Location", 0, ROOM
     };
 
     Location exitLocation = {
