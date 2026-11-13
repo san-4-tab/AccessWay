@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <fstream>
 #include <limits>
-
+#include <iostream>
 // ------------------------------------------------------------------ data
 bool EvacuationManager::addLocation(const Location& loc) {
     BuildingGraph& g = graphs[loc.buildingId];
