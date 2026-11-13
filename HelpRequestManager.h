@@ -67,6 +67,7 @@ public:
     // requests.txt -> id|buildingId|visitorLocationId|assignedVolunteerId|helpType|status
     bool saveToFile(const string& filename) const;
     bool loadFromFile(const string& filename);
+    void syncVolunteerAvailability();
 };
 
 #endif
