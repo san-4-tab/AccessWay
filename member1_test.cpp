@@ -161,6 +161,12 @@ cout << "Wheelchair allowed on wide path: "
     true, true
 };
 
+    cout << "Wheelchair allowed on stairs: "
+     << ac.isEdgeAllowed(stairs, WHEELCHAIR) << endl;
+
+cout << "Limited mobility allowed on stairs: "
+     << ac.isEdgeAllowed(stairs, LIMITED_MOBILITY) << endl;
+
 cout << "Wheelchair allowed on stairs: "
      << ac.isEdgeAllowed(stairs, WHEELCHAIR) << endl;
     cout << "\n===== TEST COMPLETED =====\n";
