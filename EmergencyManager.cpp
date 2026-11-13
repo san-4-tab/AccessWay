@@ -122,7 +122,6 @@ bool EmergencyManager::setVolunteerAvailability(int b, int id, bool available) {
 
     return volunteers.setAvailability(b, id, available);
 }
-}
 
 void EmergencyManager::displayVolunteers(int b) const { volunteers.displayVolunteers(b); }
 
@@ -184,4 +183,4 @@ bool EmergencyManager::loadAll(const string& folder) {
 
     return volunteersLoaded && requestsLoaded && statusLoaded;
 }
-}
+
