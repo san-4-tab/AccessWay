@@ -1,0 +1,26 @@
+
+name: Member 1 C++ Build Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check Member 1 C++ files
+        run: |
+          g++ -std=c++17 -Wall -Wextra -I. -fsyntax-only \
+          member1_navigation/Building.cpp \
+          member1_navigation/Floor.cpp \
+          member1_navigation/Location.cpp \
+          member1_navigation/Graph.cpp \
+          member1_navigation/Accessibility.cpp \
+          member1_navigation/MinHeap.cpp
