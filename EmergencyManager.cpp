@@ -102,7 +102,26 @@ void EmergencyManager::printEmergencyReport(int b) const {
 bool EmergencyManager::registerVolunteer(const Volunteer& v) { return volunteers.registerVolunteer(v); }
 
 bool EmergencyManager::setVolunteerAvailability(int b, int id, bool available) {
+
+    // Do not allow a volunteer with an active request to become available.
+    if (available) {
+
+        vector<HelpRequest> allRequests =
+            helpRequests.getAllRequests(b);
+
+        for (size_t i = 0; i < allRequests.size(); i++) {
+
+            const HelpRequest& r = allRequests[i];
+
+            if (r.assignedVolunteerId == id &&
+                (r.status == ACCEPTED || r.status == IN_PROGRESS)) {
+                return false;
+            }
+        }
+    }
+
     return volunteers.setAvailability(b, id, available);
+}
 }
 
 void EmergencyManager::displayVolunteers(int b) const { volunteers.displayVolunteers(b); }
