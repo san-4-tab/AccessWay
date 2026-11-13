@@ -10,10 +10,6 @@
 using namespace std;
 
 
-struct BuildingData {
-    vector<Location> locations;
-    vector<Connection> connections;
-};
 
 class SimulationGraph  {
 private:
