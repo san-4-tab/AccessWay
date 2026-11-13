@@ -9,7 +9,8 @@
 #include <queue>
 #include <string>
 #include <unordered_map>
-#include "../common/AccessWayData.h"
+#include "common/AccessWayData.h"
+#include "common/EmergencyData.h"
 #include "VolunteerManager.h"
 #include "EvacuationManager.h"
 
