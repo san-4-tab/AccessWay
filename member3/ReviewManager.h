@@ -20,29 +20,39 @@ struct ReviewNode {
 class ReviewManager {
 private:
     ReviewNode* head;
+    vector<Location> knownLocations;
+   bool validReview(const Review& r) const {
+    if (r.reviewId <= 0 ||
+        r.buildingId <= 0 ||
+        r.locationId <= 0 ||
+        r.severity < 1 ||
+        r.severity > 5 ||
+        r.category.empty() ||
+        r.description.empty() ||
+        r.category.find('|') != string::npos ||
+        r.description.find('|') != string::npos ||
+        r.category.find('\n') != string::npos ||
+        r.description.find('\n') != string::npos ||
+        r.category.find('\r') != string::npos ||
+        r.description.find('\r') != string::npos)
+        return false;
 
-    bool validReview(const Review& r) const {
-        return r.reviewId > 0 &&
-               r.buildingId > 0 &&
-               r.locationId > 0 &&
-               r.severity >= 1 &&
-               r.severity <= 5 &&
-               !r.category.empty() &&
-               !r.description.empty() &&
-               r.category.find('|') == string::npos &&
-               r.description.find('|') == string::npos &&
-               r.category.find('\n') == string::npos &&
-               r.description.find('\n') == string::npos &&
-               r.category.find('\r') == string::npos &&
-               r.description.find('\r') == string::npos;
+    for (const Location& location : knownLocations) {
+        if (location.locationId == r.locationId &&
+            location.buildingId == r.buildingId)
+            return true;
     }
 
+    return false;
+}
 public:
     ReviewManager() : head(nullptr) {}
-
+    void setBuildingData(const BuildingData& data) {
+    knownLocations = data.locations;
     ReviewManager(const ReviewManager&) = delete;
     ReviewManager& operator=(const ReviewManager&) = delete;
-
+    
+}
     ~ReviewManager() {
         clear();
     }
