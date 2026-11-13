@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "../common/AccessPulseData.h"
+#include "../common/AccessWayData.h"
 
 class LocationManager {
 private:
