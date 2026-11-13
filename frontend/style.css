@@ -975,138 +975,331 @@ textarea {
    
 /* ACCESSWAY INTERACTIVE INDOOR MAP */
 
+
+/* ACCESSWAY ARCHITECTURAL FLOOR MAP */
+
 .indoor-map-card {
-    margin-top: 25px;
+    margin-top: 28px;
+    padding: 26px;
+    background: #fff;
+    border: 1px solid #e1e9f0;
+    border-radius: 18px;
+    box-shadow: 0 8px 28px rgba(24, 49, 74, 0.06);
+}
+
+.indoor-map-card h2 {
+    color: #183650;
+    font-size: 23px;
+    margin-bottom: 7px;
+}
+
+.indoor-map-card > p {
+    color: #77899c;
+    margin-bottom: 20px;
 }
 
 .map-controls {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
     margin: 20px 0;
-    align-items: end;
 }
 
 .map-controls label {
-    display: block;
-    margin-bottom: 7px;
-    font-weight: 600;
+    font-size: 13px;
+    font-weight: 700;
+    color: #40566d;
 }
 
 .map-controls select {
+    display: block;
     width: 100%;
-    padding: 11px;
-    border: 1px solid #d5dfeb;
-    border-radius: 8px;
-    background: white;
+    margin-top: 8px;
+    padding: 12px;
+    border: 1px solid #dce5ed;
+    border-radius: 9px;
+    background: #f8fafc;
+    color: #243c55;
 }
 
-.primary-button {
-    padding: 12px 18px;
+#show-map-route {
+    grid-column: 1 / -1;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
     background: #13a69f;
     color: white;
-    border: none;
-    border-radius: 8px;
+    font-weight: 700;
     cursor: pointer;
-    font-weight: 600;
 }
 
-.primary-button:hover {
-    background: #108a85;
-}
-
-.map-legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin: 18px 0;
-    color: #61748b;
-    font-size: 13px;
+#show-map-route:hover {
+    background: #108b85;
 }
 
 .indoor-map {
     width: 100%;
+    padding: 16px;
+    background: #edf2f7;
+    border: 1px solid #e0e7ef;
+    border-radius: 15px;
     overflow-x: auto;
-    background: #eef4f8;
-    border-radius: 12px;
-    padding: 12px;
 }
 
-.indoor-map svg {
+.floor-switcher {
+    display: flex;
+    gap: 9px;
+    margin-bottom: 14px;
+}
+
+.floor-switcher button {
+    padding: 11px 20px;
+    border: 1px solid #d8e2ec;
+    border-radius: 9px;
+    background: white;
+    color: #52677e;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.floor-switcher button.active {
+    background: #173653;
+    border-color: #173653;
+    color: white;
+}
+
+.floor-plan-canvas {
+    min-width: 650px;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.floor-plan-canvas svg {
     display: block;
     width: 100%;
-    min-width: 650px;
     height: auto;
+}
+
+.floor-background {
+    fill: #fff;
+    stroke: #d7e1eb;
+    stroke-width: 2;
+}
+
+.plan-heading {
+    font-size: 19px;
+    font-weight: 800;
+    fill: #173653;
+    letter-spacing: 1px;
+}
+
+.plan-level {
+    font-size: 12px;
+    font-weight: 700;
+    fill: #91a0af;
+}
+
+.floor-room {
+    pointer-events: none;
+}
+
+.room-wall {
+    fill: #f8fafc;
+    stroke: #8297aa;
+    stroke-width: 3;
+}
+
+.room-label {
+    text-anchor: middle;
+    font-size: 13px;
+    font-weight: 700;
+    fill: #38536d;
+}
+
+.room-number {
+    text-anchor: middle;
+    font-size: 11px;
+    fill: #8293a4;
+}
+
+.corridor-area {
+    fill: #e9f2f8;
+    stroke: #8297aa;
+    stroke-width: 3;
+}
+
+.corridor-title {
+    text-anchor: middle;
+    font-size: 13px;
+    font-weight: 800;
+    fill: #547087;
+    letter-spacing: 1px;
+}
+
+.corridor-subtitle {
+    text-anchor: middle;
+    font-size: 10px;
+    fill: #8a9eaf;
+}
+
+.service-room {
+    fill: #eee8fc;
+    stroke: #9274c8;
+    stroke-width: 3;
+}
+
+.stairs-room {
+    fill: #fff1d9;
+    stroke: #d99b43;
+}
+
+.service-label {
+    text-anchor: middle;
+    font-size: 12px;
+    font-weight: 800;
+    fill: #5b4a82;
+}
+
+.service-symbol {
+    text-anchor: middle;
+    font-size: 24px;
+    fill: #7657ad;
+}
+
+.exit-note {
+    text-anchor: middle;
+    font-size: 12px;
+    font-weight: 800;
+    fill: #c45151;
+}
+
+.location-circle {
+    stroke: #fff;
+    stroke-width: 4;
+    filter: drop-shadow(0 2px 3px rgba(20, 45, 70, 0.2));
+}
+
+.location-circle.entrance {
+    fill: #16a875;
+}
+
+.location-circle.corridor {
+    fill: #4f8cc9;
+}
+
+.location-circle.elevator {
+    fill: #9274c8;
+}
+
+.location-circle.room {
+    fill: #647d95;
+}
+
+.location-circle.stairs {
+    fill: #dc9b3e;
+}
+
+.location-circle.exit {
+    fill: #d85c5c;
+}
+
+.location-symbol {
+    text-anchor: middle;
+    fill: white;
+    font-size: 10px;
+    font-weight: 900;
+}
+
+.location-label {
+    text-anchor: middle;
+    fill: #243d55;
+    font-size: 12px;
+    font-weight: 800;
+    paint-order: stroke;
+    stroke: white;
+    stroke-width: 4px;
+    stroke-linejoin: round;
 }
 
 .map-node {
     cursor: pointer;
+    outline: none;
 }
 
-.map-node rect {
-    stroke: #6e8297;
-    stroke-width: 2;
-    rx: 8;
+.map-node:hover .location-circle,
+.map-node:focus .location-circle {
+    stroke: #13a69f;
+    stroke-width: 6;
 }
 
-.map-node text {
-    font-size: 13px;
-    fill: #17324d;
-    font-weight: 600;
-    text-anchor: middle;
+.route-node .location-circle {
+    stroke: #13a69f;
+    stroke-width: 5;
+}
+
+.indoor-route-line {
+    fill: none;
+    stroke: #10a89d;
+    stroke-width: 9;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0.95;
+    filter: drop-shadow(0 2px 2px rgba(16, 168, 157, 0.3));
     pointer-events: none;
 }
 
-.map-node.selected rect {
-    stroke: #13a69f;
-    stroke-width: 4;
+.map-key {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding: 16px 5px 3px;
+    color: #61758a;
+    font-size: 12px;
+    font-weight: 600;
 }
 
-.map-node.route-node rect {
-    stroke: #13a69f;
-    stroke-width: 4;
+.map-key span {
+    display: flex;
+    align-items: center;
+    gap: 7px;
 }
 
-.map-edge {
-    stroke: #9aabba;
-    stroke-width: 7;
-    stroke-linecap: round;
-    fill: none;
+.key-dot {
+    width: 11px;
+    height: 11px;
+    display: inline-block;
+    border-radius: 50%;
 }
 
-.map-edge.stairs {
-    stroke: #e5a044;
-    stroke-dasharray: 8 5;
-}
-
-.map-edge.route-edge {
-    stroke: #13a69f;
-    stroke-width: 10;
-}
-
-.floor-title {
-    font-size: 20px;
-    font-weight: 700;
-    fill: #17324d;
-}
+.entrance-key { background: #16a875; }
+.room-key { background: #647d95; }
+.lift-key { background: #9274c8; }
+.stairs-key { background: #dc9b3e; }
+.route-key { background: #10a89d; }
 
 .map-route-result {
-    margin-top: 16px;
-    padding: 15px;
-    background: #e7f7f4;
-    border-radius: 9px;
-    color: #175c57;
-    line-height: 1.6;
+    margin-top: 17px;
+    padding: 17px;
+    border-radius: 11px;
+    background: #eaf8f5;
+    border: 1px solid #ccece4;
+    color: #17675e;
+    line-height: 1.8;
 }
 
-@media (max-width: 650px) {
+.route-path {
+    margin: 7px 0;
+    color: #175b57;
+    font-weight: 700;
+}
+
+@media (max-width: 700px) {
     .map-controls {
         grid-template-columns: 1fr;
     }
-}
 
-
-    .nav-link {
-        font-size: 10px;
+    .indoor-map-card {
+        padding: 15px;
     }
 }
