@@ -30,14 +30,23 @@ int main() {
         false, true, false, true,
         true, true
     };
+    // Create one common dataset for all three modules
+BuildingData building;
+
+building.locations.push_back(entrance);
+building.locations.push_back(exitLocation);
+building.connections.push_back(path);
 
     // 2. MEMBER 1 - NAVIGATION
 
     Graph navigation;
 
-    navigation.addVertex(entrance);
-    navigation.addVertex(exitLocation);
-    navigation.addEdge(path);
+   bool navigationLoadPass =
+    navigation.loadBuildingData(building);
+
+cout << (navigationLoadPass
+    ? "PASS: Common data loaded into navigation.\n"
+    : "FAIL: Navigation data loading failed.\n");
 
     Graph::RouteResult normalRoute =
         navigation.dijkstra(1, 2, GENERAL);
@@ -69,9 +78,12 @@ int main() {
 
     EmergencyManager emergency;
 
-    emergency.addLocation(entrance);
-    emergency.addLocation(exitLocation);
-    emergency.addConnection(path);
+    bool emergencyLoadPass =
+    emergency.loadBuildingData(building);
+
+cout << (emergencyLoadPass
+    ? "PASS: Common data loaded into emergency management.\n"
+    : "FAIL: Emergency data loading failed.\n");
 
     RouteResult evacuationRoute =
         emergency.findEvacuationRoute(1, 1, GENERAL);
@@ -98,12 +110,7 @@ int main() {
 
     // 4. MEMBER 3 - WHAT-IF SIMULATION
 
-    BuildingData building;
-
-    building.locations.push_back(entrance);
-    building.locations.push_back(exitLocation);
-    building.connections.push_back(path);
-
+    
     WhatIfSimulator simulator(building);
 
     cout << "\n--- MEMBER 3: SIMULATION ---\n";
@@ -151,11 +158,13 @@ int main() {
     cout << "Member 3 what-if simulation: "
          << (simulationPass ? "PASS" : "FAIL") << "\n";
 
-    if (navigationPass &&
-        navigationBlockPass &&
-        emergencyPass &&
-        emergencyBlockPass &&
-        simulationPass) {
+    if (navigationLoadPass &&
+    emergencyLoadPass &&
+    navigationPass &&
+    navigationBlockPass &&
+    emergencyPass &&
+    emergencyBlockPass &&
+    simulationPass) {
 
         cout << "\nALL BACKEND INTEGRATION TESTS PASSED!\n";
         return 0;
