@@ -323,4 +323,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("map-mobility")
         ?.addEventListener("change", calculateAndShowMapRoute);
+        // Automatically display the default accessible route
+    calculateAndShowMapRoute();
 });
