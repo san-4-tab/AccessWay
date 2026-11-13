@@ -151,6 +151,9 @@ cout << "Crutches allowed: "
 cout << "Wheelchair allowed on wide path: "
      << ac.isEdgeAllowed(wide, WHEELCHAIR) << endl;
 
+    cout << "Limited mobility allowed on stairs: "
+     << ac.isEdgeAllowed(stairs, LIMITED_MOBILITY) << endl;
+
     Connection stairs = {
     6, 101, 1, 2,
     10, 1.5, 0,
