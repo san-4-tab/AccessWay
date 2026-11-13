@@ -8,7 +8,7 @@
 
 #include <string>
 #include <unordered_map>
-#include "../common/AccessPulseData.h"
+#include "../common/AccessWayData.h"
 #include "EvacuationManager.h"
 #include "VolunteerManager.h"
 #include "HelpRequestManager.h"
