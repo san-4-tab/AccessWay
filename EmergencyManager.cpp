@@ -149,8 +149,20 @@ bool EmergencyManager::saveAll(const string& folder) const {
 }
 
 bool EmergencyManager::loadAll(const string& folder) {
-    bool ok = volunteers.loadFromFile(folder + "/volunteers.txt");
-    ok = helpRequests.loadFromFile(folder + "/requests.txt") && ok;
-    ok = evacuation.loadStatus(folder + "/emergency_status.txt") && ok;
-    return ok;
+
+    bool volunteersLoaded =
+        volunteers.loadFromFile(folder + "/volunteers.txt");
+
+    bool requestsLoaded =
+        helpRequests.loadFromFile(folder + "/requests.txt");
+
+    if (volunteersLoaded && requestsLoaded) {
+        helpRequests.syncVolunteerAvailability();
+    }
+
+    bool statusLoaded =
+        evacuation.loadStatus(folder + "/emergency_status.txt");
+
+    return volunteersLoaded && requestsLoaded && statusLoaded;
+}
 }
