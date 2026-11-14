@@ -479,7 +479,9 @@ if (std::any_of(
 
     std::cout << "AccessWay API starting on http://localhost:8080\n";
 
-    if (!server.listen("0.0.0.0", 8080)) {
+    int port = 8080;
+if (const char* envPort = std::getenv("PORT")) port = std::stoi(envPort);
+if (!server.listen("0.0.0.0", port)) {
         std::cerr << "Could not start API server on port 8080\n";
         return 1;
     }
