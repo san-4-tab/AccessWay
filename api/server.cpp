@@ -219,12 +219,15 @@ int main() {
                 return;
             }
 
-            if (std::any_of(
-                reviews.getReviews(review.buildingId).begin(),
-                reviews.getReviews(review.buildingId).end(),
-                [&](const Review& existing) {
-                    return existing.reviewId == review.reviewId;
-                })) {
+         const std::vector<Review> existingReviews =
+    reviews.getReviews(review.buildingId);
+
+if (std::any_of(
+    existingReviews.begin(),
+    existingReviews.end(),
+    [&](const Review& existing) {
+        return existing.reviewId == review.reviewId;
+    })) {
                 res.status = 409;
                 res.set_content(
                     R"({"error":"Review ID already exists"})",
