@@ -43,4 +43,4 @@ g++ -std=c++17 main.cpp -o member3_app
 - Priority scores are prototype values, not validated accessibility standards.
 - Simulation reports reachability, not certified evacuation safety.
 - Reviews are stored locally in a text file.
-- The module will be integrated with the common building data during the final development stage.
+- The module is integrated with the shared building data defined in common/AccessWayData.h.
