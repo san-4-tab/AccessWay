@@ -235,6 +235,7 @@ bool HelpRequestManager::saveToFile(const string& filename) const {
 
 
 bool HelpRequestManager::loadFromFile(const string& filename) {
+
     ifstream in(filename.c_str());
 
     if (!in)
@@ -245,6 +246,7 @@ bool HelpRequestManager::loadFromFile(const string& filename) {
     nextSequence = 0;
 
     string line;
+    bool success = true;
 
     while (getline(in, line)) {
 
@@ -253,33 +255,89 @@ bool HelpRequestManager::loadFromFile(const string& filename) {
 
         vector<string> p = splitLine(line);
 
-        if (p.size() < 6)
+        // Exactly six fields are required.
+        if (p.size() != 6) {
+            success = false;
             continue;
+        }
 
         try {
+
             HelpRequest r;
 
-            r.requestId = stoi(p[0]);
-            r.buildingId = stoi(p[1]);
-            r.visitorLocationId = stoi(p[2]);
-            r.assignedVolunteerId = stoi(p[3]);
+            size_t pos0 = 0, pos1 = 0, pos2 = 0;
+            size_t pos3 = 0, pos5 = 0;
+
+            r.requestId = stoi(p[0], &pos0);
+            r.buildingId = stoi(p[1], &pos1);
+            r.visitorLocationId = stoi(p[2], &pos2);
+            r.assignedVolunteerId = stoi(p[3], &pos3);
             r.helpType = p[4];
 
-            int statusValue = stoi(p[5]);
+            int statusValue = stoi(p[5], &pos5);
 
-            if (statusValue < PENDING || statusValue > CANCELLED)
+            // Reject partially parsed numbers.
+            if (pos0 != p[0].size() ||
+                pos1 != p[1].size() ||
+                pos2 != p[2].size() ||
+                pos3 != p[3].size() ||
+                pos5 != p[5].size()) {
+
+                success = false;
                 continue;
+            }
+
+            // Validate IDs and help type.
+            if (r.requestId <= 0 ||
+                r.buildingId <= 0 ||
+                r.visitorLocationId <= 0 ||
+                r.assignedVolunteerId < -1 ||
+                r.helpType.empty() ||
+                r.helpType.find_first_of("|\r\n") != string::npos) {
+
+                success = false;
+                continue;
+            }
+
+            // Validate request status.
+            if (statusValue < PENDING || statusValue > CANCELLED) {
+                success = false;
+                continue;
+            }
 
             r.status = static_cast<RequestStatus>(statusValue);
 
+            // Active and completed requests must have an assigned volunteer.
+            if ((r.status == ACCEPTED ||
+                 r.status == IN_PROGRESS ||
+                 r.status == COMPLETED) &&
+                r.assignedVolunteerId == -1) {
+
+                success = false;
+                continue;
+            }
+
+            // Pending requests must not have an assigned volunteer.
+            if (r.status == PENDING &&
+                r.assignedVolunteerId != -1) {
+
+                success = false;
+                continue;
+            }
+
             long long key = makeKey(r.buildingId, r.requestId);
 
-            if (requests.count(key))
+            // Reject duplicate request IDs within a building.
+            if (requests.count(key)) {
+                success = false;
                 continue;
+            }
 
             requests[key] = r;
 
+            // Rebuild pending priority queues.
             if (r.status == PENDING) {
+
                 PendingEntry e;
                 e.priority = priorityOf(r.helpType);
                 e.sequence = nextSequence++;
@@ -288,13 +346,15 @@ bool HelpRequestManager::loadFromFile(const string& filename) {
                 pendingQueues[r.buildingId].push(e);
             }
 
-        } catch (...) {
-            // Ignore corrupted records
+        }
+        catch (...) {
+            success = false;
         }
     }
 
-    return true;
+    return success && !in.bad();
 }
+
 void HelpRequestManager::syncVolunteerAvailability() {
 
     for (auto& kv : requests) {
