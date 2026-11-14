@@ -119,7 +119,45 @@ cout << "Active volunteer remains unavailable after loading: "
 em2.displayVolunteers(1);
 em2.displayRequests(1);
 em2.printEmergencyReport(1);
+// Test that an unreachable high-priority request
+// does not prevent a reachable lower-priority request.
 
+EmergencyManager queueTest;
+queueTest.loadSampleBuilding(1);
+
+queueTest.registerVolunteer(
+    makeVolunteer(10, "Queue Tester", "General", 1)
+);
+
+queueTest.createHelpRequest(
+    makeRequest(1, 999, "Emergency")
+);
+
+queueTest.createHelpRequest(
+    makeRequest(2, 1, "General")
+);
+
+int queueHandledId = -1;
+
+bool queueProcessingPass =
+    queueTest.processNextRequest(1, &queueHandledId);
+
+HelpRequest* urgentRequest =
+    queueTest.getHelpRequestManager().findRequest(1, 1);
+
+HelpRequest* reachableRequest =
+    queueTest.getHelpRequestManager().findRequest(1, 2);
+
+bool queueFallbackPass =
+    queueProcessingPass &&
+    queueHandledId == 2 &&
+    urgentRequest &&
+    urgentRequest->status == PENDING &&
+    reachableRequest &&
+    reachableRequest->status == ACCEPTED;
+
+cout << "Queue skips unreachable urgent request: "
+     << (queueFallbackPass ? "PASS" : "FAIL") << "\n";
 // Make GitHub Actions fail if either test fails.
 if (!invalidRequestChecksPass ||
     !manualReleaseBlocked ||
