@@ -161,7 +161,7 @@ cout << "Queue skips unreachable urgent request: "
 // Make GitHub Actions fail if either test fails.
 if (!invalidRequestChecksPass ||
     !manualReleaseBlocked ||
-    !persistenceAvailabilityPass) {
+    !persistenceAvailabilityPass || !queueFallbackPass) {
     cout << "\nVOLUNTEER CONSISTENCY TEST FAILED.\n";
     return 1;
 }
