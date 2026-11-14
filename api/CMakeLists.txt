@@ -32,8 +32,9 @@ file(GLOB BACKEND_SOURCES CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/../member3/*.cpp"
 )
 
-# Exclude existing demo/test entry points.
+# Exclude existing demo and test entry points.
 list(FILTER BACKEND_SOURCES EXCLUDE REGEX "/main\\.cpp$")
+list(FILTER BACKEND_SOURCES EXCLUDE REGEX "/[^/]*test[^/]*\\.cpp$")
 
 add_executable(accessway_api
     server.cpp
