@@ -1,784 +1,1452 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>AccessWay | Intelligent Accessibility System</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+/* =====================================
+   ACCESSWAY – MAIN DESIGN
+===================================== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --navy: #142b49; --navy-light: #203e60; --blue: #3478c9; --teal: #16a6a0;
+    --background: #f4f7fb; --white: #fff; --text: #24354b; --muted: #6f7e92;
+    --border: #e6ebf2; --success: #1a9b70; --warning: #e69b35; --danger: #d9534f;
+    --shadow: 0 6px 22px rgba(24, 48, 78, .07);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', Arial, sans-serif; background: var(--background); color: var(--text); min-height: 100vh; line-height: 1.5; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+.hidden { display: none !important; }
+.app-container { display: flex; min-height: 100vh; }
+
+/* ---------- sidebar ---------- */
+.sidebar { width: 262px; background: var(--navy); color: #fff; padding: 26px 16px; display: flex; flex-direction: column; flex-shrink: 0; position: sticky; top: 0; height: 100vh; }
+.brand { display: flex; align-items: center; gap: 12px; padding: 0 8px 28px; }
+.brand-icon { width: 46px; height: 46px; border-radius: 12px; background: var(--teal); display: grid; place-items: center; font-weight: 800; font-size: 24px; }
+.brand h2 { font-size: 21px; line-height: 1.1; } .brand span { font-size: 12px; color: #9fb3cb; letter-spacing: .04em; }
+.sidebar-heading { font-size: 12px; letter-spacing: .14em; color: #8ea4bf; font-weight: 700; padding: 0 10px 10px; }
+.navigation { display: flex; flex-direction: column; gap: 6px; }
+.nav-link { display: flex; align-items: center; gap: 14px; padding: 13px 14px; border: 0; background: none; color: #d3deec; border-radius: 12px; font-weight: 600; text-align: left; transition: .15s; }
+.nav-link span { width: 22px; text-align: center; font-size: 17px; }
+.nav-link:hover { background: var(--navy-light); } .nav-link.active { background: var(--teal); color: #fff; }
+.sidebar-bottom { margin-top: auto; }
+.help-card { background: var(--navy-light); border-radius: 14px; padding: 16px; font-size: 13px; color: #c9d6e6; }
+.help-card h3 { color: #fff; font-size: 15px; margin-bottom: 4px; }
+.help-button { margin-top: 10px; width: 100%; padding: 9px; border: 0; border-radius: 9px; background: var(--teal); color: #fff; font-weight: 700; }
+.sidebar-footer { text-align: center; font-size: 12px; color: #8ea4bf; margin-top: 12px; }
+
+/* ---------- main ---------- */
+.main-content { flex: 1; min-width: 0; padding: 26px 34px 20px; }
+.topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; gap: 12px; }
+.breadcrumb { font-size: 13px; color: var(--muted); } .breadcrumb span { color: var(--blue); }
+.topbar h1 { font-size: 30px; color: var(--navy); line-height: 1.2; }
+.topbar-right { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--muted); }
+.status-indicator { width: 9px; height: 9px; border-radius: 50%; background: var(--success); }
+.profile-avatar { width: 42px; height: 42px; border-radius: 50%; background: #e4eef8; display: grid; place-items: center; font-weight: 700; color: var(--navy); }
+.page { display: none; } .page.active { display: block; animation: fade .3s; }
+@keyframes fade { from { opacity: 0; transform: translateY(8px); } }
+.page > * + * { margin-top: 18px; }
+
+/* ---------- cards ---------- */
+.content-card, .stat-card, .building-card, .intro-card, .welcome-section { background: var(--white); border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--shadow); }
+.content-card { padding: 22px; }
+.content-card h3, .intro-card h2 { color: var(--navy); }
+.content-card > h3 { margin-bottom: 12px; font-size: 18px; }
+.welcome-section { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 32px; background: linear-gradient(110deg, #123456, #1c5c7a 65%, #2a7f8e); color: #fff; border: 0; }
+.welcome-section h2 { font-size: 30px; margin: 4px 0 8px; } .welcome-section p { max-width: 620px; color: #d6e6f2; }
+.eyebrow { font-size: 12px; letter-spacing: .16em; font-weight: 700; color: #8fe3dd !important; }
+.welcome-symbol { width: 100px; height: 100px; border-radius: 22px; background: linear-gradient(145deg,#4a95f0,#2f6fe0); display: grid; place-items: center; font-size: 62px; color: #fff; box-shadow: 0 10px 24px rgba(0,0,0,.2); flex-shrink: 0; }
+.section-heading { display: flex; justify-content: space-between; align-items: end; margin-top: 28px !important; }
+.section-heading h2 { font-size: 21px; color: var(--navy); } .section-heading p { color: var(--muted); font-size: 14px; }
+.demo-label, .campus-demo-tag { font-size: 11px; font-weight: 800; letter-spacing: .08em; padding: 5px 11px; border-radius: 99px; background: #e6f6f4; color: #0f857f; }
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px; }
+.stat-card { padding: 20px; } .stat-card p { color: var(--muted); font-size: 14px; } .stat-card h2 { font-size: 34px; color: var(--navy); line-height: 1.2; } .stat-card > span { font-size: 12px; color: var(--success); }
+.stat-icon { width: 40px; height: 40px; border-radius: 11px; display: grid; place-items: center; font-size: 18px; margin-bottom: 10px; }
+.stat-icon.blue { background: #e3eefb; color: var(--blue); } .stat-icon.teal { background: #dff4f3; color: var(--teal); } .stat-icon.orange { background: #fdf0dc; color: var(--warning); } .stat-icon.purple { background: #efe8fb; color: #8a63c7; } .stat-icon.green { background: #def5ea; color: var(--success); }
+.building-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.building-card { overflow: hidden; }
+.building-visual { height: 140px; display: grid; place-items: center; font-size: 64px; }
+.building-info { padding: 16px; } .building-info h3 { color: var(--navy); margin: 4px 0; } .building-info p { font-size: 13px; color: var(--muted); }
+.building-tag { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 99px; background: #eef3f9; color: var(--blue); }
+.text-button { margin-top: 10px; background: none; border: 0; color: var(--teal); font-weight: 700; padding: 0; }
+.quick-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.action-card { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; text-align: left; padding: 20px; background: #fff; border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--shadow); transition: .15s; }
+.action-card:hover { transform: translateY(-3px); border-color: var(--teal); }
+.action-card span { font-size: 24px; color: var(--teal); } .action-card small { color: var(--muted); }
+.intro-card { display: flex; align-items: center; gap: 18px; padding: 24px; background: linear-gradient(120deg, #e8f4f6, #edf2fb); }
+.large-icon { width: 58px; height: 58px; border-radius: 15px; background: #fff; display: grid; place-items: center; font-size: 26px; color: var(--teal); box-shadow: var(--shadow); flex-shrink: 0; }
+.intro-card p { color: var(--muted); }
+
+/* ---------- forms ---------- */
+label { display: block; font-size: 13px; font-weight: 600; margin: 14px 0 5px; }
+select, input[type=text], input[type=number], input:not([type]), textarea { width: 100%; padding: 11px 13px; border: 1px solid #d3dce7; border-radius: 10px; background: #fbfcfe; }
+select:focus, input:focus, textarea:focus { outline: 2px solid rgba(22, 166, 160, .35); border-color: var(--teal); }
+.form-row { display: grid; gap: 14px; } .form-row.three { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); } .form-row.two { grid-template-columns: 1fr 1fr; }
+.form-row label { margin-top: 0; }
+.check { display: flex; align-items: center; gap: 8px; } .check input { width: auto; }
+.primary-button, .secondary-button, .danger-button { border: 0; border-radius: 10px; padding: 12px 20px; font-weight: 700; margin-top: 16px; transition: .15s; }
+.primary-button { background: var(--teal); color: #fff; width: 100%; } .primary-button.inline { width: auto; }
+.secondary-button { background: #e8eef5; color: var(--navy); margin-right: 8px; }
+.danger-button { background: var(--danger); color: #fff; width: 100%; }
+.primary-button:hover, .danger-button:hover { filter: brightness(.93); } .secondary-button:hover { background: #dbe5f0; }
+.button-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; } .button-row .primary-button { margin-right: 0; }
+.mini-button { margin: 8px 6px 0 0; padding: 4px 11px; border: 0; border-radius: 8px; background: #e8eef5; color: var(--navy); font-size: 12px; font-weight: 700; }
+.mini-button.ghost { background: #fbe9e8; color: #a33; }
+.two-column { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 18px; }
+.sub { margin: 20px 0 6px; color: var(--navy); }
+.small-note, .muted-note { font-size: 12.5px; color: var(--muted); }
+.result-area { margin-top: 14px; }
+
+/* ---------- navigation layout + map ---------- */
+.nav-layout { display: grid; grid-template-columns: 360px minmax(0, 1fr); gap: 18px; align-items: start; }
+.route-empty { padding: 18px; border: 1px dashed #cdd8e5; border-radius: 12px; color: var(--muted); font-size: 14px; }
+.route-option { border: 2px solid var(--border); border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; cursor: pointer; transition: .15s; }
+.route-option:hover { border-color: #b8dedc; } .route-option.selected { border-color: var(--teal); background: #effaf9; }
+.route-option p { font-size: 13px; color: var(--muted); margin-top: 3px; }
+.route-steps { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); } .route-steps h4 { color: var(--navy); }
+.route-steps ol, .compare-card ol, .plain-steps { padding-left: 20px; margin: 8px 0; font-size: 14px; } li { margin: 3px 0; }
+.pill { display: inline-block; padding: 2px 9px; border-radius: 99px; font-size: 11.5px; font-weight: 700; background: #e8eef5; margin: 2px 2px 2px 0; }
+.pill.ok { background: #d9f3e8; color: #0b6b42; } .pill.warn { background: #fdebd0; color: #8a4b00; } .pill.bad { background: #fadbd8; color: #922; } .pill.info { background: #dcebfb; color: #1f559a; }
+.map-heading { display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px; } .map-heading h2 { color: var(--navy); font-size: 22px; }
+.campus-eyebrow { font-size: 11px; font-weight: 800; letter-spacing: .14em; color: var(--teal); }
+.chip-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 8px 0; } .chip-row.big { margin: 0; }
+.chip { border: 1px solid #cfd9e5; background: #fff; border-radius: 99px; padding: 6px 14px; font-size: 13px; font-weight: 600; transition: .15s; }
+.chip:hover { border-color: var(--teal); } .chip.on { background: var(--navy); color: #fff; border-color: var(--navy); } .chip.floor.on { background: var(--teal); border-color: var(--teal); }
+.chip-gap { width: 10px; }
+.map-scroll { overflow: auto; max-height: 680px; border: 1px solid var(--border); border-radius: 14px; background: #f4f7f3; }
+.svg-map { display: block; min-width: 560px; height: auto; } .campus-block { cursor: pointer; transition: opacity .15s; } .campus-block:hover { opacity: .85; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 12.5px; color: var(--muted); margin-top: 10px; }
+.legend .dot { display: inline-block; width: 11px; height: 11px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.legend .dot.hatch { border-radius: 2px; background: repeating-linear-gradient(45deg, #b9c4d2 0 2px, #fff 2px 5px); }
+
+/* ---------- lists & custom cards (enhanced layouts) ---------- */
+.scroll-list { max-height: 460px; overflow: auto; margin-top: 10px; }
+.priority-item-card { border: 1px solid var(--border); border-radius: 14px; padding: 18px; margin-top: 12px; background: #fff; display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; box-shadow: 0 2px 8px rgba(0,0,0,.02); }
+.priority-item-card .issue-info h4 { color: var(--navy); font-size: 16px; display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.priority-item-card .issue-info p.location { color: var(--teal); font-size: 13.5px; font-weight: 600; margin-bottom: 6px; }
+.priority-item-card .issue-info p.desc { color: var(--muted); font-size: 13.5px; }
+.priority-item-card .issue-meta { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
+.priority-item-card .issue-meta .count { font-weight: 800; font-size: 15px; color: var(--navy); }
+.priority-item-card .issue-meta .confirms { font-size: 12px; color: var(--muted); }
+
+.sev-btn-group { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 6px; }
+.sev-btn { padding: 10px; border: 1px solid #d3dce7; border-radius: 10px; background: #fbfcfe; font-weight: 700; text-align: center; cursor: pointer; transition: .15s; font-size: 13px; }
+.sev-btn.active.critical { background: #d9534f; color: #fff; border-color: #d9534f; }
+.sev-btn.active.high { background: #e69b35; color: #fff; border-color: #e69b35; }
+.sev-btn.active.medium { background: #3478c9; color: #fff; border-color: #3478c9; }
+.sev-btn.active.low { background: #1a9b70; color: #fff; border-color: #1a9b70; }
+
+.badge-critical { background: #fadbd8; color: #a1302a; padding: 3px 10px; border-radius: 99px; font-size: 11.5px; font-weight: 700; }
+.badge-high { background: #fdebd0; color: #8a4b00; padding: 3px 10px; border-radius: 99px; font-size: 11.5px; font-weight: 700; }
+.badge-medium { background: #e3eefb; color: #1f559a; padding: 3px 10px; border-radius: 99px; font-size: 11.5px; font-weight: 700; }
+.badge-low { background: #d9f3e8; color: #0b6b42; padding: 3px 10px; border-radius: 99px; font-size: 11.5px; font-weight: 700; }
+
+.volunteer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-top: 16px; }
+.volunteer-card { border: 1px solid var(--border); border-radius: 16px; padding: 20px; background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,.03); display: flex; flex-direction: column; justify-content: space-between; }
+.volunteer-card .v-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.volunteer-card h4 { color: var(--navy); font-size: 17px; margin-bottom: 2px; }
+.volunteer-card p.role { font-size: 13px; color: var(--muted); }
+.volunteer-card p.zone { font-size: 13px; color: var(--teal); font-weight: 600; margin: 6px 0 12px; }
+.volunteer-tags { display: flex; flex-wrap: gap; gap: 6px; margin-bottom: 16px; }
+.vtag { background: #f0f4f9; color: var(--navy); padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: 600; }
+
+.compare-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; margin-bottom: 14px; }
+.compare-card { border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-top: 12px; background: #fbfcfe; } .compare-grid .compare-card { margin-top: 0; } .compare-card h4 { color: var(--navy); }
+.delta { font-weight: 700; color: var(--navy); margin: 8px 0; }
+.warning-banner { display: flex; gap: 14px; background: #fff6ea; border: 1px solid #f4d9b0; border-left: 5px solid var(--warning); padding: 16px 18px; border-radius: 12px; align-items: start; } .warning-banner > span { font-size: 24px; } .warning-banner p { font-size: 14px; color: #6f4a14; }
+.warning-box, .info-box { border-radius: 10px; padding: 12px 14px; font-size: 14px; margin: 10px 0; } .warning-box { background: #fff6ea; border-left: 5px solid var(--warning); color: #6f4a14; } .info-box { background: #e9f8f1; border-left: 5px solid var(--success); color: #11583c; }
+.exit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; } .exit-card { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 16px; font-size: 13.5px; } .exit-card h4 { color: var(--navy); margin-bottom: 6px; }
+.main-footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-top: 36px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 13px; color: var(--muted); }
+.toast { position: fixed; bottom: 22px; left: 50%; transform: translate(-50%, 20px); background: var(--navy); color: #fff; padding: 11px 20px; border-radius: 12px; opacity: 0; pointer-events: none; transition: .25s; z-index: 50; max-width: 90vw; }
+.toast.show { opacity: 1; transform: translate(-50%, 0); } .toast.bad { background: var(--danger); }
+
+/* ---------- responsive ---------- */
+@media (max-width: 1100px) { .nav-layout { grid-template-columns: 1fr; } }
+@media (max-width: 860px) {
+    .app-container { flex-direction: column; }
+    .sidebar { width: 100%; height: auto; position: static; padding: 14px; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 10px; }
+    .brand { padding: 0; } .sidebar-heading, .sidebar-bottom { display: none; }
+    .navigation { flex-direction: row; overflow-x: auto; flex: 1; } .nav-link { white-space: nowrap; padding: 10px 12px; }
+    .main-content { padding: 18px 14px; } .topbar h1 { font-size: 24px; }
+    .welcome-symbol { display: none; } .two-column { grid-template-columns: 1fr; } .form-row.two { grid-template-columns: 1fr; }
+}
+
+/* ---------- navigation page (v3) ---------- */
+.picker { display: grid; gap: 8px; }
+.summary-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; margin: 6px 0 14px; }
+.tile { background: #f1f8f8; border: 1px solid #d7ecea; border-radius: 12px; padding: 12px; text-align: center; } .tile b { display: block; font-size: 22px; color: var(--navy); } .tile span { font-size: 12px; color: var(--muted); }
+.route-title { font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+.dir-section { border-left: 3px solid var(--teal); padding: 2px 0 2px 14px; margin: 14px 0; } .dir-section h4 { color: var(--navy); display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+.dir-num { width: 24px; height: 24px; border-radius: 50%; background: var(--teal); color: #fff; font-size: 13px; display: inline-grid; place-items: center; }
+.dir-section ol { padding-left: 22px; font-size: 14.5px; } .dir-section li { margin: 5px 0; }
+.map-with-side { display: grid; grid-template-columns: minmax(0, 1fr) 250px; gap: 16px; align-items: start; }
+.side-panel { border: 1px solid var(--border); border-radius: 14px; padding: 14px; background: #fbfcfe; font-size: 13px; } .side-panel h4 { color: var(--navy); margin-bottom: 8px; } .side-panel .sub { margin-top: 16px; }
+.toggle { display: flex; justify-content: space-between; align-items: center; margin: 0; padding: 8px 0; font-weight: 600; font-size: 13px; border-bottom: 1px solid #eef2f6; } .toggle input { width: 38px; height: 20px; accent-color: var(--teal); }
+.legend-list { list-style: none; } .legend-list li { display: flex; gap: 10px; align-items: center; margin: 9px 0; } .legend-list small { display: block; color: var(--muted); font-size: 11.5px; }
+.ln { width: 34px; height: 4px; border-radius: 2px; flex-shrink: 0; } .ln.dash { background: repeating-linear-gradient(90deg, var(--c) 0 7px, transparent 7px 12px); } .sw { width: 34px; height: 16px; border-radius: 4px; border: 1px solid #cdd6e0; flex-shrink: 0; }
+.chip-row.inline { display: inline-flex; margin: 0; }
+.svg-map.campus { min-width: 600px; width: 100%; }
+@media (max-width: 1150px) { .map-with-side { grid-template-columns: 1fr; } }
+
+/* ---------- emergency + what-if (v4) ---------- */
+.em-banner { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; background: #fdeceb; border: 1px solid #f3b9b4; border-left: 6px solid var(--danger); border-radius: 14px; padding: 14px 18px; } .em-banner p { font-size: 14px; color: #7a2a24; } .em-banner .secondary-button { margin: 0; }
+.em-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 18px; margin-top: 16px; align-items: start; } .em-grid > div > .content-card + .content-card { margin-top: 18px; }
+.quick-reports { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 8px; margin-top: 8px; }
+.report-btn { text-align: left; padding: 12px 14px; border: 1px solid #f0c9c5; background: #fff7f6; color: #7a2a24; border-radius: 12px; font-weight: 600; font-size: 14px; transition: .15s; } .report-btn:hover { background: #fdeceb; border-color: var(--danger); }
+.part { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 9px 12px; border: 1px solid var(--border); border-radius: 10px; margin-top: 8px; background: #fff; font-size: 13.5px; } .part.is-closed { background: #fdeceb; border-color: #f3b9b4; } .part .mini-button { margin: 0 0 0 6px; } .part-btns { display: flex; flex-shrink: 0; }
+details.content-card summary { cursor: pointer; } details.content-card[open] summary { margin-bottom: 8px; }
+.dir-section li .mini-button { margin: 0 0 0 8px; padding: 2px 9px; }
+@media (max-width: 1100px) { .em-grid { grid-template-columns: 1fr; } }
+
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+</style>
 </head>
-
 <body>
-
 <div class="app-container">
 
-    <!-- SIDEBAR -->
     <aside class="sidebar">
-
-        <div class="brand">
-            <div class="brand-icon">A</div>
-            <div>
-                <h2>AccessWay</h2>
-                <span>Smart Accessibility</span>
-            </div>
-        </div>
-
+        <div class="brand"><div class="brand-icon">A</div><div><h2>AccessWay</h2><span>Smart Accessibility</span></div></div>
         <div class="sidebar-heading">MAIN MENU</div>
-
         <nav class="navigation">
-            <button class="nav-link active" data-page="dashboard">
-                <span>▦</span> Dashboard
-            </button>
-
-            <button class="nav-link" data-page="navigation">
-                <span>⌖</span> Building Navigation
-            </button>
-
-            <button class="nav-link" data-page="reviews">
-                <span>✎</span> Accessibility Reviews
-            </button>
-
-            <button class="nav-link" data-page="emergency">
-                <span>⚠</span> Emergency & Simulation
-            </button>
-
-            <button class="nav-link" data-page="volunteers">
-                <span>♡</span> Volunteer Assistance
-            </button>
+            <button class="nav-link active" data-page="dashboard"><span>▦</span> Dashboard</button>
+            <button class="nav-link" data-page="navigation"><span>⌖</span> Building Navigation</button>
+            <button class="nav-link" data-page="reviews"><span>✎</span> Accessibility Reviews</button>
+            <button class="nav-link" data-page="emergency"><span>⚠</span> Emergency &amp; Simulation</button>
+            <button class="nav-link" data-page="volunteers"><span>♡</span> Volunteer Assistance</button>
         </nav>
-
         <div class="sidebar-bottom">
-            <div class="help-card">
-                <div class="help-icon">?</div>
-                <h3>Need assistance?</h3>
-                <p>AccessWay helps make buildings more accessible.</p>
-                <button class="help-button" data-page="volunteers">
-                    Get Help
-                </button>
-            </div>
-
-            <div class="sidebar-footer">
-                AccessWay © 2026
-            </div>
+            <div class="help-card"><h3>Need assistance?</h3><p>AccessWay helps make buildings more accessible.</p><button class="help-button" data-page="volunteers">Get Help</button></div>
+            <div class="sidebar-footer">AccessWay © 2026</div>
         </div>
-
     </aside>
 
-
-    <!-- MAIN CONTENT -->
     <main class="main-content">
-
-        <!-- TOP BAR -->
         <header class="topbar">
-
-            <div>
-                <p class="breadcrumb">Workspace / <span id="breadcrumb-page">Dashboard</span></p>
-                <h1 id="page-heading">Dashboard</h1>
-            </div>
-
-            <div class="topbar-right">
-                <span class="status-indicator"></span>
-                <span class="system-status">System Demo</span>
-                <div class="profile-avatar">U</div>
-            </div>
-
+            <div><p class="breadcrumb">Workspace / <span id="breadcrumb-page">Dashboard</span></p><h1 id="page-heading">Dashboard</h1></div>
+            <div class="topbar-right"><span class="status-indicator"></span><span>System Demo</span><div class="profile-avatar">U</div></div>
         </header>
 
-
-        <!-- DASHBOARD PAGE -->
+        <!-- DASHBOARD -->
         <section class="page active" id="dashboard">
-
             <div class="welcome-section">
                 <div>
                     <p class="eyebrow">ACCESSIBILITY MANAGEMENT</p>
                     <h2>Welcome to AccessWay</h2>
-                    <p>
-                        Making buildings safer, smarter and more accessible
-                        for everyone.
-                    </p>
+                    <p>Making buildings safer, smarter and more accessible for everyone.</p>
                 </div>
-
                 <div class="welcome-symbol">♿</div>
             </div>
-
-
-            <div class="section-heading">
-                <div>
-                    <h2>Building Overview</h2>
-                    <p>Sample building information for demonstration</p>
-                </div>
-
-                <span class="demo-label">DEMO DATA</span>
-            </div>
-
-
-            <!-- STATISTICS -->
+            <div class="section-heading"><div><h2>Building Overview</h2><p>Sample building information for demonstration</p></div><span class="demo-label">DEMO DATA</span></div>
             <div class="stats-grid">
-
-                <div class="stat-card">
-                    <div class="stat-icon blue">▦</div>
-                    <p>Registered Buildings</p>
-                    <h2 id="building-count">3</h2>
-                    <span>Sample buildings</span>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-icon teal">✎</div>
-                    <p>Accessibility Reviews</p>
-                    <h2 id="review-count">6</h2>
-                    <span>Submitted reviews</span>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-icon orange">⚠</div>
-                    <p>Issues Identified</p>
-                    <h2 id="issue-count">4</h2>
-                    <span>Sample accessibility issues</span>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-icon purple">♡</div>
-                    <p>Available Volunteers</p>
-                    <h2 id="volunteer-count">12</h2>
-                    <span>Sample volunteers</span>
-                </div>
-
+                <div class="stat-card"><div class="stat-icon blue">▦</div><p>Registered Buildings</p><h2 id="building-count">5</h2><span>Sample buildings</span></div>
+                <div class="stat-card"><div class="stat-icon teal">✎</div><p>Accessibility Reviews</p><h2 id="review-count">0</h2><span>Submitted reviews</span></div>
+                <div class="stat-card"><div class="stat-icon orange">⚠</div><p>Issues Identified</p><h2 id="issue-count">0</h2><span>Verified accessibility issues</span></div>
+                <div class="stat-card"><div class="stat-icon purple">♡</div><p>Available Volunteers</p><h2 id="volunteer-count">0</h2><span>Ready to help</span></div>
             </div>
-
-
-            <!-- BUILDINGS -->
-            <div class="section-heading">
-                <div>
-                    <h2>Registered Buildings</h2>
-                    <p>Select a building to explore its accessibility features.</p>
-                </div>
-            </div>
-
-            <div class="building-grid">
-
-                <article class="building-card">
-                    <div class="building-visual building-one">🏢</div>
-                    <div class="building-info">
-                        <span class="building-tag">Educational</span>
-                        <h3>University Campus</h3>
-                        <p>4 Floors · Sample Building</p>
-                        <button class="text-button" data-page="navigation">
-                            Explore Building →
-                        </button>
-                    </div>
-                </article>
-
-                <article class="building-card">
-                    <div class="building-visual building-two">🏥</div>
-                    <div class="building-info">
-                        <span class="building-tag">Healthcare</span>
-                        <h3>City Medical Centre</h3>
-                        <p>5 Floors · Sample Building</p>
-                        <button class="text-button" data-page="navigation">
-                            Explore Building →
-                        </button>
-                    </div>
-                </article>
-
-                <article class="building-card">
-                    <div class="building-visual building-three">🏬</div>
-                    <div class="building-info">
-                        <span class="building-tag">Commercial</span>
-                        <h3>Central Shopping Complex</h3>
-                        <p>3 Floors · Sample Building</p>
-                        <button class="text-button" data-page="navigation">
-                            Explore Building →
-                        </button>
-                    </div>
-                </article>
-
-            </div>
-
-
-            <!-- QUICK ACTIONS -->
-            <div class="section-heading">
-                <div>
-                    <h2>Quick Actions</h2>
-                    <p>Access important AccessWay features.</p>
-                </div>
-            </div>
-
+            <div class="section-heading"><div><h2>Registered Buildings</h2><p>Select a building to explore its floor plans and accessibility features.</p></div></div>
+            <div class="building-grid" id="building-grid"></div>
+            <div class="section-heading"><div><h2>Needs Attention First</h2><p>Highest-priority locations from visitor reviews</p></div></div>
+            <div class="content-card" id="dash-priorities"></div>
+            <div class="section-heading"><div><h2>Quick Actions</h2><p>Access important AccessWay features.</p></div></div>
             <div class="quick-actions">
-
-                <button class="action-card" data-page="navigation">
-                    <span>⌖</span>
-                    <strong>Find Accessible Routes</strong>
-                    <small>Explore building navigation</small>
-                </button>
-
-                <button class="action-card" data-page="reviews">
-                    <span>✎</span>
-                    <strong>Submit a Review</strong>
-                    <small>Report accessibility issues</small>
-                </button>
-
-                <button class="action-card" data-page="emergency">
-                    <span>⚠</span>
-                    <strong>Run a Simulation</strong>
-                    <small>Explore what-if scenarios</small>
-                </button>
-
-                <button class="action-card" data-page="volunteers">
-                    <span>♡</span>
-                    <strong>Request Assistance</strong>
-                    <small>Connect with volunteers</small>
-                </button>
-
+                <button class="action-card" data-page="navigation"><span>⌖</span><strong>Find Accessible Routes</strong><small>Explore building navigation</small></button>
+                <button class="action-card" data-page="reviews"><span>✎</span><strong>Submit a Review</strong><small>Report accessibility issues</small></button>
+                <button class="action-card" data-page="emergency"><span>⚠</span><strong>Run a Simulation</strong><small>Explore what-if scenarios</small></button>
+                <button class="action-card" data-page="volunteers"><span>♡</span><strong>Request Assistance</strong><small>Connect with volunteers</small></button>
             </div>
-
         </section>
 
-
-        <!-- BUILDING NAVIGATION PAGE -->
+        <!-- BUILDING NAVIGATION -->
         <section class="page" id="navigation">
-
-            <div class="intro-card">
-                <span class="large-icon">⌖</span>
-                <div>
-                    <h2>Accessible Building Navigation</h2>
-                    <p>
-                        Find routes based on your destination and mobility
-                        preferences.
-                    </p>
-                </div>
-            </div>
+            <div class="intro-card"><span class="large-icon">⌖</span>
+                <div><h2>Accessible Building Navigation</h2><p>Choose where you are, where you are going and your mobility needs. You get written directions, the campus route, and the floor plan of your destination.</p></div></div>
 
             <div class="content-card">
-                <h3>Find Your Route</h3>
-
+                <h3>1 · Find Your Route</h3>
                 <form id="route-form">
-
-                    <label for="building-select">Select Building</label>
-                    <select id="building-select" required>
-                        <option value="">Choose a building</option>
-                        <option>University Campus</option>
-                        <option>City Medical Centre</option>
-                        <option>Central Shopping Complex</option>
-                    </select>
-
-                    <label for="start-location">Starting Location</label>
-                    <input id="start-location" type="text"
-                        placeholder="Example: Main Entrance" required>
-
-                    <label for="destination">Destination</label>
-                    <input id="destination" type="text"
-                        placeholder="Example: Room 201" required>
-
-                    <label for="mobility">Mobility Preference</label>
-                    <select id="mobility" required>
-                        <option value="general">General</option>
-                        <option value="wheelchair">Wheelchair User</option>
-                        <option value="crutches">Crutches</option>
-                        <option value="limited">Limited Mobility</option>
-                        <option value="hand">Hand Disability</option>
-                    </select>
-
-                    <button class="primary-button" type="submit">
-                        Find Accessible Route
-                    </button>
-
+                    <div class="form-row three">
+                        <div><label>From (building, then room)</label><div class="picker" id="route-from"></div></div>
+                        <div><label>To (building, then room)</label><div class="picker" id="route-to"></div></div>
+                        <div><label for="route-profile">Mobility needs</label>
+                            <select id="route-profile">
+                                <option value="gen">General</option>
+                                <option value="wheel">Wheelchair user (no stairs)</option>
+                                <option value="crutch">Crutches (avoid stairs)</option>
+                                <option value="limited">Limited mobility (avoid stairs)</option>
+                                <option value="hand">Hand disability</option>
+                            </select></div>
+                    </div>
+                    <div class="button-row"><button class="primary-button inline" type="submit">Find Accessible Route</button><button class="secondary-button" type="button" id="route-swap">⇄ Swap</button></div>
                 </form>
-   
-<!-- ACCESSWAY CAMPUS OVERVIEW -->
-<div class="content-card campus-map-card">
-    <div class="campus-map-heading">
-        <div>
-            <span class="campus-eyebrow">CAMPUS WAYFINDING</span>
-            <h2>University Campus Map</h2>
-            <p>Explore buildings and accessible outdoor pathways.</p>
-        </div>
-        <span class="campus-demo-tag">SAMPLE CAMPUS</span>
-    </div>
-
-    <div class="campus-controls">
-        <label>
-            Starting point
-           <select id="campus-start">
-    <option value="1">Main Gate</option>
-    <option value="2">Central Junction</option>
-    <option value="3">West Junction</option>
-    <option value="4">East Junction</option>
-    <option value="5">Block A - Academic</option>
-    <option value="6">Block B - Library</option>
-    <option value="7">Block C - Medical Centre</option>
-    <option value="8">Block D - Cafeteria</option>
-    <option value="9">Accessible Parking</option>
-</select>
-        </label>
-
-        <label>
-            Destination
-            <select id="campus-destination">
-        <option value="1">Main Gate</option>
-<option value="2">Central Junction</option>
-<option value="3">West Junction</option>
-<option value="4">East Junction</option>
-<option value="5">Block A - Academic</option>
-<option value="6">Block B - Library</option>
-<option value="7">Block C - Medical Centre</option>
-<option value="8">Block D - Cafeteria</option>
-<option value="9">Accessible Parking</option>
-            </select>
-        </label>
-
-        <label>
-            Mobility profile
-            <select id="campus-mobility">
-                <option value="wheelchair">Wheelchair</option>
-                <option value="limited">Limited mobility</option>
-                <option value="crutches">Crutches</option>
-                <option value="general">General</option>
-            </select>
-        </label>
-
-        <button type="button" id="campus-find-route">
-            Find Campus Route
-        </button>
-    </div>
-
-    <div id="campus-map" class="campus-map"></div>
-
-    <div class="campus-legend">
-        <span><i class="campus-dot gate"></i> Entrance</span>
-        <span><i class="campus-dot building"></i> Building</span>
-        <span><i class="campus-dot ramp"></i> Accessible ramp</span>
-        <span><i class="campus-dot path"></i> Pathway</span>
-        <span><i class="campus-dot route"></i> Selected route</span>
-    </div>
-
-    <div id="campus-route-result" class="campus-route-result"
-         aria-live="polite">
-        Select a destination to explore the sample campus.
-    </div>
-</div>
-             
-<div class="content-card indoor-map-card">
-    <h2>Interactive Indoor Map</h2>
-    <p>Explore our sample university building.</p>
-
-    <div class="map-controls">
-        <label>Starting point
-            <select id="map-start">
-               
-<option value="1">Main Entrance</option>
-<option value="2">Main Corridor</option>
-<option value="3">Elevator</option>
-<option value="4">Room 101</option>
-<option value="5">Staircase</option>
-<option value="6">First Floor Corridor</option>
-<option value="7">Room 201</option>
-<option value="8">Emergency Exit</option>
-<option value="9">Reception</option>
-<option value="10">Classroom 102</option>
-<option value="11">Library</option>
-<option value="12">Waiting Area</option>
-<option value="13">Washroom Ground Floor</option>
-<option value="14">Student Lounge</option>
-<option value="15">Laboratory</option>
-<option value="16">First Floor Library</option>
-<option value="17">Study Area</option>
-<option value="18">Washroom First Floor</option>
-<option value="19">Common Area</option>
- </select>
- </label>
-
- <label>Destination
-            <select id="map-destination"> 
-<option value="1">Main Entrance</option>
-<option value="2">Main Corridor</option>
-<option value="3">Elevator</option>
-<option value="4">Room 101</option>
-<option value="5">Staircase</option>
-<option value="6">First Floor Corridor</option>
-<option value="7">Room 201</option>
-<option value="8">Emergency Exit</option>
-<option value="9">Reception</option>
-<option value="10">Classroom 102</option>
-<option value="11">Library</option>
-<option value="12">Waiting Area</option>
-<option value="13">Washroom Ground Floor</option>
-<option value="14">Student Lounge</option>
-<option value="15">Laboratory</option>
-<option value="16">First Floor Library</option>
-<option value="17">Study Area</option>
-<option value="18">Washroom First Floor</option>
-<option value="19">Common Area</option>
-</select>
-</label>
-
-        <label>Mobility profile
-            <select id="map-mobility">
-                <option value="wheelchair">Wheelchair</option>
-                <option value="crutches">Crutches</option>
-                <option value="limited">Limited mobility</option>
-                <option value="general">General</option>
-            </select>
-        </label>
-
-        <button type="button" id="show-map-route">
-            Show Accessible Route
-        </button>
-    </div>
-
-    <div id="indoor-map" class="indoor-map"></div>
-
-    <div id="map-route-result" class="map-route-result">
-        Select your route.
-    </div>
-</div>
-
-
-                <div id="route-result" class="result-area" aria-live="polite">
-                    Your route information will appear here.
-                </div>
-
             </div>
 
+            <div class="content-card" id="directions-card"><h3>2 · Written Directions</h3><div id="directions"></div></div>
+
+            <div class="content-card map-card" id="campus-card">
+                <div class="map-heading"><div><span class="campus-eyebrow">CAMPUS NAVIGATION</span><h2>3 · Campus Map</h2><p class="small-note">Find accessible routes, view path conditions and plan your journey across campus. Click a block to open its floor plans.</p></div><span class="campus-demo-tag">SAMPLE CAMPUS</span></div>
+                <div class="map-with-side">
+                    <div class="map-scroll" id="campus-canvas"></div>
+                    <div class="side-panel">
+                        <h4>Path Conditions</h4>
+                        <ul class="legend-list">
+                            <li><i class="ln" style="background:#3fbfb6"></i><div><b>Paved path (accessible)</b><small>Smooth, wheelchair-friendly route</small></div></li>
+                            <li><i class="ln dash" style="--c:#2f6fe0"></i><div><b>Ramp</b><small>Sloped access between levels</small></div></li>
+                            <li><i class="ln dash" style="--c:#4aa84a"></i><div><b>Grass path</b><small>Walkable, not for wheelchairs</small></div></li>
+                            <li><i class="ln dash" style="--c:#d9372b"></i><div><b>Damaged path</b><small>Broken or obstructed, closed</small></div></li>
+                        </ul>
+                        <label class="check"><input type="checkbox" data-show="ramps" checked> Show ramps</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card map-card" id="indoor-card">
+                <div class="map-heading"><div><span class="campus-eyebrow">BUILDING NAVIGATION</span><h2 id="indoor-title">Block A</h2><p class="small-note" id="indoor-sub"></p></div><span class="campus-demo-tag">4 · INDOOR MAP</span></div>
+                <div class="chip-row" id="indoor-tabs"></div>
+                <div class="chip-row"><span class="muted-note">Floor:</span><span id="indoor-floors" class="chip-row inline"></span><button class="chip" id="zoom-out">－</button><button class="chip" id="zoom-in">＋</button></div>
+                <div class="map-with-side">
+                    <div class="map-scroll" id="indoor-canvas"></div>
+                    <div class="side-panel">
+                        <h4>Map Options</h4>
+                        <label class="toggle"><input type="checkbox" data-show="route" checked><span>Show accessible route</span></label>
+                        <label class="toggle"><input type="checkbox" data-show="ramps" checked><span>Show ramps</span></label>
+                        <label class="toggle"><input type="checkbox" data-show="lifts" checked><span>Show lifts</span></label>
+                        <label class="toggle"><input type="checkbox" data-show="stairs" checked><span>Show stairs</span></label>
+                        <label class="toggle"><input type="checkbox" data-show="wash" checked><span>Show washrooms</span></label>
+                        <h4 class="sub">Path Legend</h4>
+                        <ul class="legend-list">
+                            <li><i class="ln" style="background:#0f9f94"></i><div><b>Accessible path</b><small>≥ 1.5 m wide</small></div></li>
+                            <li><i class="ln dash" style="--c:#2f6fe0"></i><div><b>Ramp</b><small>≤ 1:12 slope</small></div></li>
+                            <li><i class="ln dash" style="--c:#d9372b"></i><div><b>Restricted path</b><small>Closed in simulation</small></div></li>
+                            <li><i class="sw" style="background:#fbf6e9"></i><div><b>Room / space</b></div></li>
+                            <li><i class="sw" style="background:#edf1f5"></i><div><b>Corridor</b></div></li>
+                            <li><i class="sw" style="background:#e4dbf8"></i><div><b>Lift</b></div></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="chip-row" id="indoor-legs"></div>
+            </div>
         </section>
 
-
-        <!-- REVIEWS PAGE -->
+        <!-- REVIEWS (Updated to Modern Layout) -->
         <section class="page" id="reviews">
-
-            <div class="intro-card">
-                <span class="large-icon">✎</span>
-                <div>
-                    <h2>Accessibility Reviews</h2>
-                    <p>
-                        Help administrators identify and prioritize
-                        accessibility problems.
-                    </p>
-                </div>
-            </div>
-
-            <div class="two-column">
-
-                <div class="content-card">
-                    <h3>Submit an Accessibility Review</h3>
-
-                    <form id="review-form">
-
-                        <label for="review-building">Building</label>
-                        <select id="review-building" required>
-                            <option value="">Select building</option>
-                            <option>University Campus</option>
-                            <option>City Medical Centre</option>
-                            <option>Central Shopping Complex</option>
-                        </select>
-
-                        <label for="review-location">Location</label>
-                        <input id="review-location" type="text"
-                            placeholder="Enter location" required>
-
-                        <label for="review-category">Issue Category</label>
-                        <select id="review-category" required>
-                            <option value="">Select category</option>
-                            <option>Ramp Accessibility</option>
-                            <option>Elevator Problem</option>
-                            <option>Blocked Corridor</option>
-                            <option>Door Accessibility</option>
-                            <option>Washroom Accessibility</option>
-                            <option>Other</option>
-                        </select>
-
-                        <label for="review-severity">Severity (1–5)</label>
-                        <select id="review-severity" required>
-                            <option value="">Select severity</option>
-                            <option value="1">1 - Very Low</option>
-                            <option value="2">2 - Low</option>
-                            <option value="3">3 - Moderate</option>
-                            <option value="4">4 - High</option>
-                            <option value="5">5 - Very High</option>
-                        </select>
-
-                        <label for="review-description">Description</label>
-                        <textarea id="review-description" rows="4"
-                            placeholder="Describe the accessibility issue..."
-                            required></textarea>
-
-                        <button class="primary-button" type="submit">
-                            Submit Review
-                        </button>
-
-                    </form>
-                </div>
-
-
-                <div class="content-card">
-                    <h3>Recent Reviews</h3>
-
-                    <div id="review-list">
-
-                        <div class="review-item">
-                            <div>
-                                <strong>Elevator Failure</strong>
-                                <p>University Campus · Location 3</p>
-                            </div>
-                            <span class="severity high">High</span>
+            <div class="intro-card"><span class="large-icon">✎</span><div><h2>Community Accessibility Reviews &amp; Severity Ranking</h2><p>Submit real-time barrier reports and track top campus issues ranked by severity.</p></div></div>
+            
+            <div class="content-card">
+                <h3>Submit Accessibility Barrier Review</h3>
+                <p class="small-note" style="margin-bottom:16px;">Reports immediately update severity rankings &amp; C++ routing weights</p>
+                <form id="review-form">
+                    <input id="review-id" type="hidden">
+                    <div class="form-row two">
+                        <div>
+                            <label for="review-building">Campus Building / Zone</label>
+                            <select id="review-building"></select>
                         </div>
-
-                        <div class="review-item">
-                            <div>
-                                <strong>Steep Ramp</strong>
-                                <p>University Campus · Location 5</p>
-                            </div>
-                            <span class="severity high">High</span>
+                        <div>
+                            <label for="review-location-text">Specific Floor / Door / Ramp</label>
+                            <input id="review-location-text" type="text" placeholder="e.g., 2F West Lift or Ramp R2" required>
+                            <!-- Hidden select for compatibility with backend logic -->
+                            <select id="review-location" class="hidden"></select>
                         </div>
-
-                        <div class="review-item">
-                            <div>
-                                <strong>Blocked Corridor</strong>
-                                <p>University Campus · Location 2</p>
-                            </div>
-                            <span class="severity high">High</span>
-                        </div>
-
-                        <div class="review-item">
-                            <div>
-                                <strong>Door Accessibility</strong>
-                                <p>University Campus · Location 7</p>
-                            </div>
-                            <span class="severity medium">Medium</span>
-                        </div>
-
                     </div>
-
-                    <p class="small-note">
-                        Sample reviews for demonstration.
-                    </p>
-
-                </div>
-
+                    <div class="form-row two" style="margin-top:14px;">
+                        <div>
+                            <label for="review-category">Issue Category</label>
+                            <select id="review-category">
+                                <option value="Blocked Ramp">Blocked Ramp</option>
+                                <option value="Missing Tactile Paving">Missing Tactile Paving</option>
+                                <option value="Lift Outage">Lift Outage</option>
+                                <option value="Narrow Corridor">Narrow Corridor</option>
+                                <option value="Steep Slope">Steep Slope</option>
+                                <option value="Broken Elevator">Broken Elevator</option>
+                                <option value="Other accessibility concern">Other accessibility concern</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Severity Level</label>
+                            <div class="sev-btn-group" id="severity-buttons">
+                                <div class="sev-btn critical" data-val="5">Critical</div>
+                                <div class="sev-btn high" data-val="4">High</div>
+                                <div class="sev-btn medium active" data-val="3">Medium</div>
+                                <div class="sev-btn low" data-val="2">Low</div>
+                            </div>
+                            <input type="hidden" id="review-severity" value="3">
+                        </div>
+                    </div>
+                    <div style="margin-top:14px;">
+                        <label for="review-description">Barrier Description &amp; Mobility Impact</label>
+                        <textarea id="review-description" rows="3" placeholder="Describe how this affects wheelchair users, visually impaired students, or step-free access..." required></textarea>
+                    </div>
+                    <button class="primary-button" type="submit" style="margin-top:18px;">Submit Barrier Report</button>
+                </form>
             </div>
-
 
             <div class="content-card">
-                <h3>Accessibility Improvement Priorities</h3>
-
-                <div class="priority-item">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
                     <div>
-                        <strong>Elevator Accessibility</strong>
-                        <p>Location 3</p>
+                        <h3 style="margin-bottom:2px;">Top Issues by Severity (Live Ranking)</h3>
+                        <p class="small-note">Sorted automatically by Criticality, Report Frequency &amp; Confirmations</p>
                     </div>
-                    <span class="priority-score">11</span>
+                    <span id="tracked-clusters-badge" class="badge-medium" style="background:#142b49; color:#fff; padding:6px 14px; border-radius:99px;">5 Tracked Clusters</span>
                 </div>
-
-                <div class="priority-item">
-                    <div>
-                        <strong>Ramp Accessibility</strong>
-                        <p>Location 5</p>
-                    </div>
-                    <span class="priority-score">10</span>
-                </div>
-
-                <div class="priority-item">
-                    <div>
-                        <strong>Corridor Accessibility</strong>
-                        <p>Location 2</p>
-                    </div>
-                    <span class="priority-score">5</span>
-                </div>
-
+                <div id="priority-list" class="scroll-list"></div>
             </div>
-
         </section>
 
-
-        <!-- EMERGENCY AND SIMULATION PAGE -->
+        <!-- EMERGENCY + WHAT-IF -->
         <section class="page" id="emergency">
+            <div class="warning-banner"><span>⚠</span><div><strong>Demonstration only</strong><p>This prototype does not provide certified emergency instructions. Follow official building procedures and trained personnel. Lifts are never treated as evacuation routes.</p></div></div>
+            <div class="chip-row big"><button class="chip on" data-emtab="em-live">🚨 Emergency Mode (live)</button><button class="chip" data-emtab="em-sim">What-If Simulation (planning)</button></div>
 
-            <div class="warning-banner">
-                <span>⚠</span>
-                <div>
-                    <strong>Demonstration simulation only</strong>
-                    <p>
-                        This prototype does not provide certified emergency
-                        evacuation instructions. Follow official building
-                        emergency procedures and trained personnel.
-                    </p>
+            <div class="em-panel" id="em-live">
+                <div class="content-card" id="em-start-card">
+                    <h3>Start an emergency</h3>
+                    <p class="small-note">Tell us what is happening and where you are. While you move, report what you see (a gate is closed, a staircase is closed, a corridor is crowded) and your route changes from where you stand.</p>
+                    <div class="form-row three">
+                        <div><label for="em-type">What is happening?</label>
+                            <select id="em-type"><option>Fire alarm</option><option>Smoke in the building</option><option>Earthquake</option><option>Gas leak</option><option>Security threat nearby</option><option>Other evacuation</option></select></div>
+                        <div><label>Where are you now?</label><div class="picker" id="em-loc"></div></div>
+                        <div><label for="em-profile">Mobility needs</label>
+                            <select id="em-profile"><option value="gen">General</option><option value="wheel">Wheelchair user</option><option value="crutch">Crutches</option><option value="limited">Limited mobility</option><option value="hand">Hand disability</option></select></div>
+                    </div>
+                    <button class="danger-button inline" id="em-start" type="button">Start emergency guidance</button>
+                </div>
+
+                <div id="em-live-box" class="hidden">
+                    <div class="em-banner" id="em-banner"></div>
+                    <div class="em-grid">
+                        <div>
+                            <div class="content-card"><h3>What to do now</h3><div id="em-guidance"></div></div>
+                            <div class="content-card"><h3>Report a problem</h3>
+                                <p class="small-note">Tap what you see ahead of you. The route is recalculated from your position.</p>
+                                <div class="quick-reports">
+                                    <button class="report-btn" data-emquick="exit">🚪 Gate / exit is closed</button>
+                                    <button class="report-btn" data-emquick="stair">🪜 Staircase is closed</button>
+                                    <button class="report-btn" data-emquick="crowd">👥 Corridor is crowded</button>
+                                    <button class="report-btn" data-emquick="blocked">🔥 Corridor blocked / smoke</button>
+                                    <button class="report-btn" data-emquick="refuge">♿ Refuge area not usable</button>
+                                </div>
+                                <h4 class="sub">Or choose exactly what is wrong along your route</h4><div id="em-along"></div>
+                                <h4 class="sub">Reports so far</h4><div id="em-log"></div>
+                            </div>
+                        </div>
+                        <div class="content-card"><h3>Your route</h3><div class="chip-row" id="em-views"></div><div class="map-scroll" id="em-map"></div>
+                            <p class="small-note">Red = closed or blocked · orange 👥 = crowded · teal = your route · red pin = where you are heading.</p></div>
+                    </div>
+                </div>
+
+                <div class="two-column">
+                    <div class="content-card"><h3>Request Help (Demo SOS)</h3>
+                        <div class="warning-box"><strong>DEMO ONLY.</strong> Saved in your browser. No emergency service or staff member is contacted. In a real emergency call your local emergency number (112 in India).</div>
+                        <form id="sos-form"><label>Your location</label><div class="picker" id="sos-loc"></div><label for="sos-text">Message</label><textarea id="sos-text" rows="3"></textarea><button class="danger-button" type="submit">Record demo SOS</button></form>
+                        <div id="sos-list"></div></div>
+                    <div class="content-card"><h3>Exits &amp; Refuge Areas</h3><p class="small-note">Sample data. Replace with each building's approved emergency plan.</p><div class="exit-grid" id="exit-cards"></div></div>
                 </div>
             </div>
 
-            <div class="intro-card">
-                <span class="large-icon">⚙</span>
-                <div>
-                    <h2>What-If Simulation</h2>
-                    <p>
-                        Explore how facility failures or blocked connections
-                        can affect accessibility.
-                    </p>
+            <div class="em-panel hidden" id="em-sim">
+                <div class="content-card"><h3>1 · Plan a route</h3>
+                    <p class="small-note">This is for planning only. Pick where you are going, then see what happens if part of the route is closed. (Live problems during an emergency go in Emergency Mode.)</p>
+                    <div class="form-row three">
+                        <div><label>From</label><div class="picker" id="wi-from"></div></div>
+                        <div><label>To</label><div class="picker" id="wi-to"></div></div>
+                        <div><label for="wi-profile">Mobility needs</label>
+                            <select id="wi-profile"><option value="gen">General</option><option value="wheel" selected>Wheelchair user</option><option value="crutch">Crutches</option><option value="limited">Limited mobility</option></select></div>
+                    </div>
+                    <button class="primary-button inline" id="wi-compare" type="button">Show my route</button>
                 </div>
-            </div>
-
-            <div class="two-column">
-
-                <div class="content-card">
-                    <h3>Configure a Scenario</h3>
-
+                <div class="content-card hidden" id="wi-route-card"><h3>2 · What if part of this route is closed?</h3>
+                    <p class="small-note">These are the parts of your route. Press one to close it and see the other way.</p><div id="wi-parts"></div></div>
+                <div id="simulation-result"></div>
+                <div class="content-card"><h3>Active closures</h3><div id="active-changes"></div><button class="secondary-button" id="reset-simulation">Reset scenario</button></div>
+                <details class="content-card"><summary><b>Advanced:</b> close something that is not on my route</summary>
                     <form id="simulation-form">
-
-                        <label for="scenario-building">Building</label>
-                        <select id="scenario-building">
-                            <option>University Campus</option>
-                            <option>City Medical Centre</option>
-                        </select>
-
-                        <label for="scenario-type">Scenario Type</label>
-                        <select id="scenario-type">
-                            <option value="block">Blocked Connection</option>
-                            <option value="elevator">Elevator Unavailable</option>
-                            <option value="restore">Restore Connection</option>
-                        </select>
-
-                        <label for="connection-id">Connection ID</label>
-                        <input type="number" id="connection-id"
-                            min="1" value="2">
-
-                        <button class="primary-button" type="submit">
-                            Run What-If Simulation
-                        </button>
-
-                    </form>
-                </div>
-
-
-                <div class="content-card">
-                    <h3>Simulation Results</h3>
-
-                    <div id="simulation-result" class="result-area"
-                        aria-live="polite">
-                        No simulation has been run yet.
-                    </div>
-
-                    <button class="secondary-button" id="reset-simulation">
-                        Reset Scenario
-                    </button>
-                </div>
-
+                        <label for="scenario-type">Scenario</label>
+                        <select id="scenario-type"><option value="block">Blocked corridor</option><option value="elevator">Lift unavailable</option><option value="close">Facility temporarily unavailable</option><option value="restore">Connection restored</option></select>
+                        <div id="scenario-block-wrap"><label for="scenario-block">Building</label><select id="scenario-block"></select></div>
+                        <div id="scenario-floor-wrap"><label for="scenario-floor">Floor</label><select id="scenario-floor"></select></div>
+                        <label for="scenario-target">Which connection / facility</label><select id="scenario-target"></select>
+                        <button class="primary-button" type="submit">Apply</button>
+                    </form></details>
             </div>
-
         </section>
 
-
-        <!-- VOLUNTEER ASSISTANCE PAGE -->
+        <!-- VOLUNTEERS (Updated to Modern Layout) -->
         <section class="page" id="volunteers">
-
-            <div class="intro-card">
-                <span class="large-icon">♡</span>
-                <div>
-                    <h2>Volunteer Assistance</h2>
-                    <p>
-                        Request support from available volunteers
-                        inside the building.
-                    </p>
-                </div>
+            <div class="intro-card"><span class="large-icon">♡</span><div><h2>Peer Volunteer &amp; Mobility Escort Assistance</h2><p>Connect with trained campus accessibility ambassadors for on-demand navigation support.</p></div></div>
+            
+            <div class="content-card">
+                <h3>On-Demand Peer Volunteer &amp; Escort Dispatch</h3>
+                <p class="small-note" style="margin-bottom:14px;">Request a trained campus mobility ambassador to meet you at any gate, parking bay, or classroom.</p>
+                <form id="help-form">
+                    <input id="help-name" type="hidden" value="Student Visitor">
+                    <div class="form-row two">
+                        <div>
+                            <label for="help-loc-select">Your Meeting Point</label>
+                            <select id="help-loc-select">
+                                <option value="og">Main Gate &amp; Security Plaza</option>
+                                <option value="opk">Accessible Parking Bay P1</option>
+                                <option value="A0:main">Block A Main Entrance</option>
+                                <option value="B0:main">Block B Library Entrance</option>
+                            </select>
+                            <div class="hidden"><div class="picker" id="help-loc"></div></div>
+                        </div>
+                        <div>
+                            <label for="help-type">Assistance Needed</label>
+                            <select id="help-type">
+                                <option>Wheelchair Push / Companion</option>
+                                <option>Tactile &amp; Visual Navigation</option>
+                                <option>Heavy Door / Luggage Assist</option>
+                                <option>Classroom Guidance Escort</option>
+                                <option>General Accessibility Support</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="margin-top:14px;">
+                        <label for="help-description">Additional Meeting Notes (Optional)</label>
+                        <textarea id="help-description" rows="2" placeholder="e.g., Meeting near security desk, wearing blue jacket..."></textarea>
+                    </div>
+                    <button class="primary-button" type="submit" style="margin-top:16px; background: #0f9f94;">Request Nearest Volunteer</button>
+                </form>
+                <div id="help-result" class="result-area"></div>
             </div>
 
-            <div class="two-column">
-
-                <div class="content-card">
-                    <h3>Request Assistance</h3>
-
-                    <form id="help-form">
-
-                        <label for="help-building">Building</label>
-                        <select id="help-building" required>
-                            <option value="">Select building</option>
-                            <option>University Campus</option>
-                            <option>City Medical Centre</option>
-                            <option>Central Shopping Complex</option>
-                        </select>
-
-                        <label for="help-location">Your Location</label>
-                        <input id="help-location" type="text"
-                            placeholder="Enter your current location" required>
-
-                        <label for="help-type">Type of Assistance</label>
-                        <select id="help-type" required>
-                            <option value="">Select assistance</option>
-                            <option>Wheelchair Assistance</option>
-                            <option>Crutch Assistance</option>
-                            <option>Mobility Support</option>
-                            <option>Help with Doors</option>
-                            <option>General Assistance</option>
-                        </select>
-
-                        <label for="help-description">Additional Details</label>
-                        <textarea id="help-description" rows="3"
-                            placeholder="Describe the help you need"></textarea>
-
-                        <button class="primary-button" type="submit">
-                            Request a Volunteer
-                        </button>
-
-                    </form>
-
-                    <div id="help-result" class="result-area"
-                        aria-live="polite">
-                        Your request status will appear here.
-                    </div>
-
-                </div>
-
-
-                <div class="content-card">
-                    <h3>Volunteer Availability</h3>
-
-                    <div class="volunteer-item">
-                        <div class="volunteer-avatar">A</div>
-                        <div>
-                            <strong>Volunteer A</strong>
-                            <p>Wheelchair Assistance</p>
-                        </div>
-                        <span class="available-tag">Available</span>
-                    </div>
-
-                    <div class="volunteer-item">
-                        <div class="volunteer-avatar">B</div>
-                        <div>
-                            <strong>Volunteer B</strong>
-                            <p>Mobility Support</p>
-                        </div>
-                        <span class="available-tag">Available</span>
-                    </div>
-
-                    <div class="volunteer-item">
-                        <div class="volunteer-avatar">C</div>
-                        <div>
-                            <strong>Volunteer C</strong>
-                            <p>General Assistance</p>
-                        </div>
-                        <span class="busy-tag">Busy</span>
-                    </div>
-
-                    <p class="small-note">
-                        Sample volunteer information for demonstration.
-                    </p>
-
-                </div>
-
+            <div class="section-heading" style="margin-top:24px;">
+                <div><h2>Active Campus Volunteers &amp; Ambassadors</h2><p>Directly dispatch or view currently on-duty mobility escorts</p></div>
             </div>
+            
+            <div class="volunteer-grid" id="volunteer-list"></div>
 
+            <div class="content-card" style="margin-top:24px;">
+                <h3>Assistance Request Queue</h3>
+                <label for="acting-as">Acting as volunteer</label><select id="acting-as"></select>
+                <div id="request-list"></div>
+            </div>
         </section>
 
-
-        <!-- FOOTER -->
-        <footer class="main-footer">
-            <p>AccessWay – Intelligent Building Accessibility & Resilience System</p>
-            <span>Prototype · Sample Data</span>
-        </footer>
-
+        <footer class="main-footer"><p>AccessWay – Intelligent Building Accessibility &amp; Resilience System</p><span>Prototype · Sample Data</span></footer>
     </main>
-
 </div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+/* =========================================================
+   ACCESSWAY – CAMPUS DATA + CAMPUS MAP
+========================================================= */
+const SCALE = 0.06;                 
+const OUT_K = 0.5 / SCALE;          
+const FLOOR_NAMES = ["Ground Floor", "First Floor", "Second Floor", "Third Floor", "Fourth Floor", "Fifth Floor", "Sixth Floor"];
+const FLOOR_SHORT = ["GF", "1F", "2F", "3F", "4F", "5F", "6F"];
 
-<script src="script.js"></script>
-<script src="map.js?v=3"></script>
-<script src="campus-map.js"></script>
+const P = (top, topR, left, right, cp, cn, mid) => ({ top, topR, left, right, cp, cn, mid });
+const rep = (n, t) => Array(n).fill(t);
+
+const BLOCKS = [
+  { id: "A", name: "Block A", type: "Academic Complex", tag: "Academic", icon: "🏫", floors: 7,
+    rect: [70, 70, 240, 120], fill: "#dcecff", stroke: "#6193c5", main: [190, 210], side: [325, 130], sideDir: "es",
+    plans: [
+      P(["CS Lab:2", "Classroom:2", "Classroom:2", "Seminar Room:2"], ["Faculty Offices:1"], ["Engineering Lab:1", "Science Lab:1", "Computer Lab:1"], ["Department Office:1", "Meeting Room:1", "Academic Office:1"], "theatres", ["Lecture Theatre 1", "Auditorium", "Lecture Theatre 2"], ["Reception / Lobby*:1"]),
+      P(["Classroom:2", "Classroom:2", "Classroom:2", "Tutorial Room:1.4", "Classroom:2"], ["Faculty Room:1", "Pantry:.8"], ["Physics Lab:2", "Physics Prep Room:1"], ["Department Office:1", "Staff Common Room:1", "Notice Hall:1"], "grid6", rep(6, "Classroom"), ["Notice Board Hall:1", "Lobby*:1.6"]),
+      P(["Chemistry Lab:3", "Chemistry Store:1", "Instrument Room:1.5"], ["Lab Faculty Room:1"], ["Electronics Lab:2", "Electronics Store:1"], ["Technician Room:1", "Safety Office:1"], "hallside", ["Computer Lab (Large)", "Server Room", "Network Lab"], ["Lobby*:1.5", "Lab Reception:1"]),
+      P(["Seminar Room 1:2", "Seminar Room 2:2", "Seminar Room 3:2", "Conference Room:2.5"], ["Faculty Offices:1", "Faculty Offices:1"], ["Large Lecture Hall:2", "Lecture Hall:1"], ["Tutorial Room:1", "Tutorial Room:1", "Tutorial Room:1"], "wide3", ["Lecture Hall 1", "Lecture Hall 2", "Lecture Hall 3"], ["Lobby*:1"]),
+      P(rep(5, "Faculty Office:1.5"), ["HOD Office:1"], ["Departmental Library:1.4", "Reading Room:1", "Photocopy Room:.7"], ["Research Scholar Room:1.6", "Pantry:.8"], "grid8", rep(8, "Faculty Cabin"), ["Lobby*:1", "Store:.8"]),
+      P(["Project Lab:2", "Project Lab:2", "Research Lab:3"], ["Meeting Room:1"], ["AI Lab:1.5", "Data Science Lab:1.5"], ["Robotics Lab:1.5", "IoT Lab:1.5"], "atrium", ["Seminar Hall", "~", "Conference Hall"], ["Lobby*:1"]),
+      P(["Research Lab:3", "Research Lab:3", "Doctoral Cabin:1.5"], ["Faculty Offices:1"], ["Thesis Room:1"], ["Seminar Room:1", "Meeting Room:1"], "theatres", ["Seminar Hall", "Conference Hall", "Seminar Hall"], ["Lobby*:1"])
+    ] },
+  { id: "B", name: "Block B", type: "Library", tag: "Library", icon: "📚", floors: 5,
+    rect: [520, 60, 220, 110], fill: "#d9f3e8", stroke: "#60a98a", main: [630, 190], side: [505, 130], sideDir: "ws",
+    plans: [
+      P(["Group Study 1:2", "Group Study 2:2", "Discussion Room:2", "IT Resource Centre:2.5"], ["Help Desk:1"], ["Reference Section:1", "Catalogue Room:1", "Archives:1"], ["Digital Library:1.4", "Periodicals:1", "Print Centre:.8"], "stacks", ["Book Stacks", "Reading Hall", "Reading Hall", "Book Stacks"], ["Circulation Desk*:1"]),
+      P(["Periodicals Room:3", "Journals:2", "Media Room:2"], ["Staff Room:1"], ["Reading Room:1.5", "Quiet Study:1.5"], ["Digital Library:1", "Research Room:1", "Scan Room:.7"], "hallside", ["Reading Hall", "Group Study", "Group Study"], ["Lobby*:1", "Help Point:.8"]),
+      P(rep(4, "Group Study:1.5").concat(["Seminar Room:2"]), ["Printing:1"], ["Reference Section:1", "Reference Section:1"], ["Archive Room:1.5", "Rare Books Vault:1"], "grid6", rep(6, "Study Pod Room"), ["Lobby*:1"]),
+      P(["Book Stacks A:3", "Book Stacks B:3", "Book Stacks C:2"], ["Stack Office:1"], ["Reading Room:1"], ["Quiet Study:1", "Quiet Study:1"], "atrium", ["Periodical Hall", "~", "Reading Hall"], ["Lobby*:1.4", "Librarian Office:1"]),
+      P(["Research Commons:3", "Digital Lab:2", "Seminar Room:2"], ["Reference Room:1"], ["Thesis Room:1", "Special Collections:1"], ["Staff Library:1.4", "Training Room:1"], "theatres", ["Research Hall", "Rare Books Hall", "Research Hall"], ["Lobby*:1"])
+    ] },
+  { id: "C", name: "Block C", type: "Medical Centre", tag: "Healthcare", icon: "🏥", floors: 4,
+    rect: [650, 230, 200, 100], fill: "#fce9d5", stroke: "#d49a55", main: [640, 290], side: [750, 350], sideDir: "es",
+    plans: [
+      P(["Consultation Room:2", "Consultation Room:2", "Consultation Room:2", "Nurse Station:1.5"], ["Records Office:1"], ["Pharmacy:1", "Laboratory:1", "Radiology:1"], ["First Aid / Emergency:1.4", "Treatment Room:1", "Observation Room:1"], "theatres", ["Waiting Area", "Reception & Registration", "Waiting Area"], ["Triage Lobby*:1"]),
+      P(["Dental Clinic:2", "Eye Clinic:2", "ENT Clinic:2", "Counselling Room:1.5", "Consultation Room:2"], ["Records:1"], ["Physiotherapy:1.4", "Therapy Room:1"], ["Pathology Lab:1", "Medical Store:1", "Collection Room:.8"], "grid6", rep(6, "Consultation Room"), ["Waiting Lobby*:1.5", "Reception Desk:1"]),
+      P(["Day Care Ward:3", "Recovery Ward:3", "Isolation Room:1.5"], ["Nurse Base:1"], ["Treatment Room:1", "Treatment Room:1", "Minor OT:1"], ["Dialysis:1.5", "Infusion Room:1.5"], "atrium", ["Ward A", "~", "Ward B"], ["Lobby*:1", "Pantry:.8"]),
+      P(rep(4, "Ward:2"), ["Doctors Lounge:1"], ["ICU Observation:1.6", "Operation Theatre:1.6"], ["Admin Office:1", "Conference Room:1.4"], "hallside", ["Intensive Care Unit", "Nurses Station", "Sterile Store"], ["Lobby*:1"])
+    ] },
+  { id: "D", name: "Block D", type: "Student Centre (Hostel & Dining)", tag: "Student Life", icon: "🍽️", floors: 6,
+    rect: [630, 380, 220, 110], fill: "#eee5fc", stroke: "#9a7cc7", main: [620, 435], side: [740, 505], sideDir: "es",
+    plans: [
+      P(["Cafeteria / Mess:3", "Coffee Bar:1.5", "Bakery:1.5", "Serving Counter:2"], ["Cashier:1"], ["Kitchen:1.6", "Store Room:1"], ["Vending Area:1", "Cold Store:1", "Staff Room:1"], "theatres", ["Dining Hall", "Common Lounge", "Dining Hall"], ["Lobby*:1"]),
+      P(["Gym:3", "Games Room:2", "Club Room:1.5", "Club Room:1.5"], ["Student Union:1"], ["Recreation Room:1", "Music Room:1", "Dance Studio:1"], ["Notice Hall:1", "Print Shop:1", "Counselling Room:1"], "wide3", ["Multi-purpose Hall", "Indoor Sports Court", "Multi-purpose Hall"], ["Lobby*:1"]),
+      P(rep(5, "Hostel Room:1.5"), ["Warden Office:1.2"], ["Study Room:1", "Common Room:1", "Laundry:.8"], rep(3, "Hostel Room:1"), "grid8", rep(8, "Hostel Room"), ["Lobby*:1", "Visitors Room:.8"]),
+      P(rep(5, "Hostel Room:1.5"), ["Hostel Room:1.2"], rep(4, "Hostel Room:1"), ["Study Room:1", "Common Area:1.4"], "grid6", rep(6, "Hostel Room"), ["Lobby*:1", "Pantry:.8"]),
+      P(rep(4, "Hostel Room:1.5").concat(["Common Room:2"]), ["Warden Office:1.2"], rep(3, "Hostel Room:1"), ["Study Room:1.4", "Laundry:1"], "atrium", ["Hostel Wing A", "~", "Hostel Wing B"], ["Lobby*:1"]),
+      P(rep(5, "Hostel Room:1.5"), ["Hostel Room:1.2"], ["Terrace Lounge:2", "Hostel Room:1"], rep(3, "Hostel Room:1"), "grid8", rep(8, "Hostel Room"), ["Lobby*:1", "Terrace Access:.8"])
+    ] },
+  { id: "E", name: "Administration", type: "Administration Building", tag: "Administration", icon: "🏛️", floors: 4,
+    rect: [250, 250, 160, 90], fill: "#e8ecf1", stroke: "#7a8a9e", main: [330, 365], side: [425, 290], sideDir: "es",
+    plans: [
+      P(["Student Services:2", "Admissions Office:2", "Accounts Office:2", "Examination Cell:2"], ["Cashier:1"], ["Registrar:1", "Records Room:1", "Help Desk:1"], ["Dean Office:1", "Meeting Room:1", "Mail Room:1"], "theatres", ["Waiting Lounge", "Front Office", "Waiting Lounge"], ["Reception*:1"]),
+      P(["Dean Office:2", "HOD Office:2", "Accounts:2", "Audit Cell:2", "Staff Room:2"], ["Pantry:1"], ["HR Office:1.4", "Finance Office:1.4"], ["Conference Room:1.4", "Board Room:1.4"], "grid6", rep(6, "Open Office"), ["Lobby*:1"]),
+      P(["Director Office:2.5", "Secretary:1.5", "Planning Cell:2"], ["Legal Cell:1"], ["Strategy Room:1", "Archive:1", "IT Office:1"], ["Board Room:1.6", "Meeting Room:1"], "hallside", ["Conference Hall", "Meeting Room", "Meeting Room"], ["Lobby*:1", "Pantry:.8"]),
+      P(["Vice-Chancellor Office:3", "PA Office:1.5", "Waiting Room:1.5", "Protocol Office:2"], ["Pantry:1"], ["Library:1"], ["Board Room:1.4", "Senate Hall:1.4"], "atrium", ["Senate Room", "~", "Council Room"], ["Lobby*:1"])
+    ] }
+];
+
+const OUTDOOR_NODES = [
+  ["og", 450, 580, "Main Gate"], ["os1", 450, 505, "South Plaza"], ["os2", 450, 435, "Central Plaza"], ["os2b", 450, 365, null],
+  ["os3", 450, 290, "Admin Junction"], ["os4", 450, 190, "North Junction"], ["os5", 450, 130, "North Plaza"],
+  ["opk", 240, 505, "Accessible Parking"], ["ow1", 190, 435, "West Junction"], ["oe1", 640, 350, "East Junction"]
+];
+const OUTDOOR_EDGES = [
+  ["og", "os1", "paved", "Main Gate to South Plaza"], ["os1", "os2", "paved", "South Plaza to Central Plaza"],
+  ["os2", "os2b", "paved", "Central Plaza to Plaza North"], ["os2b", "os3", "paved", "Plaza North to Admin Junction"],
+  ["os3", "os4", "paved", "Admin Junction to North Junction"], ["os4", "os5", "paved", "North Junction to North Plaza"],
+  ["os1", "opk", "paved", "South Plaza to Accessible Parking"], ["os2", "ow1", "paved", "Central Plaza to West Junction"],
+  ["ow1", "oAm", "ramp", "West Junction to Block A entrance (ramp)"], ["os2b", "oEm", "paved", "Plaza North to Administration entrance"],
+  ["os3", "oEs", "paved", "Admin Junction to Administration side door"], ["os3", "oCm", "ramp", "Admin Junction to Block C entrance (ramp)"],
+  ["oCm", "oe1", "paved", "Block C entrance to East Junction"], ["oe1", "oCs", "paved", "East Junction to Block C side door"],
+  ["os2", "oDm", "paved", "Central Plaza to Block D entrance"], ["oe1", "oDm", "grass", "East Junction to Block D (grass shortcut)"],
+  ["os1", "oDs", "paved", "South Plaza to Block D side door"], ["os5", "oBs", "paved", "North Plaza to Block B side door"],
+  ["os4", "oBm", "damaged", "North Junction to Block B entrance (damaged)"], ["os5", "oAs", "damaged", "North Plaza to Block A side door (damaged)"]
+];
+
+const CAMPUS_COND = { paved: "#3fbfb6", ramp: "#2f6fe0", grass: "#4aa84a", damaged: "#d9372b" };
+function drawCampus(legs, route) {
+  const Q = MAPSETS || S, hot = new Set(legs.filter(l => l.v !== "C").map(l => l.v[0]));
+  const roads = E.filter(e => e.t === "outdoor" && N.get(e.a).v === "C" && N.get(e.b).v === "C");
+  const L = (e, col, w, extra = "") => { const A = N.get(e.a), B = N.get(e.b); return `<line x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}" stroke="${col}" stroke-width="${w}" stroke-linecap="round" ${extra}/>`; };
+  let s = `<svg viewBox="0 0 900 620" class="svg-map campus" role="img" aria-label="University campus map">
+    <rect width="900" height="620" rx="16" fill="#eef4ea"/><rect x="25" y="25" width="850" height="575" rx="22" fill="#f3f8ef" stroke="#d6e3d2" stroke-width="3"/>
+    <rect x="480" y="215" width="120" height="55" rx="14" fill="#dcefd9"/><text x="540" y="247" text-anchor="middle" font-size="11" font-weight="700" letter-spacing="1" fill="#5e8a62">GARDEN</text>
+    <rect x="480" y="440" width="120" height="50" rx="14" fill="#dcefd9"/><text x="540" y="470" text-anchor="middle" font-size="11" font-weight="700" letter-spacing="1" fill="#5e8a62">GREEN COURT</text>
+    <rect x="40" y="470" width="200" height="90" rx="8" fill="#e6eaef" stroke="#c8d0d9"/>
+    <g stroke="#fff" stroke-width="3">${[60, 85, 110, 135, 160, 185, 210].map(x => `<line x1="${x}" y1="482" x2="${x}" y2="548"/>`).join("")}</g>
+    <rect x="95" y="498" width="90" height="26" rx="6" fill="#fff" stroke="#334"/><text x="140" y="516" text-anchor="middle" font-size="14" font-weight="800" fill="#142b49">P  Parking</text>`;
+  [[60, 60], [850, 60], [60, 320], [860, 560], [330, 160], [770, 190], [350, 460], [560, 330]].forEach(([x, y]) => s += `<circle cx="${x}" cy="${y}" r="10" fill="#c3e3ba"/><circle cx="${x}" cy="${y}" r="4.5" fill="#a0cf95"/>`);
+  roads.forEach(e => s += L(e, "#d9dfe6", 24));
+  roads.forEach(e => s += L(e, "#ffffff", 20));
+  roads.forEach(e => {
+    const blocked = Q.blocked.has(e.key), eff = blocked ? "damaged" : (e.cond === "damaged" ? "paved" : e.cond);
+    if (eff === "ramp" && S.show.ramps === false) { s += L(e, CAMPUS_COND.paved, 3.5); return; }
+    s += L(e, CAMPUS_COND[eff], 3.5, eff === "paved" ? "" : 'stroke-dasharray="9 6"');
+    if (blocked) { const A = N.get(e.a), B = N.get(e.b), mx = (A.x + B.x) / 2, my = (A.y + B.y) / 2; s += `<path d="M${mx} ${my - 11}L${mx + 11} ${my + 8}H${mx - 11}Z" fill="#fff" stroke="#d9372b" stroke-width="2.5"/><text x="${mx}" y="${my + 5}" text-anchor="middle" font-size="11" font-weight="800" fill="#d9372b">!</text>`; }
+  });
+  BLOCKS.forEach(b => {
+    const [x, y, w, h] = b.rect, cx = x + w / 2, cy = y + h / 2, on = hot.has(b.id);
+    [b.main, b.side].forEach(([ax, ay]) => { const px = Math.min(Math.max(ax, x), x + w), py = Math.min(Math.max(ay, y), y + h); s += `<line x1="${px}" y1="${py}" x2="${ax}" y2="${ay}" stroke="#7b8794" stroke-width="5" stroke-linecap="round"/>`; });
+    const big = w > 150, nm = b.id === "E" ? "Administration<tspan x=\"" + cx + "\" dy=\"16\">Building</tspan>" : b.name + "<tspan x=\"" + cx + "\" dy=\"16\">" + b.type.replace(" (Hostel & Dining)", "").replace("Student Centre", "Student Centre") + "</tspan>";
+    s += `<g data-b="${b.id}" class="campus-block"><title>${b.name} · ${b.type} – click to open the floor plans</title>
+      <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="12" fill="#fff" stroke="${on ? "#14b8a6" : "#334155"}" stroke-width="${on ? 5 : 2.5}"/>
+      <rect x="${x + 5}" y="${y + 5}" width="${w - 10}" height="${h - 10}" rx="8" fill="${b.fill}" opacity=".75"/>
+      <text x="${cx}" y="${cy - 2}" text-anchor="middle" font-size="${big ? 15 : 13}" font-weight="800" fill="#1f2d3d">${nm}</text>
+      <text x="${cx}" y="${y + h - 12}" text-anchor="middle" font-size="10" fill="#5d6b7a">G+${b.floors - 1} · click to open</text></g>`;
+    s += `<circle cx="${b.main[0]}" cy="${b.main[1]}" r="9" fill="#4b6a92" stroke="#fff" stroke-width="3"/><text x="${b.main[0]}" y="${b.main[1] + 3.5}" text-anchor="middle" font-size="9.5" font-weight="800" fill="#fff">${b.id}</text>
+      <circle cx="${b.side[0]}" cy="${b.side[1]}" r="5.5" fill="#fff" stroke="#1a9b70" stroke-width="3"/>`;
+  });
+  OUTDOOR_NODES.forEach(([id, x, y, label]) => {
+    if (id === "og") s += `<circle cx="${x}" cy="${y}" r="14" fill="#1aa876" stroke="#fff" stroke-width="3"/><text x="${x}" y="${y + 5}" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">G</text><rect x="${x - 38}" y="${y + 16}" width="76" height="20" rx="5" fill="#142b49"/><text x="${x}" y="${y + 30}" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">Main Gate</text>`;
+    else if (id === "opk") s += `<circle cx="${x}" cy="${y}" r="11" fill="#2f6fe0" stroke="#fff" stroke-width="3"/><text x="${x}" y="${y + 4}" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">P</text>`;
+    else if (label) s += `<circle cx="${x}" cy="${y}" r="5" fill="#9aa8b6"/>`;
+  });
+  legs.filter(l => l.v === "C").forEach(l => {
+    const pts = l.nodes.map(id => N.get(id).x + "," + N.get(id).y).join(" ");
+    s += `<polyline points="${pts}" fill="none" stroke="#fff" stroke-width="12" stroke-linejoin="round" stroke-linecap="round"/><polyline points="${pts}" fill="none" stroke="#0f9f94" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>`;
+  });
+  if (route) [route.path[0], route.path[route.path.length - 1]].forEach((id, k) => {
+    const n = N.get(id), bl = n.v === "C" ? null : blockOf(n.b);
+    const p = bl ? { x: bl.rect[0] + bl.rect[2] / 2, y: bl.rect[1] + bl.rect[3] - 28 } : n;
+    s += `<circle cx="${p.x}" cy="${p.y}" r="9" fill="${k ? "#d62d20" : "#1e9e5a"}" stroke="#fff" stroke-width="3"/>`;
+  });
+  return s + "</svg>";
+}
+</script>
+<script>
+/* =========================================================
+   ACCESSWAY – NAVIGATION GRAPH & ROUTING ENGINE
+========================================================= */
+const N = new Map(), E = [], ADJ = new Map();
+const S = { blocked: new Set(), closed: new Set(), base: new Set(), opts: [], sel: 0,
+            show: { route: true, ramps: true, lifts: true, stairs: true, wash: true } };
+let IV = "A0";      
+let Z = 100;        
+let MAPSETS = null; 
+
+const blockOf = id => BLOCKS.find(b => b.id === id);
+function addNode(id, o) { N.set(id, { id, ...o }); ADJ.set(id, []); }
+function addEdge(a, b, t, name, w, cond) {
+  const A = N.get(a), B = N.get(b);
+  w ??= Math.hypot(A.x - B.x, A.y - B.y) * (t === "outdoor" ? OUT_K : 1);
+  const e = { a, b, t, name, w, cond, v: A.v, key: a < b ? a + "|" + b : b + "|" + a };
+  E.push(e); ADJ.get(a).push(e); ADJ.get(b).push(e);
+}
+
+OUTDOOR_NODES.forEach(([id, x, y, label]) => addNode(id, { b: "-", f: 0, v: "C", x, y, label, type: label ? "place" : "node" }));
+BLOCKS.forEach(b => ["m", "s"].forEach(k => addNode("o" + b.id + k, { b: "-", f: 0, v: "C", x: (k === "m" ? b.main : b.side)[0], y: (k === "m" ? b.main : b.side)[1], label: null, type: "node" })));
+
+const parseItem = s => { const [n, w] = s.split(":"); return { name: n.replace("*", ""), wt: +w || 1, lobby: n.endsWith("*") }; };
+const CENTRE = {
+  theatres: [[210, 200, 130, 240, "b"], [340, 200, 220, 240, "b"], [560, 200, 130, 240, "b"]],
+  wide3: [[210, 200, 160, 240, "b"], [370, 200, 160, 240, "b"], [530, 200, 160, 240, "b"]],
+  stacks: [[210, 200, 100, 240, "b"], [310, 200, 140, 240, "b"], [450, 200, 140, 240, "b"], [590, 200, 100, 240, "b"]],
+  grid6: [0, 1, 2].map(i => [210 + i * 160, 200, 160, 120, "t"]).concat([0, 1, 2].map(i => [210 + i * 160, 320, 160, 120, "b"])),
+  grid8: [0, 1, 2, 3].map(i => [210 + i * 120, 200, 120, 120, "t"]).concat([0, 1, 2, 3].map(i => [210 + i * 120, 320, 120, 120, "b"])),
+  hallside: [[210, 200, 300, 240, "b"], [510, 200, 180, 120, "t"], [510, 320, 180, 120, "b"]],
+  atrium: [[210, 200, 130, 240, "b"], [340, 200, 220, 240, "void"], [560, 200, 130, 240, "b"]]
+};
+function buildFloor(b, f) {
+  const v = b.id + f, pre = `${b.name} · ${FLOOR_NAMES[f]}: `, pl = b.plans[f];
+  let n = 0; const code = () => `${b.id}-${String(f * 100 + (++n)).padStart(3, "0")}`;
+  const cells = [];
+  const cell = (key, label, type, x, y, w, h, door, corr, extra = {}) => cells.push({ key, id: `${v}:${key}`, label, type, x, y, w, h, door, corr, ...extra });
+  const core = (key, label, type, x0, x1) => cell(key, label, type, x0, 50, x1 - x0, 110, { x: (x0 + x1) / 2, y: 160 }, { x: (x0 + x1) / 2, y: 180 });
+  const band = (items, x0, x1, k0, y, h, doorY, corrY, keyPrefix, coded = true) => {
+    const it = items.map(parseItem), tot = it.reduce((a, i) => a + i.wt, 0); let x = x0;
+    it.forEach((i, k) => {
+      const w = (x1 - x0) * i.wt / tot, cx = x + w / 2;
+      cell(i.lobby ? "lobby" : keyPrefix + (k0 + k), i.name, i.lobby ? "lobby" : "room", x, y, w, h, { x: cx, y: doorY }, { x: cx, y: corrY }, i.lobby ? { code: null } : { code: coded ? code() : null });
+      x += w;
+    });
+  };
+  core("S1", "Staircase 1", "stair", 40, 120); core("E1", "Lift 1", "elev", 560, 613); core("E2", "Lift 2", "elev", 613, 666); core("S2", "Staircase 2", "stair", 780, 860);
+  band(pl.top, 120, 560, 0, 50, 110, 160, 180, "t");
+  band(pl.topR, 666, 780, pl.top.length, 50, 110, 160, 180, "t");
+  [["left", 40, 170, 170, 190, "l"], ["right", 730, 860, 730, 710, "r"]].forEach(([side, x, x2, dx, cx, k]) => {
+    const it = pl[side].map(parseItem), tot = it.reduce((a, i) => a + i.wt, 0); let y = 200;
+    it.forEach((i, j) => { const h = 240 * i.wt / tot; cell(k + j, i.name, "room", x, y, x2 - x, h, { x: dx, y: y + h / 2 }, { x: cx, y: y + h / 2 }, { code: code() }); y += h; });
+  });
+  CENTRE[pl.cp].forEach(([x, y, w, h, side], i) => {
+    const name = pl.cn[i];
+    if (side === "void") { cell("c" + i, "Atrium (open to the floor below)", "void", x, y, w, h, null, null); return; }
+    const cx = x + w / 2, big = h === 240 || w >= 300;
+    cell("c" + i, name, big ? "hall" : "room", x, y, w, h, side === "t" ? { x: cx, y: y } : { x: cx, y: y + h }, { x: cx, y: side === "t" ? 180 : 460 }, { code: code() });
+  });
+  cell("S3", "Staircase 3", "stair", 40, 480, 86, 70, { x: 83, y: 480 }, { x: 83, y: 460 });
+  cell("wL", "Accessible Washroom", "wash", 126, 480, 173, 70, { x: 212.5, y: 480 }, { x: 212.5, y: 460 });
+  cell("wR", "Accessible Washroom", "wash", 601, 480, 173, 70, { x: 687.5, y: 480 }, { x: 687.5, y: 460 });
+  cell("ref", "Refuge Area", "refuge", 774, 480, 86, 70, { x: 817, y: 480 }, { x: 817, y: 460 });
+  band(pl.mid, 299, 601, 0, 480, 70, 480, 460, "m");
+
+  const nt = c => ["wash", "lobby", "hall"].includes(c.type) ? "room" : c.type;
+  const real = cells.filter(c => c.type !== "void");
+  real.forEach(c => addNode(c.id, { b: b.id, f, v, x: c.door.x, y: c.door.y, label: c.label, code: c.code || undefined, type: nt(c) }));
+  const near = new Map(), cn = (key, x, y, type = "node", label = null) => { const id = `${v}:${key}`; if (!N.has(id)) addNode(id, { b: b.id, f, v, x, y, label, type }); return id; };
+  const lines = { T: [], B: [], L: [], R: [] };
+  real.forEach(c => {
+    const side = c.corr.y === 180 ? "T" : c.corr.y === 460 ? "B" : c.corr.x === 190 ? "L" : "R";
+    const id = cn(`${side}${Math.round(c.corr.x)}_${Math.round(c.corr.y)}`, c.corr.x, c.corr.y);
+    near.set(id, c.label); lines[side].push(id); addEdge(c.id, id, "walk", null, 20);
+  });
+  const entr = (key, x, y, label, type) => cn(key, x, y, f ? "node" : type, f ? null : label);
+  const sideLabel = k => b.sideDir === k ? (k === "ws" ? "Service Entrance" : "East Entrance") : "Emergency Exit";
+  const ws = entr("ws", 48, 180, sideLabel("ws"), b.sideDir === "ws" ? "entrance" : "exit"), es = entr("es", 852, 180, sideLabel("es"), b.sideDir === "es" ? "entrance" : "exit");
+  const bw = cn("B48", 48, 460), be = cn("B852", 852, 460);
+  const jt1 = cn("T190", 190, 180), jt2 = cn("T710", 710, 180), jb1 = cn("B190", 190, 460), jb2 = cn("B710", 710, 460);
+  [[jt1, "west corridor"], [jb1, "west corridor"], [jt2, "east corridor"], [jb2, "east corridor"], [ws, "west end"], [es, "east end"], [bw, "west end"], [be, "east end"]].forEach(([id, l]) => near.set(id, l));
+  lines.T.push(ws, es, jt1, jt2); lines.B.push(bw, be, jb1, jb2); lines.L.push(jt1, jb1); lines.R.push(jt2, jb2);
+  const chain = (ids, key, name) => {
+    const u = [...new Set(ids)].sort((p, q) => (N.get(p)[key] - N.get(q)[key]) || 0);
+    for (let i = 0; i < u.length - 1; i++) addEdge(u[i], u[i + 1], "walk", `${pre}${name}: ${near.get(u[i]) || "junction"} ↔ ${near.get(u[i + 1]) || "junction"}`);
+  };
+  chain(lines.T, "x", "north corridor"); chain(lines.B, "x", "south corridor"); chain(lines.L, "y", "west corridor"); chain(lines.R, "y", "east corridor");
+  if (!f) {
+    const lob = cells.find(c => c.type === "lobby");
+    addNode(v + ":main", { b: b.id, f, v, x: lob.door.x, y: 550, label: "Main Entrance", type: "entrance" });
+    addEdge(v + ":main", lob.id, "walk", `${pre}Main Entrance to ${lob.label}`, 70);
+    addEdge(v + ":main", "o" + b.id + "m", "outdoor", `${b.name} main entrance walkway`, 150, "ramp");
+    addEdge(v + ":" + b.sideDir, "o" + b.id + "s", "outdoor", `${b.name} side entrance walkway`, 100, "ramp");
+  }
+  b.fl[f] = cells;
+}
+BLOCKS.forEach(b => {
+  b.fl = [];
+  for (let f = 0; f < b.floors; f++) buildFloor(b, f);
+  ["E1", "E2", "S1", "S2", "S3"].forEach(t => { for (let f = 1; f < b.floors; f++) { const el = t[0] === "E"; addEdge(`${b.id}${f - 1}:${t}`, `${b.id}${f}:${t}`, el ? "elev" : "stair", `${el ? "Lift" : "Staircase"} ${t[1]} · ${FLOOR_NAMES[f - 1]} ↔ ${FLOOR_NAMES[f]} (${b.name})`, 60); } });
+});
+OUTDOOR_EDGES.forEach(([a, b, cond, n]) => addEdge(a, b, "outdoor", "Campus path: " + n, undefined, cond));
+E.filter(e => e.cond === "damaged").forEach(e => { S.blocked.add(e.key); S.base.add(e.key); });
+
+const viewLabel = v => v === "C" ? "Campus outdoors" : `${blockOf(v[0]).name} · ${FLOOR_NAMES[v[1]]}`;
+const nodeText = n => n.code ? `${n.label} · ${n.code}` : n.label;
+const lab = id => { const n = N.get(id); return n.b === "-" ? n.label : `${nodeText(n)} (${blockOf(n.b).name}, ${FLOOR_NAMES[n.f]})`; };
+
+function locationOptions(filter, types, blockId) {
+  types = types || ["room", "refuge", "entrance", "exit"];
+  if (blockId === "-") return [...N.values()].filter(n => n.type === "place").map(n => `<option value="${n.id}">${n.label}</option>`).join("");
+  let h = "";
+  BLOCKS.forEach(b => {
+    if (blockId && b.id !== blockId) return;
+    for (let f = 0; f < b.floors; f++) {
+      const ns = [...N.values()].filter(x => x.b === b.id && x.f === f && types.includes(x.type) && (!filter || filter(x)));
+      if (ns.length) h += `<optgroup label="${b.name} – ${FLOOR_NAMES[f]}">${ns.map(x => `<option value="${x.id}">${escapeHTML(nodeText(x))}</option>`).join("")}</optgroup>`;
+    }
+  });
+  return h;
+}
+
+class MinHeap {
+  constructor() { this.a = []; }
+  get size() { return this.a.length; }
+  push(k, v) { const a = this.a; a.push([k, v]); let i = a.length - 1; while (i && a[(i - 1) >> 1][0] > a[i][0]) { [a[i], a[(i - 1) >> 1]] = [a[(i - 1) >> 1], a[i]]; i = (i - 1) >> 1; } }
+  pop() { const a = this.a, t = a[0], l = a.pop(); if (a.length) { a[0] = l; let i = 0; for (;;) { let m = i, c = 2 * i + 1; if (c < a.length && a[c][0] < a[m][0]) m = c; c++; if (c < a.length && a[c][0] < a[m][0]) m = c; if (m === i) break; [a[i], a[m]] = [a[m], a[i]]; i = m; } } return t; }
+}
+function edgeCost(e, o) {
+  const Q = o.sets || S;
+  if (!o.free && (Q.blocked.has(e.key) || Q.closed.has(e.a) || Q.closed.has(e.b))) return null;
+  if (e.t === "stair" && (o.p === "wheel" || o.m === "acc" || o.noStairs)) return null;
+  if (e.t === "elev" && o.noElev) return null;
+  if (e.cond === "grass" && (o.p === "wheel" || o.m === "acc")) return null;
+  let w = e.w;
+  if (e.t === "stair" && (o.p === "crutch" || o.p === "limited")) w *= 4;
+  if (e.cond === "grass" && (o.p === "crutch" || o.p === "limited")) w *= 2.5;
+  if (o.m === "simple") w += 250;
+  if (!o.free && Q.crowd && Q.crowd.has(e.key)) w *= 6;
+  return w;
+}
+function dijkstra(src, o, dst) {
+  const dist = new Map([[src, 0]]), prev = new Map(), done = new Set(), Q = new MinHeap(); Q.push(0, src);
+  while (Q.size) {
+    const [c, u] = Q.pop(); if (done.has(u)) continue; done.add(u); if (u === dst) break;
+    for (const e of ADJ.get(u)) {
+      const v = e.a === u ? e.b : e.a, k = edgeCost(e, o); if (k == null) continue;
+      if (c + k < (dist.get(v) ?? 1e18)) { dist.set(v, c + k); prev.set(v, [u, e]); Q.push(c + k, v); }
+    }
+  }
+  return { dist, prev };
+}
+const SPEED = { gen: 1.3, hand: 1.2, wheel: 1.0, limited: .7, crutch: .6 };
+function findRoute(a, b, o) {
+  const { dist, prev } = dijkstra(a, o, b); if (!dist.has(b)) return null;
+  const path = [b], es = []; let c = b;
+  while (c !== a) { const [u, e] = prev.get(c); path.unshift(u); es.unshift(e); c = u; }
+  let m = 0, turns = 0, secs = 0;
+  es.forEach(e => { if (e.t === "walk" || e.t === "outdoor") m += e.w * SCALE; else secs += e.t === "elev" ? 25 : 30; });
+  for (let i = 2; i < path.length; i++) {
+    const p = N.get(path[i - 2]), q = N.get(path[i - 1]), r = N.get(path[i]); if (p.v !== q.v || q.v !== r.v) continue;
+    let d = Math.abs(Math.atan2(q.y - p.y, q.x - p.x) - Math.atan2(r.y - q.y, r.x - q.x)); if (Math.min(d, 2 * Math.PI - d) > .5) turns++;
+  }
+  secs += m / (SPEED[o.p] || 1.3);
+  return { path, es, m: Math.round(m), turns, conn: es.length, min: Math.max(1, Math.round(secs / 60)),
+           stairs: es.filter(e => e.t === "stair").length, elev: es.filter(e => e.t === "elev").length, ramps: es.filter(e => e.cond === "ramp").length };
+}
+function legsOf(r) { const L = []; r.path.forEach((id, i) => { const n = N.get(id), l = L[L.length - 1]; if (l && l.v === n.v) { l.nodes.push(id); l.to = i; } else L.push({ v: n.v, nodes: [id], from: i, to: i }); }); return L; }
+
+const card = d => d[0] > 0 ? "east" : d[0] < 0 ? "west" : d[1] < 0 ? "north" : "south";
+function directionsOf(r) {
+  const legs = legsOf(r), out = [], last = r.path.length - 1;
+  legs.forEach((l, li) => {
+    const sec = { title: l.v === "C" ? "Outdoors on campus" : `Inside ${blockOf(l.v[0]).name} · ${FLOOR_NAMES[l.v[1]]}`, v: l.v, items: [], ends: [] };
+    const add = (t, id) => { sec.items.push(t); sec.ends.push(id || null); };
+    const prevE = li ? r.es[l.from - 1] : null, nextE = l.to < last ? r.es[l.to] : null;
+    const vert = e => e && (e.t === "elev" || e.t === "stair");
+    if (l.nodes.length === 1 && vert(prevE) && vert(nextE)) return;      
+    if (prevE && prevE.t === "outdoor" && l.v !== "C") add(`Enter ${blockOf(l.v[0]).name} through the ${N.get(r.path[l.from]).label} (ramp access).`, r.path[l.from]);
+    if (prevE && (prevE.t === "elev" || prevE.t === "stair")) add(`You arrive on the ${FLOOR_NAMES[l.v[1]]}.`, r.path[l.from]);
+    if (l.v === "C") {
+      let acc = 0, conds = new Set(), from = N.get(r.path[l.from]);
+      for (let i = l.from; i < l.to; i++) {
+        const e = r.es[i], b = N.get(r.path[i + 1]); acc += e.w * SCALE; conds.add(e.cond);
+        if (b.label || i === l.to - 1) {
+          const dest = b.label || (nextE ? `the entrance of ${blockOf(N.get(r.path[l.to + 1]).b).name}` : "your destination");
+          add(`Follow the ${conds.has("grass") ? "grass path" : "paved path"}${from.label ? " from " + from.label : ""} to ${dest} (${Math.round(acc)} m${conds.has("ramp") ? ", includes a ramp" : ""}).`, b.id);
+          acc = 0; conds = new Set(); from = b;
+        }
+      }
+    } else {
+      const moves = [];
+      for (let i = l.from; i < l.to; i++) {
+        const a = N.get(r.path[i]), b = N.get(r.path[i + 1]), d = [Math.sign(b.x - a.x), Math.sign(b.y - a.y)], m = r.es[i].w * SCALE, lm = moves[moves.length - 1];
+        if (lm && lm.d[0] === d[0] && lm.d[1] === d[1]) { lm.m += m; lm.to = b; } else moves.push({ d, m, to: b });
+      }
+      moves.forEach((mv, k) => {
+        const p = moves[k - 1]; let verb = "Head " + card(mv.d);
+        if (p) { const cr = p.d[0] * mv.d[1] - p.d[1] * mv.d[0]; verb = cr > 0 ? "Turn right" : cr < 0 ? "Turn left" : "Turn around"; }
+        add(`${verb} and walk ${mv.m < 10 ? mv.m.toFixed(1) : Math.round(mv.m)} m${mv.to.label ? " to " + nodeText(mv.to) : ""}.`, mv.to.id);
+      });
+    }
+    if (nextE && (nextE.t === "elev" || nextE.t === "stair")) {
+      let j = l.to, dir; const tag = N.get(r.path[l.to]).label;
+      while (j < last && r.es[j] && r.es[j].t === nextE.t) j++;
+      const f0 = N.get(r.path[l.to]).f, f1 = N.get(r.path[j]).f; dir = f1 > f0 ? "up" : "down";
+      add(`Take ${tag} ${dir} to the ${FLOOR_NAMES[f1]}${nextE.t === "stair" ? " (stairs)" : ""}.`, r.path[j]);
+    }
+    if (nextE && nextE.t === "outdoor" && l.v !== "C") add(`Leave ${blockOf(l.v[0]).name} through the ${N.get(r.path[l.to]).label}.`, r.path[l.to]);
+    if (li === legs.length - 1) add(`You have arrived: ${lab(r.path[last])}.`, r.path[last]);
+    out.push(sec);
+  });
+  return out.filter(s => s.items.length);
+}
+
+function wrapText(s, max) {
+  if (s.length <= max || !s.includes(" ")) return [s];
+  const mid = s.length / 2; let best = 0, bd = 99; [...s].forEach((c, i) => { if (c === " " && Math.abs(i - mid) < bd) { bd = Math.abs(i - mid); best = i; } });
+  return [s.slice(0, best), s.slice(best + 1)];
+}
+function drawFloor(b, f, legs, route) {
+  const v = b.id + f, cells = b.fl[f], sh = S.show;
+  const Q = MAPSETS || S, crowd = Q.crowd || new Set();
+  const hotIds = new Set(); E.forEach(e => { if (Q.blocked.has(e.key)) { hotIds.add(e.a); hotIds.add(e.b); } });
+  let s = `<svg viewBox="0 0 1040 650" class="svg-map" style="width:${Z}%" role="img" aria-label="${b.name} ${FLOOR_NAMES[f]} floor plan">
+   <defs><pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="#f3f5f8"/><line x1="0" y1="0" x2="0" y2="7" stroke="#b7c2d0" stroke-width="2"/></pattern>
+   <pattern id="seats" width="12" height="12" patternUnits="userSpaceOnUse"><rect width="12" height="12" fill="#f4efe0"/><rect x="2" y="2" width="8" height="7" rx="2" fill="#e2dbc6"/></pattern></defs>
+   <rect width="1040" height="650" rx="14" fill="#f8fafc"/>
+   <text x="30" y="34" font-size="20" font-weight="800" fill="#142b49">${FLOOR_NAMES[f].toUpperCase()}</text>
+   <text x="1010" y="30" text-anchor="end" font-size="11" font-weight="700" fill="#5d6b7a">${b.name.toUpperCase()} · ${b.type.toUpperCase()}</text>
+   <g transform="translate(70 0)">
+   <rect x="40" y="50" width="820" height="500" fill="#fff" stroke="#142b49" stroke-width="5"/>
+   <g fill="#edf1f5"><rect x="40" y="160" width="820" height="40"/><rect x="40" y="440" width="820" height="40"/><rect x="170" y="200" width="40" height="240"/><rect x="690" y="200" width="40" height="240"/></g>
+   <g font-size="9" fill="#7b8794" font-weight="600"><text x="300" y="169">Corridor (2.4 m)</text><text x="300" y="449">Corridor (2.4 m)</text><text x="600" y="469">Corridor (2.4 m)</text></g>`;
+  cells.forEach(c => {
+    if (c.type === "void") {
+      s += `<rect x="${c.x}" y="${c.y}" width="${c.w}" height="${c.h}" fill="url(#hatch)" stroke="#5b6b80" stroke-width="1.5" stroke-dasharray="6 4"/><text x="${c.x + c.w / 2}" y="${c.y + c.h / 2 - 4}" font-size="11" font-weight="700" text-anchor="middle" fill="#6b7a8d">Atrium</text><text x="${c.x + c.w / 2}" y="${c.y + c.h / 2 + 10}" font-size="9" text-anchor="middle" fill="#6b7a8d">open to floor below</text>`;
+      return;
+    }
+    const hidden = (c.type === "elev" && !sh.lifts) || (c.type === "stair" && !sh.stairs) || (c.type === "wash" && !sh.wash);
+    const fill = hidden ? "#fbf6e9" : { room: "#fbf6e9", hall: /Auditorium|Hall|Theatre|Stacks|Lounge|Ward|Court|Wing|Care/.test(c.label) ? "url(#seats)" : "#f4efe0", lobby: "#e8f4f1", wash: "#dcebf8", refuge: "#fde8c8", elev: "#e4dbf8", stair: "url(#hatch)" }[c.type];
+    const hot = hotIds.has(c.id) || Q.closed.has(c.id), cx = c.x + c.w / 2, cy = c.y + c.h / 2;
+    s += `<rect x="${c.x}" y="${c.y}" width="${c.w}" height="${c.h}" fill="${fill}" stroke="${hot ? "#d9372b" : "#5b6b80"}" stroke-width="${hot ? 3 : 1.5}"/>`;
+    const dx = c.door.x, dy = c.door.y, hz = [160, 200, 440, 480].includes(c.door.y) && !(c.door.x === 170 || c.door.x === 730);
+    s += hz ? `<line x1="${dx - 11}" y1="${dy}" x2="${dx + 11}" y2="${dy}" stroke="#edf1f5" stroke-width="4"/>` : `<line x1="${dx}" y1="${dy - 11}" x2="${dx}" y2="${dy + 11}" stroke="#edf1f5" stroke-width="4"/>`;
+    const fs = c.w < 70 ? 8 : c.w < 110 ? 9 : 10.5, lines = wrapText(c.label, Math.floor(c.w / (fs * .56)));
+    if (c.type === "elev" || c.type === "stair") {
+      s += `<text x="${cx}" y="${cy}" font-size="${c.w < 60 ? 8.5 : 10}" font-weight="700" text-anchor="middle" fill="#2c3e57">${c.label}</text>`;
+    } else if (c.type === "wash") {
+      s += hidden ? `<text x="${cx}" y="${cy}" font-size="9" text-anchor="middle" fill="#2c3e57">Washroom</text>` : `<text x="${cx - 14}" y="${cy + 6}" font-size="17" text-anchor="middle">🚻</text><text x="${cx + 14}" y="${cy + 6}" font-size="17" text-anchor="middle">♿</text>`;
+    } else {
+      const tx = c.type === "lobby" ? c.x + c.w * 0.27 : cx;   
+      const y0 = cy - (lines.length - 1) * 6 - (c.code ? 4 : 0);
+      s += `<text x="${tx}" y="${y0}" font-size="${fs}" font-weight="700" text-anchor="middle" fill="#1f2d3d">${lines.map((t, k) => `<tspan x="${tx}" dy="${k ? fs + 2 : 0}">${escapeHTML(t)}</tspan>`).join("")}</text>`;
+      if (c.code) s += `<text x="${tx}" y="${y0 + lines.length * (fs + 2) + 2}" font-size="8.5" text-anchor="middle" fill="#6b7a8d">${c.code}</text>`;
+      if (c.type === "refuge") s += `<text x="${cx}" y="${c.y + c.h - 8}" font-size="13" text-anchor="middle">♿</text>`;
+    }
+    if (Q.closed.has(c.id)) s += `<path d="M${c.x + 6} ${c.y + 6}L${c.x + c.w - 6} ${c.y + c.h - 6}M${c.x + c.w - 6} ${c.y + 6}L${c.x + 6} ${c.y + c.h - 6}" stroke="#d9372b" stroke-width="2.5"/>`;
+    s += `<circle cx="${dx}" cy="${dy}" r="2.5" fill="#8394a8"/>`;
+  });
+  if (!f) {
+    s += `<rect x="36" y="162" width="8" height="36" fill="#edf1f5"/><rect x="856" y="162" width="8" height="36" fill="#edf1f5"/><rect x="418" y="546" width="64" height="8" fill="#edf1f5"/>
+      <rect x="-60" y="166" width="94" height="28" rx="5" fill="#e3f4ea" stroke="#1a9b70"/><text x="-13" y="183" text-anchor="middle" font-size="9" font-weight="700" fill="#0b6b42">${N.get(v + ":ws").label}</text>
+      <rect x="866" y="166" width="94" height="28" rx="5" fill="#e3f4ea" stroke="#1a9b70"/><text x="913" y="183" text-anchor="middle" font-size="9" font-weight="700" fill="#0b6b42">${N.get(v + ":es").label}</text>
+      <rect x="395" y="574" width="110" height="26" rx="5" fill="#e3f4ea" stroke="#1a9b70"/><text x="450" y="591" text-anchor="middle" font-size="10.5" font-weight="700" fill="#0b6b42">Main Entrance</text>`;
+    if (sh.ramps) s += `<line x1="450" y1="554" x2="450" y2="572" stroke="#2f6fe0" stroke-width="3.5" stroke-dasharray="5 3"/>`;
+  }
+  E.filter(e => e.v === v && crowd.has(e.key)).forEach(e => {
+    const A = N.get(e.a), B = N.get(e.b), mx = (A.x + B.x) / 2, my = (A.y + B.y) / 2;
+    s += `<line x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}" stroke="#e69b35" stroke-width="6" stroke-dasharray="3 6" stroke-linecap="round"/><circle cx="${mx}" cy="${my}" r="9" fill="#fff" stroke="#e69b35" stroke-width="2"/><text x="${mx}" y="${my + 4}" text-anchor="middle" font-size="11">👥</text>`;
+  });
+  E.filter(e => e.v === v && Q.blocked.has(e.key)).forEach(e => {
+    const A = N.get(e.a), B = N.get(e.b), mx = (A.x + B.x) / 2, my = (A.y + B.y) / 2;
+    s += `<line x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}" stroke="#d9372b" stroke-width="4" stroke-dasharray="7 5"/><circle cx="${mx}" cy="${my}" r="8" fill="#fff" stroke="#d9372b" stroke-width="2"/><text x="${mx}" y="${my + 4}" text-anchor="middle" font-size="11" font-weight="800" fill="#d9372b">✕</text>`;
+  });
+  if (route && sh.route) legs.filter(l => l.v === v).forEach(l => {
+    const pts = l.nodes.map(id => N.get(id).x + "," + N.get(id).y).join(" ");
+    s += `<polyline points="${pts}" fill="none" stroke="#fff" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/><polyline points="${pts}" fill="none" stroke="#0f9f94" stroke-width="3.6" stroke-linejoin="round" stroke-linecap="round"/>`;
+    [l.nodes[0], l.nodes[l.nodes.length - 1]].forEach(id => {
+      const n = N.get(id), st = id === route.path[0], en = id === route.path[route.path.length - 1];
+      if (en) s += `<path d="M${n.x} ${n.y} c-9 -12 -12 -17 -12 -23 a12 12 0 1 1 24 0 c0 6 -3 11 -12 23z" fill="#d62d20" stroke="#fff" stroke-width="2"/><circle cx="${n.x}" cy="${n.y - 23}" r="4.5" fill="#fff"/>`;
+      else s += `<circle cx="${n.x}" cy="${n.y}" r="${st ? 7 : 5}" fill="${st ? "#1e9e5a" : "#0f9f94"}" stroke="#fff" stroke-width="2.5"/>`;
+    });
+  });
+  return s + "</g></svg>";
+}
+
+function renderCampusMap() {
+  const o = S.opts[S.sel], r = o && o.r;
+  document.getElementById("campus-canvas").innerHTML = drawCampus(r ? legsOf(r) : [], r);
+}
+function renderIndoorMap() {
+  const o = S.opts[S.sel], r = o && o.r, legs = r ? legsOf(r) : [];
+  document.getElementById("indoor-tabs").innerHTML = BLOCKS.map(b => `<button class="chip ${IV[0] === b.id ? "on" : ""}" data-iv="${b.id}${IV[0] === b.id ? IV[1] : "0"}">${b.id === "E" ? "Administration" : b.name}</button>`).join("");
+  const b = blockOf(IV[0]);
+  document.getElementById("indoor-floors").innerHTML = FLOOR_SHORT.slice(0, b.floors).map((l, i) => `<button class="chip floor ${+IV[1] === i ? "on" : ""}" data-iv="${b.id}${i}" title="${FLOOR_NAMES[i]}">${l}</button>`).join("");
+  document.getElementById("indoor-title").textContent = `${b.name} – ${b.type}`;
+  document.getElementById("indoor-sub").textContent = `${FLOOR_NAMES[+IV[1]]} · G+${b.floors - 1}`;
+  document.getElementById("indoor-canvas").innerHTML = drawFloor(b, +IV[1], legs, r);
+  document.getElementById("indoor-legs").innerHTML = legs.filter(l => l.v !== "C").length ? `<span class="muted-note">Route on:</span>` + legs.filter(l => l.v !== "C").map(l => `<button class="chip ${l.v === IV ? "on" : ""}" data-iv="${l.v}">${viewLabel(l.v)}</button>`).join("") : "";
+}
+const renderMaps = () => { renderCampusMap(); renderIndoorMap(); };
+</script>
+<script>
+/* =========================================================
+   ACCESSWAY – FRONTEND APP LOGIC & UI BINDINGS
+========================================================= */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+function escapeHTML(v) { return String(v).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+const store = { get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { } } };
+function toast(msg, bad) { const t = $("#toast"); t.textContent = msg; t.className = "toast show" + (bad ? " bad" : ""); clearTimeout(toast.t); toast.t = setTimeout(() => t.className = "toast", 3400); }
+
+const API = { base: window.ACCESSWAY_API || null,
+  async get(p) { if (!this.base) return null; try { const r = await fetch(this.base + p); return r.ok ? await r.json() : null; } catch { return null; } },
+  async post(p, b) { if (!this.base) return null; try { const r = await fetch(this.base + p, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(b) }); return r.ok ? await r.json() : null; } catch { return null; } } };
+
+function buildPicker(id, { campus = true, types } = {}) {
+  const el = $("#" + id);
+  if (!el) return;
+  el.innerHTML = `<select id="${id}-b" aria-label="Building"></select><select id="${id}-r" aria-label="Room"></select>`;
+  $(`#${id}-b`).innerHTML = (campus ? `<option value="-">Campus (outdoor places)</option>` : "") + BLOCKS.map(b => `<option value="${b.id}">${b.name} · ${b.type}</option>`).join("");
+  const fill = () => { $(`#${id}-r`).innerHTML = locationOptions(null, types, $(`#${id}-b`).value); };
+  $(`#${id}-b`).addEventListener("change", () => { fill(); el.dispatchEvent(new Event("pick")); });
+  $(`#${id}-r`).addEventListener("change", () => el.dispatchEvent(new Event("pick")));
+  fill();
+}
+const pickValue = id => $(`#${id}-r`) ? $(`#${id}-r`).value : "";
+function setPicker(id, nodeId) { const n = N.get(nodeId); if (!n || !$(`#${id}-b`)) return; $(`#${id}-b`).value = n.b; $(`#${id}-b`).dispatchEvent(new Event("change")); $(`#${id}-r`).value = nodeId; }
+
+const pageTitles = { dashboard: "Dashboard", navigation: "Building Navigation", reviews: "Accessibility Reviews", emergency: "Emergency & Simulation", volunteers: "Volunteer Assistance" };
+function showPage(id) {
+  $$(".page").forEach(p => p.classList.toggle("active", p.id === id));
+  $$(".nav-link").forEach(l => l.classList.toggle("active", l.dataset.page === id));
+  $("#page-heading").textContent = $("#breadcrumb-page").textContent = pageTitles[id] || "Dashboard";
+  history.replaceState(null, "", "#" + id);
+  if (id === "dashboard") renderDashboard();
+  if (id === "navigation") renderMaps();
+  if (id === "reviews") renderReviews();
+  if (id === "volunteers") renderVolunteers();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+document.addEventListener("click", e => {
+  const p = e.target.closest("[data-page]"); if (p) { showPage(p.dataset.page); return; }
+  const o = e.target.closest("[data-open]"); if (o) { showPage("navigation"); setIndoor(o.dataset.open + "0", true); return; }
+  const v = e.target.closest("[data-iv]"); if (v) { setIndoor(v.dataset.iv); return; }
+  const b = e.target.closest("[data-b]"); if (b) setIndoor(b.dataset.b + "0", true);
+});
+function setIndoor(v, scroll) { IV = v; renderIndoorMap(); if (scroll) $("#indoor-card").scrollIntoView({ behavior: "smooth", block: "start" }); }
+
+function renderDashboard() {
+  $("#building-count").textContent = BLOCKS.length;
+  $("#review-count").textContent = reviews.length;
+  $("#issue-count").textContent = reviews.filter(r => r.verified).length;
+  $("#volunteer-count").textContent = volunteers.filter(v => v.available).length;
+  const cardBg = ["linear-gradient(135deg,#d6e8fb,#b5cff3)", "linear-gradient(135deg,#d3f2e6,#a6dccf)", "linear-gradient(135deg,#fbe9d3,#f0cfa6)", "linear-gradient(135deg,#e8dffb,#cdbdf0)", "linear-gradient(135deg,#e3e8ee,#c7d0db)"];
+  $("#building-grid").innerHTML = BLOCKS.map((b, i) => `<article class="building-card"><div class="building-visual" style="background:${cardBg[i]}">${b.icon}</div>
+    <div class="building-info"><span class="building-tag">${escapeHTML(b.tag)}</span><h3>${b.name === "Administration" ? "Administration Building" : b.name + " · " + escapeHTML(b.type)}</h3>
+    <p>${b.floors} Floors (G+${b.floors - 1}) · Sample Building</p><button class="text-button" data-open="${b.id}">Explore Building →</button></div></article>`).join("");
+  $("#dash-priorities").innerHTML = rankLocations().slice(0, 3).map(p => `<div class="priority-item"><div><strong>${escapeHTML(N.get(p.loc).label)}</strong><p>${escapeHTML(lab(p.loc))}</p></div><span class="priority-score">${p.score}</span></div>`).join("") || `<p class="small-note">No reviews yet.</p>`;
+}
+
+function findRoutes() {
+  const a = pickValue("route-from"), b = pickValue("route-to"), p = $("#route-profile").value;
+  if (a === b) { toast("Start and destination are the same place.", true); return; }
+  const modes = [["short", "Shortest route"], ["simple", "Simplest route (fewest connections)"], ["acc", "Accessible route (no stairs)"]], out = [];
+  modes.forEach(([m, title]) => {
+    const r = findRoute(a, b, { p, m }); if (!r) return;
+    const sig = r.path.join(), dup = out.find(x => x.sig === sig);
+    if (dup) dup.title += " · " + title.split(" (")[0]; else out.push({ title, r, sig });
+  });
+  S.opts = out; S.sel = 0; renderRouteResult(); focusRoute();
+  if (!out.length) toast("No route is available for this profile with the current closures.", true);
+  else $("#directions-card").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+function renderRouteResult() {
+  const box = $("#directions");
+  if (!box) return;
+  if (!S.opts.length) { box.innerHTML = `<div class="route-empty">${S.searched ? "No route found. Try another profile, or reset the what-if scenario." : "Choose where you are, where you are going and your mobility needs, then press Find Accessible Route."}</div>`; return; }
+  const o = S.opts[S.sel], r = o.r;
+  const tabs = S.opts.length > 1 ? `<div class="chip-row">${S.opts.map((x, i) => `<button class="chip ${i === S.sel ? "on" : ""}" data-option="${i}">${escapeHTML(x.title.split(" · ")[0].replace(/ \(.*\)/, ""))}</button>`).join("")}</div>` : "";
+  box.innerHTML = tabs + `<div class="summary-tiles">
+      <div class="tile"><b>${r.m} m</b><span>Distance</span></div><div class="tile"><b>${r.min} min</b><span>Est. time</span></div>
+      <div class="tile"><b>${r.ramps}</b><span>Ramps</span></div><div class="tile"><b>${r.elev}</b><span>Lift rides</span></div>
+      <div class="tile"><b>${r.stairs}</b><span>Stair flights</span></div></div>
+    <p class="route-title">${escapeHTML(o.title)} ${r.stairs ? `<span class="pill warn">uses stairs</span>` : `<span class="pill ok">step-free</span>`}</p>
+    ${directionsOf(r).map((sec, i) => `<div class="dir-section"><h4><span class="dir-num">${i + 1}</span>${escapeHTML(sec.title)}</h4><ol>${sec.items.map(t => `<li>${escapeHTML(t)}</li>`).join("")}</ol></div>`).join("")}
+    <p class="small-note">Sample data. North is the top of each plan. Verify real conditions before travelling.</p>`;
+}
+document.addEventListener("click", e => { const c = e.target.closest("[data-option]"); if (c) { S.sel = +c.dataset.option; renderRouteResult(); focusRoute(); } });
+function focusRoute() {
+  const o = S.opts[S.sel];
+  if (o) { const legs = legsOf(o.r).filter(l => l.v !== "C"); if (legs.length) IV = legs[legs.length - 1].v; }
+  renderMaps();
+}
+if ($("#route-form")) $("#route-form").addEventListener("submit", e => { e.preventDefault(); S.searched = true; findRoutes(); });
+if ($("#route-swap")) $("#route-swap").addEventListener("click", () => { const a = pickValue("route-from"), b = pickValue("route-to"); setPicker("route-from", b); setPicker("route-to", a); });
+if ($("#zoom-in")) $("#zoom-in").addEventListener("click", () => { Z = Math.min(220, Z + 20); renderIndoorMap(); });
+if ($("#zoom-out")) $("#zoom-out").addEventListener("click", () => { Z = Math.max(80, Z - 20); renderIndoorMap(); });
+$$("[data-show]").forEach(cb => cb.addEventListener("change", () => { S.show[cb.dataset.show] = cb.checked; renderMaps(); }));
+
+/* ================= REVIEWS MODULE (Updated with Severity buttons & Confirms) ================= */
+class MaxHeap {
+  constructor() { this.a = []; }
+  push(x) { const a = this.a; a.push(x); let i = a.length - 1; while (i && a[(i - 1) >> 1].score < a[i].score) { [a[i], a[(i - 1) >> 1]] = [a[(i - 1) >> 1], a[i]]; i = (i - 1) >> 1; } }
+  pop() { const a = this.a; if (!a.length) return; const top = a[0], last = a.pop(); if (a.length) { a[0] = last; let i = 0; for (;;) { let m = i, c = 2 * i + 1; if (c < a.length && a[c].score > a[m].score) m = c; c++; if (c < a.length && a[c].score > a[m].score) m = c; if (m === i) break; [a[i], a[m]] = [a[m], a[i]]; i = m; } } return top; }
+}
+
+const sampleReviews = [
+  { id: 1, building: "Block A — Engineering & Labs", locText: "East Entrance Ramp R1", category: "Blocked Ramp", severity: 5, sevLabel: "Critical", desc: "Delivery pallets temporarily parked across the bottom landing of Ramp R1 blocking wheelchair turning radius.", user: "Aaroon S. (CS Undergrad)", time: "18 mins ago", confirms: 14, verified: true },
+  { id: 2, building: "Main Gate & Security Plaza", locText: "North-West Tactile Strip", category: "Missing Tactile Paving", severity: 4, sevLabel: "High", desc: "Two tactile blister tiles near the security turnstile are loose after yesterday's rain.", user: "Meera K. (Research Fellow)", time: "1 hour ago", confirms: 11, verified: true },
+  { id: 3, building: "Block B — Central Library", locText: "West Wing Lift L2", category: "Lift Outage", severity: 4, sevLabel: "High", desc: "Secondary elevator L2 audio floor announcer is muted; main elevator L1 works fine with braille panel.", user: "Rohan D. (Accessibility Club)", time: "3 hours ago", confirms: 9, verified: true },
+  { id: 4, building: "Block D — Student Centre & Hostels", locText: "Dining Hall Side Door", category: "Narrow Corridor", severity: 3, sevLabel: "Medium", desc: "Extra chairs stacked along the west corridor reduce clear width to 95cm during lunch rush.", user: "Priya N. (Resident)", time: "5 hours ago", confirms: 5, verified: true },
+  { id: 5, building: "Administration Building", locText: "South Garden Walkway", category: "Steep Slope", severity: 2, sevLabel: "Low", desc: "Alternative garden shortcut has a slight lip; use the main covered Ramp R0 instead.", user: "Vikram P. (Faculty)", time: "1 day ago", confirms: 3, verified: false }
+];
+
+let reviews = store.get("accesswayReviewsV4", null);
+if (!reviews) { reviews = sampleReviews; store.set("accesswayReviewsV4", reviews); }
+const saveReviews = () => store.set("accesswayReviewsV4", reviews);
+
+function rankLocations() {
+  const heap = new MaxHeap();
+  reviews.forEach(r => {
+    let weight = r.severity * 10 + (r.confirms * 2);
+    heap.push({ r, score: weight });
+  });
+  const out = []; let x; while ((x = heap.pop())) out.push(x.r); return out;
+}
+
+function renderReviews() {
+  const listEl = $("#priority-list");
+  if (!listEl) return;
+  const ranked = rankLocations();
+  $("#tracked-clusters-badge").textContent = `${ranked.length} Tracked Clusters`;
+
+  listEl.innerHTML = ranked.map((r, i) => {
+    let badgeClass = "badge-low";
+    if (r.severity >= 5) badgeClass = "badge-critical";
+    else if (r.severity === 4) badgeClass = "badge-high";
+    else if (r.severity === 3) badgeClass = "badge-medium";
+
+    return `<div class="priority-item-card">
+      <div class="issue-info">
+        <h4><span style="color:var(--teal)">#${i+1}</span> ${escapeHTML(r.category)} <span class="${badgeClass}" style="margin-left:6px;">${r.sevLabel || 'High'}</span> <span style="font-size:12px; font-weight:400; color:var(--muted); margin-left:8px;">${r.time || '1 hour ago'}</span></h4>
+        <p class="location">${escapeHTML(r.building)} — ${escapeHTML(r.locText)}</p>
+        <p class="desc">${escapeHTML(r.desc)}</p>
+        <p style="font-size:12px; color:var(--muted); margin-top:6px;">Reported by ${escapeHTML(r.user || 'Campus User')}</p>
+      </div>
+      <div class="issue-meta">
+        <span class="count">1 Report</span>
+        <span class="confirms">${r.confirms} confirms</span>
+        <button class="primary-button inline" data-confirm="${r.id}" style="padding:6px 12px; font-size:12px; margin-top:4px; background:#0f9f94;">👍 Confirm (${r.confirms})</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+document.addEventListener("click", e => {
+  const btn = e.target.closest("[data-confirm]");
+  if (btn) {
+    const id = +btn.dataset.confirm;
+    const r = reviews.find(x => x.id === id);
+    if (r) { r.confirms++; saveReviews(); renderReviews(); toast(`Confirmed barrier report #${id}. Routing weights updated.`); }
+  }
+});
+
+// Severity selector buttons behavior
+document.querySelectorAll("#severity-buttons .sev-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll("#severity-buttons .sev-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    const val = btn.dataset.val;
+    $("#review-severity").value = val;
+  });
+});
+
+if ($("#review-form")) {
+  $("#review-form").addEventListener("submit", e => {
+    e.preventDefault();
+    const building = $("#review-building").value;
+    const locText = $("#review-location-text").value.trim();
+    const category = $("#review-category").value;
+    const severity = +$("#review-severity").value;
+    const desc = $("#review-description").value.trim();
+    const sevLabel = severity >= 5 ? "Critical" : severity === 4 ? "High" : severity === 3 ? "Medium" : "Low";
+
+    const newR = {
+      id: Date.now(),
+      building,
+      locText,
+      category,
+      severity,
+      sevLabel,
+      desc,
+      user: "Current User",
+      time: "Just now",
+      confirms: 1,
+      verified: severity >= 4
+    };
+
+    reviews.unshift(newR);
+    saveReviews();
+    $("#review-description").value = "";
+    $("#review-location-text").value = "";
+    renderReviews();
+    toast("Barrier report submitted successfully! C++ routing weights updated.");
+  });
+}
+
+const fillReviewBuildings = () => {
+  const sel = $("#review-building");
+  if (!sel) return;
+  sel.innerHTML = BLOCKS.map(b => `<option value="${b.name} — ${b.type}">${b.name} — ${b.type}</option>`).join("") + `<option value="Main Gate & Security Plaza">Main Gate & Security Plaza</option>`;
+};
+
+/* ================= VOLUNTEERS MODULE (Updated with Modern Cards) ================= */
+let volunteers = store.get("accesswayVolunteersV3", [
+  { id: 1, name: "Ananya Verma", role: "Certified Mobility Escort · Final Year Civil Eng", zone: "Block A & Admin Plaza", eta: "ETA 2 mins", skills: ["Wheelchair Assist", "Sighted Guide", "First Aid"], phone: "+91 98221 XXXXX", available: true },
+  { id: 2, name: "Kabir Malhotra", role: "Peer Accessibility Ambassador · Library Wing", zone: "Block B & Main Gate", eta: "ETA 3 mins", skills: ["Tactile Navigation", "Sign Language (ISL)", "Campus Cart"], phone: "+91 98112 XXXXX", available: true },
+  { id: 3, name: "Dr. Sneha Rao", role: "Medical & Rehab Support Coordinator", zone: "Block C & Block D", eta: "ETA 4 mins", skills: ["Medical Escort", "Emergency Evac", "Mobility Aid Repair"], phone: "+91 98443 XXXXX", available: true }
+]);
+
+let requests = store.get("accesswayRequestsV3", []);
+const saveVol = () => { store.set("accesswayVolunteersV3", volunteers); store.set("accesswayRequestsV3", requests); };
+
+function renderVolunteers() {
+  const listEl = $("#volunteer-list");
+  if (!listEl) return;
+
+  listEl.innerHTML = volunteers.map(v => `<div class="volunteer-card">
+    <div>
+      <div class="v-header">
+        <div>
+          <h4>${escapeHTML(v.name)}</h4>
+          <p class="role">${escapeHTML(v.role)}</p>
+        </div>
+        <span class="${v.available ? "badge-low" : "badge-high"}" style="padding:4px 10px;">${v.available ? "Available • " + v.eta : "On Duty • " + v.eta}</span>
+      </div>
+      <p class="zone">Zone: ${escapeHTML(v.zone)}</p>
+      <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:16px;">
+        ${v.skills.map(s => `<span class="vtag">${escapeHTML(s)}</span>`).join("")}
+      </div>
+    </div>
+    <button class="primary-button inline" data-assign="${v.id}" style="width:100%; background:#142b49; margin-top:0;">Assign ${escapeHTML(v.name.split(" ")[0])}</button>
+  </div>`).join("");
+
+  const actingEl = $("#acting-as");
+  if (actingEl) actingEl.innerHTML = volunteers.map(v => `<option value="${v.id}">${escapeHTML(v.name)}</option>`).join("");
+
+  const reqEl = $("#request-list");
+  if (reqEl) {
+    reqEl.innerHTML = requests.map(r => `<div class="request-item">
+      <div><strong>Meeting Point: ${escapeHTML(r.meetingPoint)}</strong> · ${escapeHTML(r.type)}
+      <p>Details: ${escapeHTML(r.details || "None")}</p>
+      <p>Assigned Volunteer: <b>${escapeHTML(r.assignedTo || "Dispatching...")}</b></p></div>
+      <span class="pill info">${escapeHTML(r.status)}</span>
+    </div>`).join("") || `<p class="small-note" style="margin-top:10px;">No active escort requests in queue.</p>`;
+  }
+}
+
+document.addEventListener("click", e => {
+  const btn = e.target.closest("[data-assign]");
+  if (btn) {
+    const id = +btn.dataset.assign;
+    const v = volunteers.find(x => x.id === id);
+    if (v) {
+      toast(`Successfully dispatched ${v.name}! They are en route to your location.`);
+      requests.unshift({ id: Date.now(), meetingPoint: "Main Gate Plaza", type: "Assigned Escort", details: "Direct assignment", assignedTo: v.name, status: "En Route" });
+      saveVol();
+      renderVolunteers();
+    }
+  }
+});
+
+if ($("#help-form")) {
+  $("#help-form").addEventListener("submit", e => {
+    e.preventDefault();
+    const locSel = $("#help-loc-select");
+    const locText = locSel.options[locSel.selectedIndex].text;
+    const type = $("#help-type").value;
+    const details = $("#help-description").value.trim();
+
+    const escReq = {
+      id: Date.now(),
+      meetingPoint: locText,
+      type,
+      details,
+      assignedTo: volunteers[0].name,
+      status: "Dispatched"
+    };
+
+    requests.unshift(escReq);
+    saveVol();
+    renderVolunteers();
+    $("#help-description").value = "";
+    toast(`Volunteer ${volunteers[0].name} dispatched! ETA 2 minutes to ${locText}.`);
+  });
+}
+
+/* ================= EMERGENCY / SIMULATION MODULE ================= */
+const EM = { active: false, done: "", blocked: new Set(), closed: new Set(), crowd: new Set(), log: [], route: null, target: null, pos: null, type: "", profile: "gen", view: null };
+const emOpts = () => ({ p: EM.profile, noElev: true, noStairs: ["wheel", "crutch", "limited"].includes(EM.profile), sets: EM });
+function emPlan() {
+  const id = EM.pos, n = N.get(id), o = emOpts(); EM.route = null; EM.target = null; EM.done = "";
+  if (!n) return;
+  if (["entrance", "exit"].includes(n.type) && n.f === 0) { EM.done = "exit"; return; }
+  if (n.type === "refuge") { EM.done = "refuge"; return; }
+  const here = [...N.values()].filter(t => t.b === n.b);
+  const exits = here.filter(t => ["entrance", "exit"].includes(t.type) && t.f === 0), refuges = here.filter(t => t.type === "refuge" && t.f === n.f);
+  const { dist } = dijkstra(id, o);
+  const nearest = list => { let best = null; list.forEach(t => { if (!EM.closed.has(t.id) && dist.has(t.id) && (!best || dist.get(t.id) < dist.get(best.id))) best = t; }); return best; };
+  EM.target = o.noStairs ? (n.f === 0 ? nearest(exits) || nearest(refuges) : nearest(refuges)) : (nearest(exits) || nearest(refuges));
+  EM.route = EM.target ? findRoute(id, EM.target.id, o) : null;
+  if (EM.route) EM.view = EM.view && legsOf(EM.route).some(l => l.v === EM.view) ? EM.view : n.v;
+  else EM.view = n.v;
+}
+const emShort = e => e.t === "walk" ? e.name.replace(/^.*?: /, "") : e.name.replace(/ \(Block [A-E]\)| \(Administration\)/, "");
+function emRender() {
+  const n = N.get(EM.pos); if (!n) return;
+  const r = EM.route, refuge = EM.target && EM.target.type === "refuge";
+  $("#em-banner").innerHTML = `<div><strong>🚨 EMERGENCY ACTIVE · ${escapeHTML(EM.type)}</strong><p>You are at: ${escapeHTML(lab(EM.pos))}</p></div><button class="secondary-button" id="em-end">I am safe · End emergency</button>`;
+  let head;
+  if (EM.done === "exit") head = `<div class="info-box"><strong>You are at an exit.</strong> Leave the building and go to the assembly point at Central Plaza.</div>`;
+  else if (EM.done === "refuge") head = `<div class="warning-box"><strong>You are at the Refuge Area.</strong> Stay here and wait for assistance.</div>`;
+  else if (!EM.target) head = `<div class="warning-box" style="border-color:#d9372b"><strong>No safe route with the problems reported so far.</strong> Stay where you are if safe and call emergency services.</div>`;
+  else head = `<div class="${refuge ? "warning-box" : "info-box"}"><strong>${refuge ? "Go to Refuge Area" : "Evacuate via nearest exit"}:</strong> ${escapeHTML(lab(EM.target.id))}. About ${r.m} m.</div>`;
+  const dirs = r ? directionsOf(r) : [];
+  const steps = dirs.map(sec => `<div class="dir-section"><h4>${escapeHTML(sec.title)}</h4><ol>${sec.items.map((t, i) => `<li>${escapeHTML(t)} ${sec.ends[i] && sec.ends[i] !== EM.pos && !/^You have arrived/.test(t) ? `<button class="mini-button" data-here="${sec.ends[i]}">I am here</button>` : ""}</li>`).join("")}</ol></div>`).join("");
+  const along = r ? r.es.filter(e => e.name).map(e => {
+    const stair = e.t === "stair", corridor = e.t === "walk" || (e.t === "outdoor");
+    return `<div class="part"><span>${stair ? "🪜" : "➡️"} ${escapeHTML(emShort(e))}${EM.crowd.has(e.key) ? ` <span class="pill warn">crowded</span>` : ""}</span><span class="part-btns">${stair ? `<button class="mini-button ghost" data-emact="block" data-key="${e.key}">Closed</button>` : corridor ? `<button class="mini-button" data-emact="crowd" data-key="${e.key}">Crowded</button><button class="mini-button ghost" data-emact="block" data-key="${e.key}">Blocked</button>` : ""}</span></div>`;
+  }).join("") + (EM.target && ["entrance", "exit", "refuge"].includes(EM.target.type) ? `<div class="part"><span>${EM.target.type === "refuge" ? "♿" : "🚪"} ${escapeHTML(lab(EM.target.id))}</span><span class="part-btns"><button class="mini-button ghost" data-emact="node" data-key="${EM.target.id}">${EM.target.type === "refuge" ? "Not usable" : "Gate / exit closed"}</button></span></div>` : "") : "";
+  $("#em-guidance").innerHTML = head + steps;
+  $("#em-along").innerHTML = along || `<p class="small-note">Nothing ahead to report.</p>`;
+  $("#em-log").innerHTML = EM.log.map((l, i) => `<div class="change-item">${escapeHTML(l.text)} <button class="mini-button" data-undo="${i}">Undo</button></div>`).join("") || `<p class="small-note">No problems reported yet.</p>`;
+  const legs = r ? legsOf(r) : [], v = EM.view || n.v;
+  $("#em-views").innerHTML = (legs.length > 1 ? `<span class="muted-note">Floor:</span>` + legs.filter(l => l.v !== "C").map(l => `<button class="chip ${l.v === v ? "on" : ""}" data-emview="${l.v}">${FLOOR_SHORT[l.v[1]]}</button>`).join("") : "");
+  MAPSETS = EM;
+  $("#em-map").innerHTML = v === "C" ? drawCampus(legs, r) : drawFloor(blockOf(v[0]), +v[1], legs, r || { path: [EM.pos] });
+  MAPSETS = null;
+}
+function emApply(kind, key) {
+  if (kind === "block") { EM.blocked.add(key); const e = E.find(x => x.key === key); EM.log.push({ kind, key, text: `${e.t === "stair" ? "🪜 Staircase closed" : "🔥 Blocked"}: ${emShort(e)}` }); }
+  else if (kind === "crowd") { EM.crowd.add(key); EM.log.push({ kind, key, text: `👥 Crowded: ${emShort(E.find(x => x.key === key))}` }); }
+  else if (kind === "node") { EM.closed.add(key); EM.log.push({ kind, key, text: `${N.get(key).type === "refuge" ? "♿ Refuge not usable" : "🚪 Exit closed"}: ${lab(key)}` }); }
+  emPlan(); emRender(); toast("Reported. Your route has been updated from where you are.");
+}
+function emQuick(kind) {
+  const r = EM.route; if (!r) { toast("There is no route to change right now.", true); return; }
+  if (kind === "exit") { const id = r.path.find(i => ["entrance", "exit"].includes(N.get(i).type) && N.get(i).f === 0 && i !== EM.pos); if (!id) { toast("No exit on your route yet.", true); return; } emApply("node", id); }
+  else if (kind === "refuge") { if (!EM.target || EM.target.type !== "refuge") { toast("You are not heading to a refuge area.", true); return; } emApply("node", EM.target.id); }
+  else if (kind === "stair") { const e = r.es.find(x => x.t === "stair"); if (!e) { toast("There is no staircase on your current route.", true); return; } emApply("block", e.key); }
+  else { const e = r.es.find(x => x.name && x.t === "walk"); if (!e) { toast("No corridor ahead on your route.", true); return; } emApply(kind === "crowd" ? "crowd" : "block", e.key); }
+}
+if ($("#em-start")) {
+  $("#em-start").addEventListener("click", () => {
+    EM.active = true; EM.blocked = new Set(S.base); EM.closed = new Set(); EM.crowd = new Set(); EM.log = [];
+    EM.pos = pickValue("em-loc"); EM.profile = $("#em-profile").value; EM.type = $("#em-type").value; EM.view = null;
+    $("#em-start-card").classList.add("hidden"); $("#em-live-box").classList.remove("hidden"); emPlan(); emRender();
+    $("#em-live-box").scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+}
+if ($("#em-live-box")) {
+  $("#em-live-box").addEventListener("click", e => {
+    const t = e.target, d = t.dataset;
+    if (t.id === "em-end") { EM.active = false; $("#em-live-box").classList.add("hidden"); $("#em-start-card").classList.remove("hidden"); toast("Emergency mode ended."); return; }
+    if (d.here) { EM.pos = d.here; EM.view = null; emPlan(); emRender(); return; }
+    if (d.emquick) { emQuick(d.emquick); return; }
+    if (d.emact) { emApply(d.emact, d.key); return; }
+    if (d.emview) { EM.view = d.emview; emRender(); return; }
+    if (d.undo != null) { const l = EM.log.splice(+d.undo, 1)[0]; (l.kind === "node" ? EM.closed : l.kind === "crowd" ? EM.crowd : EM.blocked).delete(l.key); emPlan(); emRender(); toast("Report removed."); }
+  });
+}
+let sosList = store.get("accesswaySOS", []);
+const renderSOS = () => { if ($("#sos-list")) $("#sos-list").innerHTML = sosList.map(s => `<div class="change-item">${escapeHTML(lab(s.loc))}: ${escapeHTML(s.text || "(no message)")} <span class="pill warn">DEMO · not sent</span></div>`).join(""); };
+if ($("#sos-form")) {
+  $("#sos-form").addEventListener("submit", e => { e.preventDefault(); sosList.unshift({ loc: pickValue("sos-loc"), text: $("#sos-text").value.trim() }); store.set("accesswaySOS", sosList); $("#sos-text").value = ""; renderSOS(); toast("Demo request saved in this browser only."); });
+}
+function renderExits() {
+  if ($("#exit-cards")) $("#exit-cards").innerHTML = BLOCKS.map(b => `<div class="exit-card"><h4>${b.name} · ${b.type}</h4><p><strong>Exits:</strong> Main Entrance, ${N.get(b.id + "0:ws").label}, ${N.get(b.id + "0:es").label}</p><p><strong>Refuge areas:</strong> one on every floor ♿</p></div>`).join("");
+}
+$$("[data-emtab]").forEach(b => b.addEventListener("click", () => { $$("[data-emtab]").forEach(x => x.classList.toggle("on", x === b)); $$(".em-panel").forEach(p => p.classList.toggle("hidden", p.id !== b.dataset.emtab)); }));
+
+const WI = { base: null };
+function wiShow() {
+  const a = pickValue("wi-from"), b = pickValue("wi-to"), p = $("#wi-profile").value;
+  if (a === b) { toast("Choose two different places.", true); return; }
+  WI.base = findRoute(a, b, { p, m: "short", free: true });
+  if (!WI.base) { $("#wi-route-card").classList.add("hidden"); toast("No route exists between these places.", true); return; }
+  $("#wi-route-card").classList.remove("hidden"); renderWiParts(); compareRoutes();
+}
+function renderWiParts() {
+  if (!WI.base) return;
+  const parts = WI.base.es.filter(e => e.name);
+  if ($("#wi-parts")) $("#wi-parts").innerHTML = parts.map(e => {
+    const closed = S.blocked.has(e.key), label = e.t === "walk" ? `<b>${escapeHTML(viewLabel(e.v))}</b> · ${escapeHTML(e.name.replace(/^.*?: /, ""))}` : escapeHTML(e.name.replace(/^Campus path: /, ""));
+    const icon = e.t === "elev" ? "🛗" : e.t === "stair" ? "🪜" : e.t === "outdoor" ? "🚶" : "➡️";
+    return `<div class="part ${closed ? "is-closed" : ""}"><span>${icon} ${label}</span><button class="mini-button ${closed ? "" : "ghost"}" data-part="${e.key}">${closed ? "Reopen" : "What if this is closed?"}</button></div>`;
+  }).join("");
+}
+if ($("#wi-parts")) {
+  $("#wi-parts").addEventListener("click", e => {
+    const k = e.target.dataset.part; if (!k) return;
+    S.blocked.has(k) ? S.blocked.delete(k) : S.blocked.add(k);
+    renderWiParts(); renderActiveChanges(); compareRoutes(); fillScenarioTargets(); renderMaps();
+  });
+}
+function fillScenarioFloors() {
+  const bid = $("#scenario-block").value, k = $("#scenario-type").value, fl = $("#scenario-floor");
+  if (!fl) return;
+  const need = bid !== "-" && ["block", "close"].includes(k);
+  $("#scenario-floor-wrap").classList.toggle("hidden", !need);
+  $("#scenario-block-wrap").classList.toggle("hidden", k === "restore");
+  if (need) fl.innerHTML = Array.from({ length: blockOf(bid).floors }, (_, i) => `<option value="${i}">${FLOOR_NAMES[i]}</option>`).join("");
+  fillScenarioTargets();
+}
+function fillScenarioTargets() {
+  const k = $("#scenario-type").value, bid = $("#scenario-block").value, f = +$("#scenario-floor").value || 0, sel = $("#scenario-target");
+  if (!sel) return;
+  if (k === "restore") {
+    sel.innerHTML = [...S.blocked].map(key => `<option value="e:${key}">${escapeHTML(E.find(e => e.key === key).name)}</option>`).join("") + [...S.closed].map(id => `<option value="n:${id}">Facility: ${escapeHTML(lab(id))}</option>`).join("") || `<option value="">Nothing to restore</option>`; return;
+  }
+  if (k === "close") { sel.innerHTML = bid === "-" ? "" : locationOptions(n => n.f === f, ["room"], bid); return; }
+  let es;
+  if (k === "elevator") es = E.filter(e => e.t === "elev" && bid !== "-" && e.v[0] === bid);
+  else if (bid === "-") es = E.filter(e => e.t === "outdoor" && e.v === "C");
+  else es = E.filter(e => e.t === "walk" && e.name && e.v === bid + f);
+  es = es.filter(e => !S.blocked.has(e.key));
+  sel.innerHTML = es.map(e => `<option value="e:${e.key}">${escapeHTML(e.name.replace(/^[^:]*: /, "").replace(/ \(Block [A-E]\)| \(Administration\)/, ""))}</option>`).join("") || `<option value="">Nothing available</option>`;
+}
+function renderActiveChanges() {
+  if ($("#active-changes")) $("#active-changes").innerHTML = ([...S.blocked].map(k => `<div class="change-item">🚧 ${escapeHTML(E.find(e => e.key === k).name)} <button class="mini-button" data-reopen="e:${k}">Reopen</button></div>`).join("") + [...S.closed].map(i => `<div class="change-item">🚫 ${escapeHTML(lab(i))} unavailable <button class="mini-button" data-reopen="n:${i}">Reopen</button></div>`).join("")) || `<p class="small-note">No disruptions.</p>`;
+}
+if ($("#active-changes")) {
+  $("#active-changes").addEventListener("click", e => {
+    const r = e.target.dataset.reopen; if (!r) return;
+    (r[0] === "e" ? S.blocked : S.closed).delete(r.slice(2));
+    renderActiveChanges(); fillScenarioTargets(); renderWiParts(); compareRoutes(); renderMaps();
+  });
+}
+["#scenario-type", "#scenario-block"].forEach(s => { if ($(s)) $(s).addEventListener("change", fillScenarioFloors); });
+if ($("#scenario-floor")) $("#scenario-floor").addEventListener("change", fillScenarioTargets);
+if ($("#simulation-form")) {
+  $("#simulation-form").addEventListener("submit", e => {
+    e.preventDefault();
+    const k = $("#scenario-type").value, t = $("#scenario-target").value; if (!t) return;
+    const kind = t[0], id = t.slice(2);
+    if (k === "restore") (kind === "e" ? S.blocked : S.closed).delete(id); else if (k === "close") S.closed.add(t); else S.blocked.add(id);
+    fillScenarioTargets(); renderActiveChanges(); renderWiParts(); compareRoutes(); renderMaps(); toast("Scenario updated.");
+  });
+}
+if ($("#reset-simulation")) {
+  $("#reset-simulation").addEventListener("click", () => { S.blocked = new Set(S.base); S.closed.clear(); fillScenarioTargets(); renderActiveChanges(); renderWiParts(); compareRoutes(); renderMaps(); toast("Scenario reset."); });
+}
+function compareRoutes() {
+  const a = pickValue("wi-from"), b = pickValue("wi-to"), p = $("#wi-profile").value, out = $("#simulation-result");
+  if (!out || a === b || !WI.base) return;
+  const before = findRoute(a, b, { p, m: "short", free: true }), after = findRoute(a, b, { p, m: "short" });
+  const rb = dijkstra(a, { p, m: "short", free: true }).dist, ra = dijkstra(a, { p, m: "short" }).dist;
+  const lost = [...N.values()].filter(n => ["room", "refuge", "entrance"].includes(n.type) && rb.has(n.id) && !ra.has(n.id));
+  const same = before && after && before.path.join() === after.path.join();
+  const card = (t, r) => `<div class="compare-card"><h4>${t}</h4>${r ? `<p class="small-note">≈ ${r.m} m · ${r.min} min</p><ol>${directionsOf(r).flatMap(s => s.items).slice(0, 16).map(x => `<li>${escapeHTML(x)}</li>`).join("")}</ol>` : `<span class="pill bad">No route available</span>`}</div>`;
+  out.innerHTML = `<div class="content-card"><h3>3 · What happens</h3>${same ? `<div class="info-box">Your route is not affected.</div>` : after ? `<div class="warning-box">Part of your route is closed. Alternative shown below.</div>` : `<div class="warning-box">No route available.</div>`}
+    <div class="compare-grid">${card("Planned route", before)}${card("Alternative route", same ? null : after)}</div>` +
+    (after ? `<button class="secondary-button" id="wi-show-map" style="margin-top:12px;">View route on the maps</button>` : "") + `</div>`;
+  const m = $("#wi-show-map"); if (m) m.onclick = () => showRouteOnMap(same ? before : after, same ? "Planned route" : "Alternative route");
+}
+if ($("#wi-compare")) $("#wi-compare").addEventListener("click", wiShow);
+
+(async function init() {
+  buildPicker("route-from"); buildPicker("route-to"); buildPicker("wi-from"); buildPicker("wi-to");
+  buildPicker("em-loc", { campus: false }); buildPicker("sos-loc", { campus: false }); buildPicker("help-loc");
+  setPicker("route-from", "og"); setPicker("route-to", "A0:c1"); setPicker("wi-from", "og"); setPicker("wi-to", "D3:l0");
+  if ($("#route-profile")) $("#route-profile").value = "wheel";
+
+  const blocks = BLOCKS.map(b => `<option value="${b.id}">${b.name} · ${b.type}</option>`).join("");
+  fillReviewBuildings();
+  if ($("#scenario-block")) $("#scenario-block").innerHTML = blocks + `<option value="-">Campus paths</option>`;
+  fillScenarioFloors(); renderActiveChanges(); renderSOS(); renderExits();
+  S.searched = true; findRoutes(); setPicker("em-loc", "A3:c1"); wiShow();
+  renderReviews();
+  renderVolunteers();
+  
+  const start = location.hash.slice(1);
+  showPage(pageTitles[start] ? start : "dashboard");
+})();
+</script>
 </body>
 </html>
