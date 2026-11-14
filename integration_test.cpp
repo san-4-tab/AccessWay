@@ -93,7 +93,36 @@ cout << (emergencyLoadPass
     cout << "\n--- MEMBER 2: EMERGENCY ---\n";
 
     bool emergencyPass = evacuationRoute.found;
+// Verify evacuation graph works in both directions.
 
+RouteResult reverseRoute =
+    emergency.getEvacuationManager().findRoute(
+        1, 2, 1, GENERAL
+    );
+
+vector<int> reverseReachable =
+    emergency.getEvacuationManager().findReachableLocations(
+        1, 2, GENERAL, MODE_NORMAL
+    );
+
+bool reverseRoutePass =
+    reverseRoute.found &&
+    reverseRoute.path.size() == 2 &&
+    reverseRoute.path[0] == 2 &&
+    reverseRoute.path[1] == 1;
+
+bool reverseReachabilityPass =
+    reverseReachable.size() == 2 &&
+    reverseReachable[0] == 1 &&
+    reverseReachable[1] == 2;
+
+cout << (reverseRoutePass
+    ? "PASS: Reverse evacuation route found (2 to 1).\n"
+    : "FAIL: Reverse evacuation route failed.\n");
+
+cout << (reverseReachabilityPass
+    ? "PASS: Reverse BFS reaches both locations.\n"
+    : "FAIL: Reverse BFS test failed.\n");
     cout << (emergencyPass
         ? "PASS: Evacuation route found.\n"
         : "FAIL: Evacuation route not found.\n");
