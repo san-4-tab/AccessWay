@@ -1020,7 +1020,7 @@ function renderDashboard() {
   $("#building-grid").innerHTML = BLOCKS.map((b, i) => `<article class="building-card"><div class="building-visual" style="background:${cardBg[i]}">${b.icon}</div>
     <div class="building-info"><span class="building-tag">${escapeHTML(b.tag)}</span><h3>${b.name === "Administration" ? "Administration Building" : b.name + " · " + escapeHTML(b.type)}</h3>
     <p>${b.floors} Floors (G+${b.floors - 1}) · Sample Building</p><button class="text-button" data-open="${b.id}">Explore Building →</button></div></article>`).join("");
-  $("#dash-priorities").innerHTML = rankLocations().slice(0, 3).map(p => `<div class="priority-item"><div><strong>${escapeHTML(N.get(p.loc).label)}</strong><p>${escapeHTML(lab(p.loc))}</p></div><span class="priority-score">${p.score}</span></div>`).join("") || `<p class="small-note">No reviews yet.</p>`;
+$("#dash-priorities").innerHTML = rankLocations().slice(0, 3).map(p => `<div class="priority-item"><div><strong>${escapeHTML(p.locText || p.building || "Campus location")}</strong><p>${escapeHTML(p.building || "Campus")}</p></div><span class="priority-score">${p.severity * 10 + p.confirms * 2}</span></div>`).join("") || `<p class="small-note">No reviews yet.</p>`;
 }
 
 function findRoutes() {
