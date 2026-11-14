@@ -20,18 +20,40 @@ void VolunteerManager::clear() {
 }
 
 bool VolunteerManager::registerVolunteer(const Volunteer& volunteer) {
-    long long key = makeKey(volunteer.buildingId, volunteer.volunteerId);
-    if (index.find(key) != index.end()) return false;       // duplicate id
+
+    if (volunteer.volunteerId <= 0 ||
+        volunteer.buildingId <= 0 ||
+        volunteer.currentLocationId <= 0 ||
+        volunteer.volunteerName.empty() ||
+        volunteer.assistanceType.empty())
+        return false;
+
+    if (volunteer.volunteerName.find_first_of("|\r\n") != string::npos ||
+        volunteer.assistanceType.find_first_of("|\r\n") != string::npos)
+        return false;
+
+    long long key = makeKey(
+        volunteer.buildingId,
+        volunteer.volunteerId
+    );
+
+    if (index.find(key) != index.end())
+        return false;
 
     VolunteerNode* node = new VolunteerNode;
     node->data = volunteer;
     node->next = nullptr;
 
-    if (tail == nullptr) head = tail = node;                // append at tail: O(1)
-    else { tail->next = node; tail = node; }
+    if (tail == nullptr)
+        head = tail = node;
+    else {
+        tail->next = node;
+        tail = node;
+    }
 
     index[key] = node;
     count++;
+
     return true;
 }
 
@@ -120,24 +142,67 @@ bool VolunteerManager::saveToFile(const string& filename) const {
 }
 
 bool VolunteerManager::loadFromFile(const string& filename) {
+
     ifstream in(filename.c_str());
-    if (!in) return false;
+
+    if (!in)
+        return false;
+
     clear();
+
     string line;
+    bool success = true;
+
     while (getline(in, line)) {
-        if (line.empty()) continue;
+
+        if (line.empty())
+            continue;
+
         vector<string> p = splitLine(line);
-        if (p.size() < 6) continue;
+
+        if (p.size() != 6) {
+            success = false;
+            continue;
+        }
+
         try {
+
             Volunteer v;
-            v.volunteerId = stoi(p[0]);
-            v.buildingId = stoi(p[1]);
+
+            size_t pos0 = 0;
+            size_t pos1 = 0;
+            size_t pos4 = 0;
+            size_t pos5 = 0;
+
+            v.volunteerId = stoi(p[0], &pos0);
+            v.buildingId = stoi(p[1], &pos1);
             v.volunteerName = p[2];
             v.assistanceType = p[3];
-            v.available = (p[4] == "1");
-            v.currentLocationId = stoi(p[5]);
-            registerVolunteer(v);
-        } catch (...) { /* skip corrupted line */ }
+
+            int availability = stoi(p[4], &pos4);
+
+            v.currentLocationId = stoi(p[5], &pos5);
+
+            if (pos0 != p[0].size() ||
+                pos1 != p[1].size() ||
+                pos4 != p[4].size() ||
+                pos5 != p[5].size() ||
+                (availability != 0 && availability != 1)) {
+
+                success = false;
+                continue;
+            }
+
+            v.available = (availability == 1);
+
+            if (!registerVolunteer(v))
+                success = false;
+
+        }
+        catch (...) {
+            success = false;
+        }
     }
-    return true;
+
+    return success && !in.bad();
 }
