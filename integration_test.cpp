@@ -278,6 +278,11 @@ cout << (reverseReachabilityPass
 
     cout << "Member 2 emergency route: "
          << (emergencyPass ? "PASS" : "FAIL") << "\n";
+    cout << "Member 2 reverse route: "
+     << (reverseRoutePass ? "PASS" : "FAIL") << "\n";
+
+cout << "Member 2 reverse reachability: "
+     << (reverseReachabilityPass ? "PASS" : "FAIL") << "\n";
 
     cout << "Member 2 blocked emergency: "
          << (emergencyBlockPass ? "PASS" : "FAIL") << "\n";
@@ -301,7 +306,8 @@ cout << "Member 3 max heap: "
     emergencyBlockPass &&
     simulationPass && reviewValidationPass &&
     rankingPass &&
-    heapPass ) {
+    heapPass && reverseRoutePass &&
+reverseReachabilityPass ) {
 
         cout << "\nALL BACKEND INTEGRATION TESTS PASSED!\n";
         return 0;
